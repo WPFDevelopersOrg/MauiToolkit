@@ -4,9 +4,9 @@ using System.Diagnostics;
 namespace Maui.Toolkit;
 public static class StatusBarExtensions
 {
-    public static MauiAppBuilder UseStarusBar(this MauiAppBuilder builder) => UseStarusBar(builder, default);
+    public static MauiAppBuilder UseStatusBar(this MauiAppBuilder builder) => UseStatusBar(builder, default);
 
-    public static MauiAppBuilder UseStarusBar(this MauiAppBuilder builder, Action<StatusBarOptions>? configureDelegate)
+    public static MauiAppBuilder UseStatusBar(this MauiAppBuilder builder, Action<StatusBarOptions>? configureDelegate)
     {
         ArgumentNullException.ThrowIfNull(builder, nameof(builder));
 

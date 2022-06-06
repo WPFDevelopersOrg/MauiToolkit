@@ -1,4 +1,8 @@
-﻿namespace MauiAppx;
+﻿
+
+using Maui.Toolkit;
+
+namespace MauiAppx;
 
 public static class MauiProgram
 {
@@ -7,6 +11,15 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseWindowStartup(options => 
+            {
+
+            })
+            .UseStatusBar(options => 
+            {
+
+            })
+            .UseMessageNotify()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
