@@ -33,6 +33,7 @@ internal class WindowsServiceImp : IWindowsService
             windowsLeftCycle.OnWindowCreated(window =>
             {
                 _MainWindow = window;
+
                 var appWindow = _MainWindow.GetAppWindow();
                 if (appWindow is null)
                     return;

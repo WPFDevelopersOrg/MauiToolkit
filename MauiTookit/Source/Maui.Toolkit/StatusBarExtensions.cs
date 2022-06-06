@@ -1,5 +1,11 @@
 ﻿using Maui.Toolkit.Options;
+using Maui.Toolkit.Services;
+using Microsoft.Maui.LifecycleEvents;
 using System.Diagnostics;
+
+#if WINDOWS || MACCATALYST || IOS || ANDROID
+using Maui.Toolkit.Platforms;
+#endif
 
 namespace Maui.Toolkit;
 public static class StatusBarExtensions
@@ -17,6 +23,15 @@ public static class StatusBarExtensions
             ToolTipText = appName,
         };
         configureDelegate?.Invoke(options);
+
+#if WINDOWS || MACCATALYST || IOS || ANDROID
+        var vService = new StatusBarServiceImp(options);
+        builder.Services.AddSingleton<IStatusBarService>(vService);
+        builder.ConfigureLifecycleEvents(lefecycleEvent =>
+        {
+            vService.RegisterApplicationEvent(lefecycleEvent);
+        });
+#endif
 
         return builder;
     }

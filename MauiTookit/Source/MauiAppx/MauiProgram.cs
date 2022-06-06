@@ -16,7 +16,7 @@ public static class MauiProgram
             })
             .UseStatusBar(options => 
             {
-
+                options.IconFilePath = "appicon.icon";
             })
             .UseMessageNotify()
             .ConfigureFonts(fonts =>

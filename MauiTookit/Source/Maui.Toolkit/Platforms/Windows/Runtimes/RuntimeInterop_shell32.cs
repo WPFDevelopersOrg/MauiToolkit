@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Maui.Toolkit.Platforms.Windows.Runtimes;
 
-public static class RuntimeInterop
+public static partial class RuntimeInterop
 {
     private const string _Shell32 = "shell32.dll";
 

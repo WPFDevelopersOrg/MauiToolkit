@@ -304,36 +304,36 @@ public static class Utility
     {
         public _UrlDecoder(int size, Encoding encoding)
         {
-            this._encoding = encoding;
-            this._charBuffer = new char[size];
-            this._byteBuffer = new byte[size];
+            _encoding = encoding;
+            _charBuffer = new char[size];
+            _byteBuffer = new byte[size];
         }
 
         public void AddByte(byte b)
         {
-            this._byteBuffer[this._byteCount++] = b;
+            _byteBuffer[_byteCount++] = b;
         }
 
         public void AddChar(char ch)
         {
-            this._FlushBytes();
-            this._charBuffer[this._charCount++] = ch;
+            _FlushBytes();
+            _charBuffer[_charCount++] = ch;
         }
 
         private void _FlushBytes()
         {
-            if (this._byteCount > 0)
+            if (_byteCount > 0)
             {
-                this._charCount += this._encoding.GetChars(this._byteBuffer, 0, this._byteCount, this._charBuffer, this._charCount);
-                this._byteCount = 0;
+                _charCount += _encoding.GetChars(_byteBuffer, 0, _byteCount, _charBuffer, _charCount);
+                _byteCount = 0;
             }
         }
 
         public string GetString()
         {
-            this._FlushBytes();
-            if (this._charCount > 0)
-                return new string(this._charBuffer, 0, this._charCount);
+            _FlushBytes();
+            if (_charCount > 0)
+                return new string(_charBuffer, 0, _charCount);
 
             return "";
         }
