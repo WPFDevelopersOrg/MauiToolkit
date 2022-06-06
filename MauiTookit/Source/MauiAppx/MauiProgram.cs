@@ -1,6 +1,5 @@
-﻿
-
-using Maui.Toolkit;
+﻿using Maui.Toolkit;
+using Maui.Toolkit.Shared;
 
 namespace MauiAppx;
 
@@ -13,7 +12,7 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .UseWindowStartup(options => 
             {
-
+                options.PresenterKind = WindowPresenterKind.Default;
             })
             .UseStatusBar(options => 
             {

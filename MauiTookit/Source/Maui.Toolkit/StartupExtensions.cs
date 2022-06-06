@@ -1,5 +1,11 @@
 ﻿using Maui.Toolkit.Options;
+using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
+using Microsoft.Maui.LifecycleEvents;
+
+#if WINDOWS || MACCATALYST || IOS || ANDROID
+using Maui.Toolkit.Platforms;
+#endif
 
 namespace Maui.Toolkit;
 
@@ -20,8 +26,15 @@ public static class StartupExtensions
         };
         configureDelegate?.Invoke(options);
 
-
-
+#if WINDOWS || MACCATALYST || IOS || ANDROID
+        var vService = new WindowsServiceImp(options);
+        builder.Services.AddSingleton<IWindowsService>(vService);
+        builder.ConfigureLifecycleEvents(lefecycleEvent =>
+        {
+            vService.RegisterApplicationEvent(lefecycleEvent);
+        });
+#endif
         return builder;
+
     }
 }

@@ -10,11 +10,11 @@ public static class StatusBarExtensions
     {
         ArgumentNullException.ThrowIfNull(builder, nameof(builder));
 
-        var processName = PlatformShared.GetApplicationName();
+        var appName = PlatformShared.GetApplicationName();
         var options = new StatusBarOptions()
         {
-            Title = processName,
-            ToolTipText = processName,
+            Title = appName,
+            ToolTipText = appName,
         };
         configureDelegate?.Invoke(options);
 
