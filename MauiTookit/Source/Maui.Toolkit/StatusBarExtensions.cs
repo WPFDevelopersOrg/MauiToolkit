@@ -10,8 +10,7 @@ public static class StatusBarExtensions
     {
         ArgumentNullException.ThrowIfNull(builder, nameof(builder));
 
-        //this is null when in ios
-        var processName = Process.GetCurrentProcess()?.ProcessName;
+        var processName = PlatformShared.GetApplicationName();
         var options = new StatusBarOptions()
         {
             Title = processName,
