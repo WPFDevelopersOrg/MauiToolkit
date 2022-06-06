@@ -281,9 +281,6 @@ internal class WindowsServiceImp : IWindowsService
 
         RuntimeInterop.void_objc_msgSend_IntPtr(mainWindow.Handle, toggleFullScreenSelector.Handle, IntPtr.Zero);
 
-        var nsWindowIntPtr = RuntimeInterop.gdk_quartz_window_get_nswindow(_MainWindow.Handle);
-
-
         return true;
     }
 
