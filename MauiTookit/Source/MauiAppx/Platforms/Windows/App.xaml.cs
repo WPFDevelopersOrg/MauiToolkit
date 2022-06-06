@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
+using System.Diagnostics;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -18,10 +19,18 @@ public partial class App : MauiWinUIApplication
         this.InitializeComponent();
     }
 
+    static Mutex? __SingleMutex;
+
     protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
+        if (!IsSingleInstance())
+        {
+            Process.GetCurrentProcess().Kill();
+            return;
+        }
+
         base.OnLaunched(args);
     }
 
@@ -29,5 +38,24 @@ public partial class App : MauiWinUIApplication
     {
         return base.IsOverridableInterface(iid);
     }
+
+    static bool IsSingleInstance()
+    {
+        const string applicationId = "94CD1068-AA73-4D23-9F77-92855F64EB08";
+        __SingleMutex = new Mutex(false, applicationId);
+        GC.KeepAlive(__SingleMutex);
+
+        try
+        {
+            return __SingleMutex.WaitOne(0, false);
+        }
+        catch (Exception)
+        {
+            __SingleMutex.ReleaseMutex();
+            return __SingleMutex.WaitOne(0, false);
+        }
+
+    }
+
 }
 
