@@ -284,7 +284,6 @@ internal class WindowsServiceImp : IWindowsService
         return true;
     }
 
-
     bool IWindowsService.ResizeWindow(Size size) => MoveWindow(_StartupOptions.Location, size);
 
     bool IWindowsService.RestoreWindow() => MoveWindowRestore();
