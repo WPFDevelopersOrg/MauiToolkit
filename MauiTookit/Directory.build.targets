@@ -1,0 +1,10 @@
+﻿<Project>
+	<ItemGroup>
+		<!--<PackageReference Update="System.Text.Json" Version="6.0.4" />-->
+		<!--<PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0-preview1" />-->
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+		<!-- Required - WinUI does not yet have buildTransitive for everything -->
+	</ItemGroup>
+</Project>
