@@ -12,6 +12,7 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .UseWindowStartup(options => 
             {
+                options.TitleBarKind = WindowTitleBarKind.ExtendsContentIntoTitleBar;
                 options.PresenterKind = WindowPresenterKind.Maximize;
             })
             .UseStatusBar(options => 
