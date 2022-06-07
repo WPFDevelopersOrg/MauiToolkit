@@ -49,11 +49,27 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<MauiImage Include="Resources\AppIcon\application.png" BaseSize="25,25" />
+		<MauiImage Include="Resources\AppIcon\application.svg" BaseSize="25,25" />
 	</ItemGroup>
-	
+
+	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+		<None Update="Resources\AppIcon\application128.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Resources\AppIcon\application32.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Resources\AppIcon\application48.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Resources\AppIcon\application64.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
 	<ItemGroup>
 	  <ProjectReference Include="..\Maui.Toolkit\Maui.Toolkit.csproj" />
 	</ItemGroup>
+	
 
 </Project>
