@@ -49,7 +49,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<MauiImage Include="Resources\AppIcon\application.svg" BaseSize="25,25" />
+		<MauiImage Include="Resources\AppIcon\application.svg" BaseSize="20,20" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
