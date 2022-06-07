@@ -16,7 +16,9 @@ public static class MauiProgram
             })
             .UseStatusBar(options => 
             {
-                options.IconFilePath = "appicon.icon";
+                options.IconFilePath = PlatformShared.CreatePathBuilder()
+                                                     .AddArgument("appicon.ico")
+                                                     .Build();
             })
             .UseMessageNotify()
             .ConfigureFonts(fonts =>

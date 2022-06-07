@@ -1,11 +1,12 @@
-﻿using Maui.Toolkit.Options;
+﻿using Maui.Toolkit.Concurrency;
+using Maui.Toolkit.Disposables;
+using Maui.Toolkit.Options;
 using Maui.Toolkit.Platforms.Windows.Runtimes;
 using Maui.Toolkit.Platforms.Windows.Runtimes.Shell32;
 using Maui.Toolkit.Services;
 using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Maui.Platform;
 using PInvoke;
-using TimerX = System.Timers.Timer;
 
 
 namespace Maui.Toolkit.Platforms;
@@ -21,15 +22,16 @@ internal class StatusBarServiceImp : IStatusBarService
     readonly StatusBarOptions _StatusBarOptions;
     Microsoft.UI.Xaml.Window? _MainWindow;
     NOTIFYICONDATA _NOTIFYICONDATA = default;
-    volatile bool _IsShowIn = false;
+    bool _IsShowIn = false;
 
-    volatile bool _IsBlinking = false;
-    TimerX? _BlinkTimer;
+    bool _IsBlinking = false;
+
     object _BlinkLock = new();
 
     IntPtr _hICon;
     volatile bool _IsReversed = false;
 
+    IDisposable? _Disposable;
 
     private event EventHandler<EventArgs>? StatusBarEventChanged;
 
@@ -87,48 +89,6 @@ internal class StatusBarServiceImp : IStatusBarService
         return true;
     }
 
-    bool IStatusBarService.Blink(double rate)
-    {
-        if (_MainWindow is null)
-            return false;
-
-        lock (_BlinkLock)
-        {
-            if (_IsBlinking)
-                return true;
-
-            if (rate <= 0)
-                rate = 500;
-            else if (rate > 3000)
-                rate = 3000;
-
-            if (_BlinkTimer is null)
-            {
-                _BlinkTimer = new TimerX(rate);
-                _BlinkTimer.Elapsed += BlinkTimer_Elapsed;
-            }
-            else
-                _BlinkTimer.Interval = rate;
-
-            _BlinkTimer.Start();
-            _IsBlinking = true;
-        }
-
-        return true;
-    }
-
-    bool IStatusBarService.Hide()
-    {
-        lock (this)
-        {
-            _IsShowIn = false;
-            ((IStatusBarService)this).Stop();
-            return RuntimeInterop.Shell_NotifyIcon(NotifyCommand.NIM_Delete, ref _NOTIFYICONDATA);
-        }
-    }
-
-    bool IStatusBarService.SetDescription(string? text) => true;
-
     bool IStatusBarService.Show(string? iconPath)
     {
         lock (this)
@@ -141,57 +101,71 @@ internal class StatusBarServiceImp : IStatusBarService
                 IntPtr hIcon = User32.LoadImage(IntPtr.Zero, iconPath, User32.ImageType.IMAGE_ICON, 32, 32, User32.LoadImageFlags.LR_LOADFROMFILE);
                 _NOTIFYICONDATA.hIcon = hIcon;
                 _NOTIFYICONDATA.hBalloonIcon = hIcon;
-                _hICon = hIcon;           
+                _hICon = hIcon;
             }
 
             //_NOTIFYICONDATA.TimeoutOrVersion = (uint)NOTIFYICONVERSIONFlags.NOTIFYICON_VERSION_4;
             //RuntimeInterop.Shell_NotifyIcon(NotifyCommand.NIM_SetVersion, ref _NOTIFYICONDATA);
-
-            if (_IsShowIn)
+            //
+            if (Volatile.Read(ref _IsShowIn))
                 return RuntimeInterop.Shell_NotifyIcon(NotifyCommand.NIM_Modify, ref _NOTIFYICONDATA);
             else
             {
-                _IsShowIn = true;
+                Volatile.Write(ref _IsShowIn, true);
                 return RuntimeInterop.Shell_NotifyIcon(NotifyCommand.NIM_Add, ref _NOTIFYICONDATA);
             }
         }
     }
 
-    bool IStatusBarService.Stop()
-    {
-        lock (_BlinkLock)
-        {
-            if (!_IsBlinking)
-                return true;
-
-            _IsBlinking = false;
-            if (_BlinkTimer is null)
-                return true;
-
-            _BlinkTimer.Stop();
-            _BlinkTimer.Elapsed -= BlinkTimer_Elapsed;
-            _BlinkTimer = null;
-        }
-
-        return true;
-    }
-
-    void BlinkTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    bool IStatusBarService.Hide()
     {
         lock (this)
         {
-            if (_IsReversed)
+            Volatile.Write(ref _IsShowIn, false);
+            _Disposable?.Dispose();
+            return RuntimeInterop.Shell_NotifyIcon(NotifyCommand.NIM_Delete, ref _NOTIFYICONDATA);
+        }
+    }
+
+    bool IStatusBarService.SetDescription(string? text) => true;
+
+    IDisposable IStatusBarService.SchedulePeriodic(TimeSpan period, Func<bool, string>? action)
+    {
+        var rate = period.TotalMilliseconds;
+        if (rate <= 0)
+            rate = 500;
+        else if (rate > 1000)
+            rate = 1000;
+
+        period = TimeSpan.FromMilliseconds(rate);
+        var scheduler = new TimestampedScheduler();
+        _Disposable = scheduler;
+
+        scheduler.Run(period, (isFlag, canable) => 
+        {
+            IntPtr iconPtr = _hICon;
+            if (!canable.IsDisposed)
             {
-                _IsReversed = false;
-                _NOTIFYICONDATA.hIcon = IntPtr.Zero;
-                RuntimeInterop.Shell_NotifyIcon(NotifyCommand.NIM_Modify, ref _NOTIFYICONDATA);
+                var path = action?.Invoke(isFlag);
+                if (!string.IsNullOrWhiteSpace(path))
+                    iconPtr = User32.LoadImage(IntPtr.Zero, path, User32.ImageType.IMAGE_ICON, 32, 32, User32.LoadImageFlags.LR_LOADFROMFILE);
+                else
+                {
+                    if (isFlag)
+                        iconPtr = IntPtr.Zero;
+                }
+
+                var lastIcon = _NOTIFYICONDATA.hIcon;
+                if (lastIcon != _hICon && lastIcon != IntPtr.Zero)
+                    RuntimeInterop.DeleteObject(_hICon);
             }
             else
-            {
-                _IsReversed = true;
-                _NOTIFYICONDATA.hIcon = _hICon;
-                RuntimeInterop.Shell_NotifyIcon(NotifyCommand.NIM_Modify, ref _NOTIFYICONDATA);
-            }
-        }
+                _Disposable = null;
+
+            _NOTIFYICONDATA.hIcon = iconPtr;
+            RuntimeInterop.Shell_NotifyIcon(NotifyCommand.NIM_Modify, ref _NOTIFYICONDATA);
+        });
+        
+        return scheduler;
     }
 }

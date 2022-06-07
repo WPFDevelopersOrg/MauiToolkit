@@ -1,4 +1,7 @@
-﻿namespace MauiAppx;
+﻿using Maui.Toolkit.Helpers;
+using Maui.Toolkit.Services;
+
+namespace MauiAppx;
 
 public partial class MainPage : ContentPage
 {
@@ -19,6 +22,10 @@ public partial class MainPage : ContentPage
             CounterBtn.Text = $"Clicked {count} times";
 
         SemanticScreenReader.Announce(CounterBtn.Text);
+
+        var vService = ServiceProviderHelper.GetService<IStatusBarService>();
+
+        var vDisposable = vService?.SchedulePeriodic(TimeSpan.FromMilliseconds(200), default);
     }
 }
 

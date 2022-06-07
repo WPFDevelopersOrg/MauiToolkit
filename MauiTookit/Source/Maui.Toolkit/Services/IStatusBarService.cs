@@ -1,4 +1,6 @@
-﻿namespace Maui.Toolkit.Services;
+﻿using Maui.Toolkit.Disposables;
+
+namespace Maui.Toolkit.Services;
 public interface IStatusBarService
 {
     /// <summary>
@@ -17,15 +19,10 @@ public interface IStatusBarService
     /// <summary>
     /// when you need prompt users you can blink the icon
     /// </summary>
-    /// <param name="rate"></param>
+    /// <param name="period"></param>
+    /// <param name="action"></param>
     /// <returns></returns>
-    bool Blink(double rate = 0);
-
-    /// <summary>
-    /// when you start blink you can call stop end it
-    /// </summary>
-    /// <returns></returns>
-    bool Stop();
+    IDisposable SchedulePeriodic(TimeSpan period, Func<bool, string>? action);
 
     /// <summary>
     /// this is the tip text when you use mac os

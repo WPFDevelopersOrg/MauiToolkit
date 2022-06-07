@@ -1,4 +1,5 @@
-﻿using Maui.Toolkit.Options;
+﻿using Maui.Toolkit.Disposables;
+using Maui.Toolkit.Options;
 using Maui.Toolkit.Services;
 using Microsoft.Maui.LifecycleEvents;
 
@@ -95,29 +96,23 @@ internal class StatusBarServiceImp : IStatusBarService
         return true;
     }
 
-
-    bool IStatusBarService.Blink(double rate)
-    {
-        throw new NotImplementedException();
-    }
-
     bool IStatusBarService.Hide()
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     bool IStatusBarService.SetDescription(string? text)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     bool IStatusBarService.Show(string? iconPath)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
-    bool IStatusBarService.Stop()
+    IDisposable IStatusBarService.SchedulePeriodic(TimeSpan period, Func<bool, string>? action)
     {
-        throw new NotImplementedException();
+        return new NullDisposible();
     }
 }
