@@ -50,6 +50,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+		<MauiImage Include="Resources\AppIcon\app200.ico" />
 		<MauiImage Include="Resources\AppIcon\app128.ico" />
 		<MauiImage Include="Resources\AppIcon\app64.ico" />
 		<MauiImage Include="Resources\AppIcon\app48.ico" />
