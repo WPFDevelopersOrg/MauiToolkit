@@ -179,7 +179,6 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
 
     bool IStatusBarService.Show(string? iconPath)
     {
-        _ImagePath = iconPath;
         var nsImagePtr = LoadImage(iconPath);
         _NsImagePtr = nsImagePtr;
         _ImagePath = iconPath;
