@@ -27,6 +27,7 @@ public static class MauiProgram
 
                 options.IconFilePath = PlatformShared.CreatePathBuilder()
                                                      .AddArgument("Resources")
+                                                     .AddArgument("AppIcon")
                                                      .AddArgument("appicon.ico")
                                                      .Build();
 #endif
