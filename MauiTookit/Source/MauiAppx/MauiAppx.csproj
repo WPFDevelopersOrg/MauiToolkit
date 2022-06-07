@@ -50,12 +50,10 @@
 	
 	<ItemGroup>
 		<MauiImage Include="Resources\AppIcon\application.svg" BaseSize="20,20" />
+		<MauiImage Include="Resources\AppIcon\application128.ico"/>
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-		<None Update="Resources\AppIcon\application128.ico">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
 		<None Update="Resources\AppIcon\application32.ico">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
