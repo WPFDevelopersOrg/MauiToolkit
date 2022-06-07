@@ -1,6 +1,6 @@
 ﻿namespace Maui.Toolkit.Disposables;
 
-internal class NullDisposible : IDisposable
+internal class NullDisposable : IDisposable
 {
     public void Dispose()
     {
