@@ -22,7 +22,7 @@ public static class MauiProgram
                 options.IconFilePath = PlatformShared.CreatePathBuilder()
                                                      .AddArgument("Resources")
                                                      .AddArgument("AppIcon")
-                                                     .AddArgument("application64.ico")
+                                                     .AddArgument("application128.ico")
                                                      .Build();
 
 #elif MACCATALYST

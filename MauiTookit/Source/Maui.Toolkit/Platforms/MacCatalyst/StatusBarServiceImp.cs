@@ -4,10 +4,12 @@ using Foundation;
 using Maui.Toolkit.Concurrency;
 using Maui.Toolkit.Disposables;
 using Maui.Toolkit.Options;
+using Maui.Toolkit.Platforms.MacCatalyst.Helpers;
 using Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
 using Maui.Toolkit.Services;
 using Microsoft.Maui.LifecycleEvents;
 using ObjCRuntime;
+using System.Runtime.InteropServices;
 
 namespace Maui.Toolkit.Platforms;
 
@@ -108,22 +110,16 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         if (_SystemStatusBar is null)
             return false;
 
-        var statusItemWithLengthSelector = new Selector("statusItemWithLength:");
-        if (_SystemStatusBar.RespondsToSelector(statusItemWithLengthSelector))
-            _StatusBarItem = Runtime.GetNSObject(RuntimeInterop.IntPtr_objc_msgSend_nfloat(_SystemStatusBar.Handle, statusItemWithLengthSelector.Handle, 40));
-
+        _StatusBarItem = _SystemStatusBar.GetNSObjectFromWithArgument<NFloat>("statusItemWithLength:", 40);
         if (_StatusBarItem is null)
             return false;
 
-        var buttonSelector = new Selector("button");
-        if (_StatusBarItem.RespondsToSelector(buttonSelector))
-            _StatusBarButton = Runtime.GetNSObject(RuntimeInterop.IntPtr_objc_msgSend(_StatusBarItem.Handle, buttonSelector.Handle));
-
+        _StatusBarButton = _StatusBarItem.GetNsObjectFrom("button");
         if (_StatusBarButton is null)
             return false;
 
-        RuntimeInterop.void_objc_msgSend_IntPtr(_StatusBarButton.Handle, Selector.GetHandle("setTarget:"), this.Handle);
-        RuntimeInterop.void_objc_msgSend_IntPtr(_StatusBarButton.Handle, Selector.GetHandle("setAction:"), new Selector("handleButtonClick:").Handle);
+        _StatusBarButton.SetValueForNsobject<IntPtr>("setTarget:", this.Handle);
+        _StatusBarButton.SetValueForNsobject<IntPtr>("setAction:", new Selector("handleButtonClick:").Handle);
 
         _IsLoaded = true;
 
@@ -139,20 +135,12 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         if (_ImagePath == image)
             return default;
 
-        var allocSelector = new Selector("alloc");
-        var statusBarImage = Runtime.GetNSObject(RuntimeInterop.IntPtr_objc_msgSend(Class.GetHandle("NSImage"), allocSelector.Handle));
+        var statusBarImage = RuntimeHelper.Alloc("NSImage");
         if (statusBarImage is null)
             return default;
 
-        var initWithContentsOfFileSelector = new Selector("initWithContentsOfFile:");
-        if (!statusBarImage.RespondsToSelector(initWithContentsOfFileSelector))
-            return default;
-
-        var imageFilePtr = CFString.CreateNative(image);
-        var nsImagePtr = RuntimeInterop.IntPtr_objc_msgSend_IntPtr(statusBarImage.Handle, initWithContentsOfFileSelector.Handle, imageFilePtr);
-        CFString.ReleaseNative(imageFilePtr);
-
-        return Runtime.GetNSObject(nsImagePtr);
+        var nsImageObject= statusBarImage.GetNSObjectFromWithArgument<string>("initWithContentsOfFile:", image);
+        return nsImageObject;
     }
 
     bool SetImage(NSObject? nsImage)
@@ -161,18 +149,15 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
             return false;
 
         IntPtr nsImagePtr = nsImage?.Handle ?? IntPtr.Zero;
+        _StatusBarButton.SetValueForNsobject<IntPtr>("setImage:", nsImagePtr);
 
-        var setImageSelector = new Selector("setImage:");
-        if (_StatusBarButton.RespondsToSelector(setImageSelector))
-            RuntimeInterop.void_objc_msgSend_IntPtr(_StatusBarButton.Handle, setImageSelector.Handle, nsImagePtr);
+        if (nsImage is not null)
+        {
+            nsImage.SetValueForNsobject<CGSize>("setSize:", new CGSize(18, 18));
+            nsImage.SetValueForNsobject<bool>("setTemplate:", true);
+        }
 
-        RuntimeInterop.void_objc_msgSend_CGSize(nsImagePtr, Selector.GetHandle("setSize:"), new CGSize(18, 18));
-        RuntimeInterop.void_objc_msgSend_bool(nsImagePtr, Selector.GetHandle("setTemplate:"), true);
-
-        var setImagePositionSelector = new Selector("setImagePosition:");
-        if (_StatusBarButton.RespondsToSelector(setImagePositionSelector))
-            RuntimeInterop.void_objc_msgSend_int(_StatusBarButton.Handle, setImagePositionSelector.Handle, 2);
-
+        _StatusBarButton.SetValueForNsobject<int>("setImagePosition:", 2);
         return true;
     }
 
@@ -183,9 +168,7 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         if (nsImagePtr is not null)
         {
             if (_NsImage is not null)
-            {
-                //_NsImage
-            }
+                _NsImage.Dealloc();
         }
 
         _NsImage = nsImagePtr;
@@ -204,9 +187,7 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         if (text is null)
             text = string.Empty;
 
-        var titleSelector = new Selector("setTitle:");
-        if (_StatusBarButton.RespondsToSelector(titleSelector))
-            RuntimeInterop.void_objc_msgSend_string(_StatusBarButton.Handle, titleSelector.Handle, text);
+        _StatusBarButton.SetValueForNsobject<string>("setTitle:", text);
 
         return true;
     }
@@ -260,7 +241,7 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         if (vSharedApplication is null)
             return;
 
-        RuntimeInterop.void_objc_msgSend_bool(vSharedApplication.Handle, Selector.GetHandle("activateIgnoringOtherApps:"), true);
+        vSharedApplication.SetValueForNsobject<bool>("activateIgnoringOtherApps:", true);
         StatusBarEventChanged?.Invoke(this, new EventArgs());
     }
 

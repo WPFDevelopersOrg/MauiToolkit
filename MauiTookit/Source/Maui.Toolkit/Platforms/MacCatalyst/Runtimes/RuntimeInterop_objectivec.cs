@@ -331,6 +331,21 @@ public static partial class RuntimeInterop
     /// </summary>
     /// <param name="receiver"></param>
     /// <param name="selector"></param>
+    /// <param name="value"></param>
+    public static IntPtr IntPtr_objc_msgSend_string(IntPtr receiver, IntPtr selector, string value)
+    {
+        var ptr = CFString.CreateNative(value);
+        var intPtr =  IntPtr_objc_msgSend_IntPtr(receiver, selector, ptr);
+        CFString.ReleaseNative(ptr);
+
+        return intPtr;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="receiver"></param>
+    /// <param name="selector"></param>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
     /// <returns></returns>
