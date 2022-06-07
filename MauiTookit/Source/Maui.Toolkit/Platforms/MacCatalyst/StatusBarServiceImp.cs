@@ -158,7 +158,6 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
             return IntPtr.Zero;
 
         RuntimeInterop.void_objc_msgSend_bool(nsImagePtr, Selector.GetHandle("setTemplate:"), true);
-
         RuntimeInterop.IntPtr_objc_msgSend_CGSize(nsImagePtr, Selector.GetHandle("setSize:"), new CGSize(20, 20));
 
         return nsImagePtr;
