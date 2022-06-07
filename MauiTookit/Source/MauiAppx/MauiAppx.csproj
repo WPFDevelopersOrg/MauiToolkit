@@ -47,7 +47,11 @@
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
-
+	
+	<ItemGroup>
+		<MauiImage Include="Resources\AppIcon\application.png" BaseSize="50,50" />
+	</ItemGroup>
+	
 	<ItemGroup>
 	  <ProjectReference Include="..\Maui.Toolkit\Maui.Toolkit.csproj" />
 	</ItemGroup>
