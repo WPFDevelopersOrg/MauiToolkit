@@ -24,12 +24,7 @@ internal class StatusBarServiceImp : IStatusBarService
     NOTIFYICONDATA _NOTIFYICONDATA = default;
     bool _IsShowIn = false;
 
-    bool _IsBlinking = false;
-
-    object _BlinkLock = new();
-
     IntPtr _hICon;
-    volatile bool _IsReversed = false;
 
     IDisposable? _Disposable;
 

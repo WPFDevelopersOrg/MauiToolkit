@@ -1,11 +1,16 @@
-﻿using Maui.Toolkit.Disposables;
+﻿using CoreFoundation;
+using Foundation;
+using Maui.Toolkit.Concurrency;
+using Maui.Toolkit.Disposables;
 using Maui.Toolkit.Options;
+using Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
 using Maui.Toolkit.Services;
 using Microsoft.Maui.LifecycleEvents;
+using ObjCRuntime;
 
 namespace Maui.Toolkit.Platforms;
 
-internal class StatusBarServiceImp : IStatusBarService
+internal class StatusBarServiceImp : NSObject, IStatusBarService
 {
     public StatusBarServiceImp(StatusBarOptions options)
     {
@@ -14,7 +19,17 @@ internal class StatusBarServiceImp : IStatusBarService
     }
 
     readonly StatusBarOptions _StatusBarOptions;
+    bool _IsRegisetr = false;
 
+    bool _IsLoaded = false;
+    NSObject? _SystemStatusBar;
+    NSObject? _StatusBar;
+    NSObject? _StatusBarItem;
+    NSObject? _StatusBarButton;
+    NSObject? _StatusBarImage;
+
+    IDisposable? _Disposable;
+    string? _ImagePath;
 
     private event EventHandler<EventArgs>? StatusBarEventChanged;
 
@@ -30,7 +45,12 @@ internal class StatusBarServiceImp : IStatusBarService
         {
             windowsLeftCycle.OnActivated(app =>
             {
-                //Show(_Options.IconFilePath);
+                if (_IsRegisetr)
+                    return;
+
+                _IsRegisetr = true;
+                LoadStatusBar();
+                ((IStatusBarService)this).Show(_StatusBarOptions.IconFilePath);
 
             }).OnResignActivation(app =>
             {
@@ -73,23 +93,140 @@ internal class StatusBarServiceImp : IStatusBarService
         return true;
     }
 
-    bool IStatusBarService.Hide()
+    bool LoadStatusBar()
     {
-        throw new NotImplementedException();
+        if (_IsLoaded)
+            return true;
+
+        _StatusBar = Runtime.GetNSObject(Class.GetHandle("NSStatusBar"));
+        if (_StatusBar is null)
+            return false;
+
+        _SystemStatusBar = _StatusBar.PerformSelector(new Selector("systemStatusBar"));
+        if (_SystemStatusBar is null)
+            return false;
+
+        var statusItemWithLengthSelector = new Selector("statusItemWithLength:");
+        if (_SystemStatusBar.RespondsToSelector(statusItemWithLengthSelector))
+            _StatusBarItem = Runtime.GetNSObject(RuntimeInterop.IntPtr_objc_msgSend_nfloat(_SystemStatusBar.Handle, statusItemWithLengthSelector.Handle, 40));
+
+        if (_StatusBarItem is null)
+            return false;
+
+        var buttonSelector = new Selector("button");
+        if (_StatusBarItem.RespondsToSelector(buttonSelector))
+            _StatusBarButton = Runtime.GetNSObject(RuntimeInterop.IntPtr_objc_msgSend(_StatusBarItem.Handle, buttonSelector.Handle));
+
+        if (_StatusBarButton is null)
+            return false;
+
+        var allocSelector = new Selector("alloc");
+        _StatusBarImage = Runtime.GetNSObject(RuntimeInterop.IntPtr_objc_msgSend(Class.GetHandle("NSImage"), allocSelector.Handle));
+        if (_StatusBarImage is null)
+            return false;
+
+        RuntimeInterop.void_objc_msgSend_IntPtr(_StatusBarButton.Handle, Selector.GetHandle("setTarget:"), this.Handle);
+        RuntimeInterop.void_objc_msgSend_IntPtr(_StatusBarButton.Handle, Selector.GetHandle("setAction:"), new Selector("handleButtonClick:").Handle);
+
+        _IsLoaded = true;
+
+        return true;
     }
 
-    bool IStatusBarService.SetDescription(string? text)
+    bool LoadImage(string? image)
     {
-        throw new NotImplementedException();
+        if (_StatusBarImage is null)
+            return false;
+
+        if (_StatusBarButton is null)
+            return false;
+
+        var initWithContentsOfFileSelector = new Selector("initWithContentsOfFile:");
+        if (!_StatusBarImage.RespondsToSelector(initWithContentsOfFileSelector))
+            return false;
+
+        var imageFilePtr = CFString.CreateNative(image);
+        var nsImagePtr = RuntimeInterop.IntPtr_objc_msgSend_IntPtr(_StatusBarImage.Handle, initWithContentsOfFileSelector.Handle, imageFilePtr);
+        CFString.ReleaseNative(imageFilePtr);
+
+        RuntimeInterop.void_objc_msgSend_IntPtr(_StatusBarButton.Handle, Selector.GetHandle("setImage:"), _StatusBarImage.Handle);
+
+        if (nsImagePtr != IntPtr.Zero)
+            RuntimeInterop.void_objc_msgSend_bool(nsImagePtr, Selector.GetHandle("setTemplate:"), true);
+
+        RuntimeInterop.void_objc_msgSend_int(_StatusBarButton.Handle, Selector.GetHandle("setImagePosition:"), 2);
+
+        return true;
     }
 
     bool IStatusBarService.Show(string? iconPath)
     {
-        throw new NotImplementedException();
+        _ImagePath = iconPath;
+        return LoadImage(iconPath);
+    }
+
+    bool IStatusBarService.Hide() => LoadImage(default);
+
+    bool IStatusBarService.SetDescription(string? text)
+    {
+        if (_StatusBarButton is null)
+            return false;
+
+        if (text is null)
+            text = string.Empty;
+
+        var titleSelector = new Selector("setTitle:");
+        if (_StatusBarButton.RespondsToSelector(titleSelector))
+            RuntimeInterop.void_objc_msgSend_string(_StatusBarButton.Handle, titleSelector.Handle, text);
+
+        return true;
     }
 
     IDisposable IStatusBarService.SchedulePeriodic(TimeSpan period, Func<bool, string>? action)
     {
-        throw new NotImplementedException();
+        var rate = period.TotalMilliseconds;
+        if (rate <= 0)
+            rate = 500;
+        else if (rate > 1000)
+            rate = 1000;
+
+        period = TimeSpan.FromMilliseconds(rate);
+        var scheduler = new TimestampedScheduler();
+        _Disposable = scheduler;
+
+        scheduler.Run(period, (isFlag, canable) =>
+        {
+            var imagePath = _ImagePath;
+            if (!canable.IsDisposed)
+            {
+                var path = action?.Invoke(isFlag);
+                if (isFlag)
+                    imagePath = path;
+            }
+
+            LoadImage(imagePath);
+        });
+
+        return scheduler;
     }
+
+    /// <summary>
+    /// it will trigger when user click the statusBar
+    /// </summary>
+    /// <param name="senderStatusBarButton"></param>
+    [Export("handleButtonClick:")]
+    protected void HandleButtonClick(NSObject senderStatusBarButton)
+    {
+        var vNsapplication = Runtime.GetNSObject(Class.GetHandle("NSApplication"));
+        if (vNsapplication is null)
+            return;
+
+        var vSharedApplication = vNsapplication.PerformSelector(new Selector("sharedApplication"));
+        if (vSharedApplication is null)
+            return;
+
+        RuntimeInterop.void_objc_msgSend_bool(vSharedApplication.Handle, Selector.GetHandle("activateIgnoringOtherApps:"), true);
+        StatusBarEventChanged?.Invoke(this, new EventArgs());
+    }
+
 }

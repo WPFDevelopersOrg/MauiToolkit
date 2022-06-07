@@ -35,14 +35,13 @@ internal class WindowsServiceImp : IWindowsService
             {
                 if (_IsRegisetr)
                     return;
+                _IsRegisetr = true;
 
                 _Application = app;
                 _MainWindow = app.Windows.FirstOrDefault();
 
                 RemoveTitltBar(_StartupOptions.TitleBarKind);
                 MoveWindow(_StartupOptions.PresenterKind);
-
-                _IsRegisetr = true;
 
             }).OnResignActivation(app =>
             {
