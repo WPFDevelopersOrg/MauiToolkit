@@ -12,7 +12,7 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .UseWindowStartup(options => 
             {
-                options.PresenterKind = WindowPresenterKind.Default;
+                options.PresenterKind = WindowPresenterKind.Maximize;
             })
             .UseStatusBar(options => 
             {
@@ -29,7 +29,7 @@ public static class MauiProgram
 
                 options.IconFilePath = PlatformShared.CreatePathBuilder()
                                                      .AddArgument("Resources")
-                                                     .AddArgument("application.png")
+                                                     .AddArgument("application128.ico")
                                                      .Build();
 #endif
 

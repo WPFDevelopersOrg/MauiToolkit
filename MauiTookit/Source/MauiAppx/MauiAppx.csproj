@@ -33,7 +33,7 @@
 	<ItemGroup>
 		<!-- App Icon -->
 		<!--<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />-->
-		<MauiIcon Include="Resources\AppIcon\application.svg" BaseSize="200,200" Resize="false" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\application.svg"/>
 		
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
@@ -50,13 +50,13 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<!--<MauiImage Include="Resources\AppIcon\application32.ico" />-->
+		<MauiImage Include="Resources\AppIcon\application128.ico" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-		<None Update="Resources\AppIcon\application128.ico">
+		<!--<None Update="Resources\AppIcon\application128.ico">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
+		</None>-->
 		<None Update="Resources\AppIcon\application48.ico">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
