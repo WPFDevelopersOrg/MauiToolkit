@@ -127,10 +127,6 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         if (_StatusBarImage is null)
             return false;
 
-        var setSizeSelector = new Selector("setSize:");
-        if (_StatusBarImage.RespondsToSelector(setSizeSelector))
-            RuntimeInterop.IntPtr_objc_msgSend_CGSize(_StatusBarImage.Handle, setSizeSelector.Handle, new CGSize(20, 20));
-
         RuntimeInterop.void_objc_msgSend_IntPtr(_StatusBarButton.Handle, Selector.GetHandle("setTarget:"), this.Handle);
         RuntimeInterop.void_objc_msgSend_IntPtr(_StatusBarButton.Handle, Selector.GetHandle("setAction:"), new Selector("handleButtonClick:").Handle);
 
@@ -162,6 +158,8 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
             return IntPtr.Zero;
 
         RuntimeInterop.void_objc_msgSend_bool(nsImagePtr, Selector.GetHandle("setTemplate:"), true);
+
+        RuntimeInterop.IntPtr_objc_msgSend_CGSize(nsImagePtr, Selector.GetHandle("setSize:"), new CGSize(20, 20));
 
         return nsImagePtr;
     }
