@@ -1,4 +1,5 @@
 ﻿using CoreFoundation;
+using CoreGraphics;
 using Foundation;
 using Maui.Toolkit.Concurrency;
 using Maui.Toolkit.Disposables;
@@ -126,6 +127,10 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         if (_StatusBarImage is null)
             return false;
 
+        var setSizeSelector = new Selector("setSize:");
+        if (_StatusBarImage.RespondsToSelector(setSizeSelector))
+            RuntimeInterop.IntPtr_objc_msgSend_CGSize(_StatusBarImage.Handle, setSizeSelector.Handle, new CGSize(20, 20));
+
         RuntimeInterop.void_objc_msgSend_IntPtr(_StatusBarButton.Handle, Selector.GetHandle("setTarget:"), this.Handle);
         RuntimeInterop.void_objc_msgSend_IntPtr(_StatusBarButton.Handle, Selector.GetHandle("setAction:"), new Selector("handleButtonClick:").Handle);
 
@@ -153,8 +158,10 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         var nsImagePtr = RuntimeInterop.IntPtr_objc_msgSend_IntPtr(_StatusBarImage.Handle, initWithContentsOfFileSelector.Handle, imageFilePtr);
         CFString.ReleaseNative(imageFilePtr);
 
-        if (nsImagePtr != IntPtr.Zero)
-            RuntimeInterop.void_objc_msgSend_bool(nsImagePtr, Selector.GetHandle("setTemplate:"), true);
+        if (nsImagePtr == IntPtr.Zero)
+            return IntPtr.Zero;
+
+        RuntimeInterop.void_objc_msgSend_bool(nsImagePtr, Selector.GetHandle("setTemplate:"), true);
 
         return nsImagePtr;
     }
