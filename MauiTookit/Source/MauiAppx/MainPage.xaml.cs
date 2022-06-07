@@ -25,7 +25,7 @@ public partial class MainPage : ContentPage
 
         var vService = ServiceProviderHelper.GetService<IStatusBarService>();
         vService?.SetDescription("100");
-        //var vDisposable = vService?.SchedulePeriodic(TimeSpan.FromMilliseconds(200), default);
+        var vDisposable = vService?.SchedulePeriodic(TimeSpan.FromMilliseconds(200), default);
     }
 }
 

@@ -150,6 +150,7 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
 
         IntPtr nsImagePtr = nsImage?.Handle ?? IntPtr.Zero;
         _StatusBarButton.SetValueForNsobject<IntPtr>("setImage:", nsImagePtr);
+        _StatusBarButton.SetValueForNsobject<long>("setImagePosition:", 2);
 
         if (nsImage is not null)
         {
@@ -157,7 +158,6 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
             nsImage.SetValueForNsobject<bool>("setTemplate:", true);
         }
 
-        _StatusBarButton.SetValueForNsobject<int>("setImagePosition:", 2);
         return true;
     }
 
