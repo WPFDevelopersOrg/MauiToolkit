@@ -27,11 +27,11 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
     NSObject? _StatusBar;
     NSObject? _StatusBarItem;
     NSObject? _StatusBarButton;
-    NSObject? _StatusBarImage;
+    //NSObject? _StatusBarImage;
+    NSObject? _NsImage;
 
     IDisposable? _Disposable;
     string? _ImagePath;
-    IntPtr _NsImagePtr;
 
     private event EventHandler<EventArgs>? StatusBarEventChanged;
 
@@ -122,11 +122,6 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         if (_StatusBarButton is null)
             return false;
 
-        var allocSelector = new Selector("alloc");
-        _StatusBarImage = Runtime.GetNSObject(RuntimeInterop.IntPtr_objc_msgSend(Class.GetHandle("NSImage"), allocSelector.Handle));
-        if (_StatusBarImage is null)
-            return false;
-
         RuntimeInterop.void_objc_msgSend_IntPtr(_StatusBarButton.Handle, Selector.GetHandle("setTarget:"), this.Handle);
         RuntimeInterop.void_objc_msgSend_IntPtr(_StatusBarButton.Handle, Selector.GetHandle("setAction:"), new Selector("handleButtonClick:").Handle);
 
@@ -135,44 +130,44 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         return true;
     }
 
-    IntPtr LoadImage(string? image)
+   
+    NSObject? LoadImage(string? image)
     {
-        if (_StatusBarImage is null)
-            return IntPtr.Zero;
-
         if (string.IsNullOrEmpty(image))
-            return IntPtr.Zero;
+            return default;
 
         if (_ImagePath == image)
-            return IntPtr.Zero;
+            return default;
+
+        var allocSelector = new Selector("alloc");
+        var statusBarImage = Runtime.GetNSObject(RuntimeInterop.IntPtr_objc_msgSend(Class.GetHandle("NSImage"), allocSelector.Handle));
+        if (statusBarImage is null)
+            return default;
 
         var initWithContentsOfFileSelector = new Selector("initWithContentsOfFile:");
-        if (!_StatusBarImage.RespondsToSelector(initWithContentsOfFileSelector))
-            return IntPtr.Zero;
+        if (!statusBarImage.RespondsToSelector(initWithContentsOfFileSelector))
+            return default;
 
         var imageFilePtr = CFString.CreateNative(image);
-        var nsImagePtr = RuntimeInterop.IntPtr_objc_msgSend_IntPtr(_StatusBarImage.Handle, initWithContentsOfFileSelector.Handle, imageFilePtr);
+        var nsImagePtr = RuntimeInterop.IntPtr_objc_msgSend_IntPtr(statusBarImage.Handle, initWithContentsOfFileSelector.Handle, imageFilePtr);
         CFString.ReleaseNative(imageFilePtr);
 
-        if (nsImagePtr == IntPtr.Zero)
-            return IntPtr.Zero;
-
-        RuntimeInterop.void_objc_msgSend_bool(nsImagePtr, Selector.GetHandle("setTemplate:"), true);
-        RuntimeInterop.IntPtr_objc_msgSend_CGSize(nsImagePtr, Selector.GetHandle("setSize:"), new CGSize(20, 20));
-
-        return nsImagePtr;
+        return Runtime.GetNSObject(nsImagePtr);
     }
 
-    bool SetImage(IntPtr nsImagePtr)
+    bool SetImage(NSObject? nsImage)
     {
         if (_StatusBarButton is null)
             return false;
+
+        IntPtr nsImagePtr = nsImage?.Handle ?? IntPtr.Zero;
+
         var setImageSelector = new Selector("setImage:");
         if (_StatusBarButton.RespondsToSelector(setImageSelector))
             RuntimeInterop.void_objc_msgSend_IntPtr(_StatusBarButton.Handle, setImageSelector.Handle, nsImagePtr);
 
-        if (nsImagePtr == IntPtr.Zero)
-            return true;
+        RuntimeInterop.void_objc_msgSend_CGSize(nsImagePtr, Selector.GetHandle("setSize:"), new CGSize(18, 18));
+        RuntimeInterop.void_objc_msgSend_bool(nsImagePtr, Selector.GetHandle("setTemplate:"), true);
 
         var setImagePositionSelector = new Selector("setImagePosition:");
         if (_StatusBarButton.RespondsToSelector(setImagePositionSelector))
@@ -184,13 +179,22 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
     bool IStatusBarService.Show(string? iconPath)
     {
         var nsImagePtr = LoadImage(iconPath);
-        _NsImagePtr = nsImagePtr;
+
+        if (nsImagePtr is not null)
+        {
+            if (_NsImage is not null)
+            {
+                //_NsImage
+            }
+        }
+
+        _NsImage = nsImagePtr;
         _ImagePath = iconPath;
 
-        return SetImage(_NsImagePtr);
+        return SetImage(_NsImage);
     }
 
-    bool IStatusBarService.Hide() => SetImage(IntPtr.Zero);
+    bool IStatusBarService.Hide() => SetImage(default);
 
     bool IStatusBarService.SetDescription(string? text)
     {
@@ -221,21 +225,21 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
 
         scheduler.Run(period, (isFlag, canable) =>
         {
-            var imagePtr = _NsImagePtr;
+            var nsImage = _NsImage;
             if (!canable.IsDisposed)
             {
                 var path = action?.Invoke(isFlag);
-                var loadImagePtr = LoadImage(path);
+                var loadNsImage = LoadImage(path);
                 if (isFlag)
-                    imagePtr = loadImagePtr;
+                    nsImage = loadNsImage;
                 else
                 {
-                    if (loadImagePtr != IntPtr.Zero)
-                        imagePtr = loadImagePtr;
+                    if (loadNsImage is not null)
+                        nsImage = loadNsImage;
                 }
             }
 
-            SetImage(imagePtr);
+            SetImage(nsImage);
         });
 
         return scheduler;

@@ -24,8 +24,8 @@ public partial class MainPage : ContentPage
         SemanticScreenReader.Announce(CounterBtn.Text);
 
         var vService = ServiceProviderHelper.GetService<IStatusBarService>();
-
-        var vDisposable = vService?.SchedulePeriodic(TimeSpan.FromMilliseconds(200), default);
+        vService?.SetDescription("100");
+        //var vDisposable = vService?.SchedulePeriodic(TimeSpan.FromMilliseconds(200), default);
     }
 }
 

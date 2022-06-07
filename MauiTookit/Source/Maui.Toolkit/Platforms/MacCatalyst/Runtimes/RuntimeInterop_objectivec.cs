@@ -203,6 +203,16 @@ public static partial class RuntimeInterop
     /// <param name="receiver"></param>
     /// <param name="selector"></param>
     /// <param name="p1"></param>
+    /// <returns></returns>
+    [DllImport(_ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
+    public extern static void void_objc_msgSend_CGSize(IntPtr receiver, IntPtr selector, CGSize p1);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="receiver"></param>
+    /// <param name="selector"></param>
+    /// <param name="p1"></param>
     /// <param name="p2"></param>
     /// <param name="p3"></param>
     /// <param name="p4"></param>
