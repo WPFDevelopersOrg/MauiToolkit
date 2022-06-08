@@ -10,6 +10,7 @@ using Maui.Toolkit.Services;
 using Microsoft.Maui.LifecycleEvents;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
+using UIKit;
 
 namespace Maui.Toolkit.Platforms;
 
@@ -32,6 +33,9 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
     //NSObject? _StatusBarImage;
     NSObject? _NsImage;
 
+    UIApplication? _Application;
+    UIWindow? _MainWindow;
+
     IDisposable? _Disposable;
     string? _ImagePath;
 
@@ -53,6 +57,10 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
                     return;
 
                 _IsRegisetr = true;
+
+                _Application = app;
+                _MainWindow = app.Windows.FirstOrDefault();
+
                 LoadStatusBar();
                 ((IStatusBarService)this).Show(_StatusBarOptions.IconFilePath);
 
@@ -242,7 +250,9 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
             return;
 
         vSharedApplication.SetValueForNsobject<bool>("activateIgnoringOtherApps:", true);
-        vSharedApplication.SetValueForNsobject<IntPtr>("arrangeInFront:", this.Handle);
+        vSharedApplication.SetValueForNsobject<IntPtr>("arrangeInFront:", _MainWindow?.Handle ?? IntPtr.Zero);
+        _Application?.SetValueForNsobject<IntPtr>("arrangeInFront:", this.Handle);
+        _MainWindow?.SetValueForNsobject<IntPtr>("arrangeInFront:", this.Handle);
         StatusBarEventChanged?.Invoke(this, new EventArgs());
     }
 
