@@ -123,6 +123,16 @@ public static partial class RuntimeInterop
     /// <param name="selector"></param>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
+    [DllImport(_ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
+    public extern static void void_objc_msgSend_CGRect_bool(IntPtr receiver, IntPtr selector, CGRect p1, bool p2);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="receiver"></param>
+    /// <param name="selector"></param>
+    /// <param name="p1"></param>
+    /// <param name="p2"></param>
     /// <param name="p3"></param>
 	[DllImport(_ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
     public extern static void void_objc_msgSend_IntPtr_IntPtr_bool(IntPtr receiver, IntPtr selector, IntPtr p1, IntPtr p2, bool p3);

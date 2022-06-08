@@ -4,6 +4,7 @@ using Foundation;
 using Maui.Toolkit.Concurrency;
 using Maui.Toolkit.Disposables;
 using Maui.Toolkit.Options;
+using Maui.Toolkit.Platforms.MacCatalyst.Extensions;
 using Maui.Toolkit.Platforms.MacCatalyst.Helpers;
 using Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
 using Maui.Toolkit.Services;
@@ -59,7 +60,7 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
                 _IsRegisetr = true;
 
                 _Application = app;
-                _MainWindow = app.Windows.FirstOrDefault();
+                _MainWindow = _Application.Delegate.GetWindow();
 
                 LoadStatusBar();
                 ((IStatusBarService)this).Show(_StatusBarOptions.IconFilePath);
@@ -241,20 +242,19 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
     [Export("handleButtonClick:")]
     protected void HandleButtonClick(NSObject senderStatusBarButton)
     {
-        var vNsapplication = Runtime.GetNSObject(Class.GetHandle("NSApplication"));
-        if (vNsapplication is null)
+        var nsApplication = Runtime.GetNSObject(Class.GetHandle("NSApplication"));
+        if (nsApplication is null)
             return;
 
-        var vSharedApplication = vNsapplication.PerformSelector(new Selector("sharedApplication"));
-        if (vSharedApplication is null)
+        var sharedApplication = nsApplication.PerformSelector(new Selector("sharedApplication"));
+        if (sharedApplication is null)
             return;
 
-        vSharedApplication.SetValueForNsobject<bool>("activateIgnoringOtherApps:", true);
-        vSharedApplication.SetValueForNsobject<IntPtr>("arrangeInFront:", _MainWindow?.Handle ?? IntPtr.Zero);
-        _Application?.SetValueForNsobject<IntPtr>("arrangeInFront:", this.Handle);
-        _MainWindow?.SetValueForNsobject<IntPtr>("arrangeInFront:", this.Handle);
+        sharedApplication.SetValueForNsobject<bool>("activateIgnoringOtherApps:", true);
 
-        _MainWindow?.MakeKeyAndVisible();
+        var uiNsWindow = _MainWindow?.GetHostWidnowForUiWindow();
+        uiNsWindow?.SetValueForNsobject<IntPtr>("makeKeyAndOrderFront:", this.Handle);
+
         StatusBarEventChanged?.Invoke(this, new EventArgs());
     }
 

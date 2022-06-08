@@ -1,5 +1,7 @@
 ﻿using CoreGraphics;
+using Foundation;
 using Maui.Toolkit.Options;
+using Maui.Toolkit.Platforms.MacCatalyst.Extensions;
 using Maui.Toolkit.Platforms.MacCatalyst.Helpers;
 using Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
 using Maui.Toolkit.Services;
@@ -11,7 +13,7 @@ using UIKit;
 
 namespace Maui.Toolkit.Platforms;
 
-internal class WindowsServiceImp : IWindowsService
+internal class WindowsServiceImp : NSObject, IWindowsService
 {
     public WindowsServiceImp(StartupOptions options)
     {
@@ -20,12 +22,14 @@ internal class WindowsServiceImp : IWindowsService
     }
 
     readonly StartupOptions _StartupOptions;
-    readonly double _ScalingFactorX = 1.3d;
-    readonly double _ScalingFactorY = 1.16d;
+    readonly double _ScalingFactorX = 1.0d;
+    readonly double _ScalingFactorY = 1.0d;
     UIApplication? _Application;
     UIWindow? _MainWindow;
-
+    NSObject? _NsMainWindow;
+    NSObject? _NsApplication;
     bool _IsRegisetr = false;
+    bool _IsTrigger = false;
 
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     public bool RegisterApplicationEvent(ILifecycleBuilder lifecycleBuilder)
@@ -38,11 +42,10 @@ internal class WindowsServiceImp : IWindowsService
                     return;
                 _IsRegisetr = true;
 
-                _Application = app;
-                _MainWindow = app.Windows.FirstOrDefault();
+                _MainWindow = _Application?.Delegate.GetWindow();
 
                 RemoveTitltBar(_StartupOptions.TitleBarKind);
-                MoveWindow(_StartupOptions.PresenterKind);
+                //MoveWindow(_StartupOptions.PresenterKind);
 
             }).OnResignActivation(app =>
             {
@@ -54,9 +57,14 @@ internal class WindowsServiceImp : IWindowsService
 
             }).DidEnterBackground(app =>
             {
-
+                // app close
             }).WillFinishLaunching((app, options) =>
             {
+                _Application = app;
+                _NsApplication = UIWindowExtension.GetSharedNsApplication();
+
+                UIWindow.Notifications.ObserveDidBecomeVisible(WindowDidBecomeVisible);
+
                 return true;
             }).FinishedLaunching((app, options) =>
             {
@@ -102,6 +110,7 @@ internal class WindowsServiceImp : IWindowsService
                 if (vTitleBar is null)
                     return false;
 
+                //vTitleBar.ToolbarStyle = UITitlebarToolbarStyle.Automatic;
                 vTitleBar.TitleVisibility = UITitlebarTitleVisibility.Hidden;
                 vTitleBar.Toolbar = null;
                 break;
@@ -123,15 +132,17 @@ internal class WindowsServiceImp : IWindowsService
 
     bool MoveWindow(WidnowAlignment location, Size size)
     {
+        if (_NsMainWindow is null)
+            _NsMainWindow = _MainWindow?.GetHostWidnowForUiWindow();
+
+        if (_NsMainWindow is null)
+            return false;
+
         if (_MainWindow is null)
             return false;
 
         var vScreen = _MainWindow.Screen;
         var vCGRect = vScreen.Bounds;
-
-        var vSizeRestrictions = _MainWindow.WindowScene?.SizeRestrictions;
-        if (vSizeRestrictions is null)
-            return false;
 
         var width = size.Width;
         var height = size.Height;
@@ -148,33 +159,54 @@ internal class WindowsServiceImp : IWindowsService
         if (height > vCGRect.Height)
             height = vCGRect.Height;
 
-        var vRealWidth = width * _ScalingFactorX;
-        var vRealHeight = height * _ScalingFactorY;
+        var startX = 0d;
+        var startY = 0d;
+        var realWidth = width * _ScalingFactorX;
+        var realHeight = height * _ScalingFactorY;
 
         switch (location)
         {
             case WidnowAlignment.LeftTop:
                 break;
             case WidnowAlignment.RightTop:
+                {
+                    startX = vCGRect.Width - realWidth;
+                    startY = 0;
+                }
                 break;
             case WidnowAlignment.Center:
+                {
+                    startX = (vCGRect.Width - realWidth) / 2.0;
+                    startY = (vCGRect.Height - realHeight) / 2.0;
+                }
                 break;
             case WidnowAlignment.LeftBottom:
+                {
+                    startX = 0;
+                    startY = vCGRect.Height - realHeight;
+                }
                 break;
             case WidnowAlignment.RightBottom:
+                {
+                    startX = vCGRect.Width - realWidth;
+                    startY = vCGRect.Height - realHeight;
+                }
                 break;
             default:
                 break;
         }
+        var cgRect = new CGRect(startX, startY, realWidth, realHeight);
 
-        vSizeRestrictions.MinimumSize = new CGSize(vRealWidth, vRealHeight);
-        vSizeRestrictions.MaximumSize = new CGSize(vRealWidth, vRealHeight);
+        _NsMainWindow.SetValueForNsobject<CGRect, bool>("setFrame:display:", cgRect, true);
 
         return true;
     }
 
     bool MoveWindowMaximize()
     {
+        if (_NsMainWindow is null)
+            return false;
+
         if (_MainWindow is null)
             return false;
 
@@ -184,103 +216,38 @@ internal class WindowsServiceImp : IWindowsService
         double width = vCGRect.Width.Value * _ScalingFactorX;
         double height = vCGRect.Height.Value * _ScalingFactorY;
 
-        //var vCoordinateSpace = _MainWindow.WindowScene.CoordinateSpace;
-        //var vBounds = vCoordinateSpace.Bounds;
-        //var vStatusBar = _Application.StatusBarFrame;
+        var cgRect = new CGRect(0, 0, width, height);
+        _NsMainWindow.SetValueForNsobject<CGRect, bool>("setFrame:display:", cgRect, true);
 
-        //_Application.StatusBarHidden = false;
-        var vSizeRestrictions = _MainWindow.WindowScene?.SizeRestrictions;
-        if (vSizeRestrictions is null)
-            return false;
-
-        //_Application.SetStatusBarHidden(true, true);
-
-        //_MainWindow.CanResizeToFitContent = true;
-        //_MainWindow.RootViewController.PreferredContentSize = new CGSize(vBounds.Width * _ScalingFactor, vBounds.Height * _ScalingFactor);
-        //_MainWindow.Bounds = new CGRect(0, 0, vBounds.Width * _ScalingFactor, vBounds.Height * _ScalingFactor);
-
-        //_MainWindow.Frame = new CGRect(0, 0, vBounds.Width * _ScalingFactor, vBounds.Height * _ScalingFactor);
-        //_MainWindow.AccessibilityFrame = new CGRect(0, 0, vBounds.Width * _ScalingFactor, vBounds.Height * _ScalingFactor);
-        //var vNewRect = vCoordinateSpace.ConvertRectFromCoordinateSpace(vCGRect, vCoordinateSpace);
-        //_MainWindow.SetNeedsDisplayInRect(new CGRect(0, 0, vBounds.Width * _ScalingFactor, vBounds.Height * _ScalingFactor));
-        //_MainWindow.SizeThatFits(new CGSize(vBounds.Width * _ScalingFactor, vBounds.Height * _ScalingFactor));
-        //_MainWindow.App
-
-        var vSize = new CGSize(width, height);
-        vSizeRestrictions.MinimumSize = vSize;
-        vSizeRestrictions.MaximumSize = vSize;
         return true;
     }
 
     bool MoveWindowMinimize()
     {
-        if (_MainWindow is null)
+        if (_NsApplication is null)
             return false;
 
-        var vSizeRestrictions = _MainWindow.WindowScene?.SizeRestrictions;
-        if (vSizeRestrictions is null)
+        if (_NsMainWindow is null)
             return false;
 
-        var vSize = new CGSize(0, 0);
-        vSizeRestrictions.MinimumSize = vSize;
-        vSizeRestrictions.MaximumSize = vSize;
+        _NsMainWindow.SetValueForNsobject<CGRect, bool>("setFrame:display:", new CGRect(0, 0, _StartupOptions.Size.Width, _StartupOptions.Size.Height), true);
+        _NsApplication.SetValueForNsobject<IntPtr>("hide:", _NsMainWindow.Handle);
 
         return true;
     }
 
     bool MoveWindowRestore()
     {
-        if (_MainWindow is null)
-            return false;
-
-        var vSizeRestrictions = _MainWindow.WindowScene?.SizeRestrictions;
-        if (vSizeRestrictions is null)
-            return false;
-
-        vSizeRestrictions.MinimumSize = _StartupOptions.Size;
-        vSizeRestrictions.MaximumSize = new Size(double.MaxValue, double.MaxValue);
-
+ 
         return true;
     }
 
     bool ToggleFullScreen(bool bFullScreen)
     {
-        if (_MainWindow is null)
+        if (_NsMainWindow is null)
             return false;
 
-        var nsApplication = Runtime.GetNSObject(Class.GetHandle("NSApplication"));
-        if (nsApplication is null)
-            return false;
-
-        var sharedApplication = nsApplication.PerformSelector(new Selector("sharedApplication"));
-        if (sharedApplication is null)
-            return false;
-
-        sharedApplication.SetValueForNsobject<long>("setPresentationOptions:", (1 << 10));
-
-        var delegeteSelector = new Selector("delegate");
-        if (!sharedApplication.RespondsToSelector(delegeteSelector))
-            return false;
-
-        var delegeteIntptr = RuntimeInterop.IntPtr_objc_msgSend(sharedApplication.Handle, delegeteSelector.Handle);
-        var delegateObject = Runtime.GetNSObject(delegeteIntptr);
-
-        if (delegateObject is null)
-            return false;
-
-        var hostWindowForUIWindowSelector = new Selector("_hostWindowForUIWindow:");
-        if (!delegateObject.RespondsToSelector(hostWindowForUIWindowSelector))
-            return false;
-
-        var mainWindow = delegateObject.PerformSelector(hostWindowForUIWindowSelector, _MainWindow.Self);
-        if (mainWindow is null)
-            return false;
-
-        var toggleFullScreenSelector = new Selector("toggleFullScreen:");
-        if (!mainWindow.RespondsToSelector(toggleFullScreenSelector))
-            return false;
-
-        RuntimeInterop.void_objc_msgSend_IntPtr(mainWindow.Handle, toggleFullScreenSelector.Handle, IntPtr.Zero);
+        _NsMainWindow.SetValueForNsobject<IntPtr>("toggleFullScreen:", this.Handle);
 
         return true;
     }
@@ -294,4 +261,21 @@ internal class WindowsServiceImp : IWindowsService
     bool IWindowsService.SetWindowMinimize() => MoveWindowMinimize();
 
     bool IWindowsService.SwitchWindow(bool fullScreen) => ToggleFullScreen(fullScreen);
+
+    void  WindowDidBecomeVisible(object? sender, NSNotificationEventArgs args)
+    {
+        if (_NsMainWindow is null)
+            _NsMainWindow = _MainWindow?.GetHostWidnowForUiWindow();
+
+        if (_NsMainWindow is null)
+            return;
+
+        if (_IsTrigger)
+            return;
+
+        _IsTrigger = true;
+        MoveWindow(_StartupOptions.PresenterKind);
+    }
+
+
 }

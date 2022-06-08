@@ -95,4 +95,23 @@ public static class RuntimeHelper
         return true;
     }
 
+    public static bool SetValueForNsobject<TArg1, TArg2>(this NSObject nsObject, string name, TArg1 arg1, TArg2 arg2)
+    {
+        if (nsObject is null)
+            return default;
+
+        var propertySelector = new Selector(name);
+        if (!nsObject.RespondsToSelector(propertySelector))
+            return default;
+
+        if (arg1 is CGRect cgRectValue && arg2 is bool boolValue)
+            RuntimeInterop.void_objc_msgSend_CGRect_bool(nsObject.Handle, propertySelector.Handle, cgRectValue, boolValue);
+        else if (arg1 is IntPtr intPtrValue1 && arg2 is IntPtr intPtrValue2)
+            RuntimeInterop.void_objc_msgSend_IntPtr_IntPtr(nsObject.Handle, propertySelector.Handle, intPtrValue1, intPtrValue2);
+        else
+            return false;
+
+        return true;
+    }
+
 }
