@@ -32,17 +32,17 @@ internal class StatusBarServiceImp : IStatusBarService
 
     bool IStatusBarService.Hide()
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     bool IStatusBarService.SetDescription(string? text)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     bool IStatusBarService.Show(string? iconPath)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     IDisposable IStatusBarService.SchedulePeriodic(TimeSpan period, Func<bool, string>? action)

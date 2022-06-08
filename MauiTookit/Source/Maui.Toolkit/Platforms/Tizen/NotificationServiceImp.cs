@@ -3,30 +3,30 @@ using Maui.Toolkit.Shared;
 
 namespace Maui.Toolkit.Platforms;
 
-internal class MessageNotifyServiceImp : IMessageNotifyService
+internal class NotificationServiceImp : INotificationService
 {
     bool IMessageNotifyService.AddArgument<T>(string key, T value)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     bool IMessageNotifyService.AddHeader(string id, string title, string arugument)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     bool IMessageNotifyService.AddText(string value)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     bool IMessageNotifyService.AddViewElement<TElement>(NotifyElementKind kind, TElement element)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     bool IMessageNotifyService.Show()
     {
-        throw new NotImplementedException();
+        return true;
     }
 }

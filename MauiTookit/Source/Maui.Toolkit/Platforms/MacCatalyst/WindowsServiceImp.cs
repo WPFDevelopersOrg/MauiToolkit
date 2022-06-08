@@ -111,7 +111,6 @@ internal class WindowsServiceImp : IWindowsService
         return true;
     }
 
-
     bool MoveWindow(WindowPresenterKind presenter) => presenter switch
     {
         WindowPresenterKind.Default => MoveWindow(_StartupOptions.Location, _StartupOptions.Size),

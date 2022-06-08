@@ -24,26 +24,26 @@ internal class WindowsServiceImp : IWindowsService
 
     bool IWindowsService.ResizeWindow(Size size)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     bool IWindowsService.RestoreWindow()
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     bool IWindowsService.SetWindowMaximize()
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     bool IWindowsService.SetWindowMinimize()
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     bool IWindowsService.SwitchWindow(bool fullScreen)
     {
-        throw new NotImplementedException();
+        return true;
     }
 }

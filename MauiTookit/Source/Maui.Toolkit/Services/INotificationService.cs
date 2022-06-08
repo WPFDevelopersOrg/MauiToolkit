@@ -1,7 +1,7 @@
 ﻿using Maui.Toolkit.Shared;
 
 namespace Maui.Toolkit.Services;
-public interface IMessageNotifyService
+public interface INotificationService
 {
     /// <summary>
     /// Id is the  group header if id is no same, will not in one group
