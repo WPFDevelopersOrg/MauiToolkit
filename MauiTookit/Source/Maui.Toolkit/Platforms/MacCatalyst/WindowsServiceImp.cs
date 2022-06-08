@@ -1,5 +1,6 @@
 ﻿using CoreGraphics;
 using Maui.Toolkit.Options;
+using Maui.Toolkit.Platforms.MacCatalyst.Helpers;
 using Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
 using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
@@ -254,6 +255,8 @@ internal class WindowsServiceImp : IWindowsService
         var sharedApplication = nsApplication.PerformSelector(new Selector("sharedApplication"));
         if (sharedApplication is null)
             return false;
+
+        sharedApplication.SetValueForNsobject<long>("setPresentationOptions:", (1 << 10));
 
         var delegeteSelector = new Selector("delegate");
         if (!sharedApplication.RespondsToSelector(delegeteSelector))
