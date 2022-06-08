@@ -1,10 +1,25 @@
-﻿using Maui.Toolkit.Services;
+﻿using Maui.Toolkit.Options;
+using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
+using Microsoft.Maui.LifecycleEvents;
 
 namespace Maui.Toolkit.Platforms;
 
 internal class NotificationServiceImp : INotificationService
 {
+
+    public NotificationServiceImp(NotifyOptions options)
+    {
+
+    }
+
+    public bool RegisterApplicationEvent(ILifecycleBuilder lifecycleBuilder)
+    {
+
+
+        return true;
+    }
+
     bool IMessageNotifyService.AddArgument<T>(string key, T value)
     {
         return true;
