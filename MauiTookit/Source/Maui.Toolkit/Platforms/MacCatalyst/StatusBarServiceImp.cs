@@ -253,6 +253,8 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         vSharedApplication.SetValueForNsobject<IntPtr>("arrangeInFront:", _MainWindow?.Handle ?? IntPtr.Zero);
         _Application?.SetValueForNsobject<IntPtr>("arrangeInFront:", this.Handle);
         _MainWindow?.SetValueForNsobject<IntPtr>("arrangeInFront:", this.Handle);
+
+        _MainWindow?.MakeKeyAndVisible();
         StatusBarEventChanged?.Invoke(this, new EventArgs());
     }
 
