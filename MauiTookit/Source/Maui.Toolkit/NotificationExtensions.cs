@@ -1,7 +1,5 @@
 ﻿using Maui.Toolkit.Options;
 using Maui.Toolkit.Services;
-using Maui.Toolkit.Shared;
-using Microsoft.Maui.LifecycleEvents;
 
 #if WINDOWS || MACCATALYST || IOS || ANDROID
 using Maui.Toolkit.Platforms;
@@ -19,7 +17,7 @@ public static class NotificationExtensions
         var appName = PlatformShared.GetApplicationName();
         var options = new NotifyOptions()
         {
-           Title = appName,
+            Title = appName,
         };
         configureDelegate?.Invoke(options);
 

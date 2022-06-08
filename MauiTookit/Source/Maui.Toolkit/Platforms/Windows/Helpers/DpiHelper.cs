@@ -1,6 +1,6 @@
 ﻿using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Maui.Platform;
-using System.Diagnostics.CodeAnalysis;
+
 
 namespace Maui.Toolkit.Platforms.Windows.Helpers;
 

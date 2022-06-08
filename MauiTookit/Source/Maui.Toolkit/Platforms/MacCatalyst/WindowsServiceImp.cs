@@ -3,11 +3,8 @@ using Foundation;
 using Maui.Toolkit.Options;
 using Maui.Toolkit.Platforms.MacCatalyst.Extensions;
 using Maui.Toolkit.Platforms.MacCatalyst.Helpers;
-using Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
 using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
-using Microsoft.Maui.LifecycleEvents;
-using ObjCRuntime;
 using System.Diagnostics.CodeAnalysis;
 using UIKit;
 
@@ -268,7 +265,7 @@ internal class WindowsServiceImp : NSObject, IWindowsService
 
     bool IWindowsService.SwitchWindow(bool fullScreen) => ToggleFullScreen(fullScreen);
 
-    void  WindowDidBecomeVisible(object? sender, NSNotificationEventArgs args)
+    void WindowDidBecomeVisible(object? sender, NSNotificationEventArgs args)
     {
         if (_NsMainWindow is null)
             _NsMainWindow = _MainWindow?.GetHostWidnowForUiWindow();

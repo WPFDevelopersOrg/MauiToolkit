@@ -1,7 +1,6 @@
 ﻿using Maui.Toolkit.Disposables;
 using Maui.Toolkit.Options;
 using Maui.Toolkit.Services;
-using Microsoft.Maui.LifecycleEvents;
 
 namespace Maui.Toolkit.Platforms;
 

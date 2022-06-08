@@ -1,14 +1,10 @@
-﻿using CoreFoundation;
-using CoreGraphics;
+﻿using CoreGraphics;
 using Foundation;
 using Maui.Toolkit.Concurrency;
-using Maui.Toolkit.Disposables;
 using Maui.Toolkit.Options;
 using Maui.Toolkit.Platforms.MacCatalyst.Extensions;
 using Maui.Toolkit.Platforms.MacCatalyst.Helpers;
-using Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
 using Maui.Toolkit.Services;
-using Microsoft.Maui.LifecycleEvents;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 using UIKit;
@@ -135,7 +131,7 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         return true;
     }
 
-   
+
     NSObject? LoadImage(string? image)
     {
         if (string.IsNullOrEmpty(image))
@@ -148,7 +144,7 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         if (statusBarImage is null)
             return default;
 
-        var nsImageObject= statusBarImage.GetNSObjectFromWithArgument<string>("initWithContentsOfFile:", image);
+        var nsImageObject = statusBarImage.GetNSObjectFromWithArgument<string>("initWithContentsOfFile:", image);
         return nsImageObject;
     }
 

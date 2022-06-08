@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace Maui.Toolkit.Platforms.Windows.Helpers;
+﻿namespace Maui.Toolkit.Platforms.Windows.Helpers;
 
 public class Win32Helper
 {

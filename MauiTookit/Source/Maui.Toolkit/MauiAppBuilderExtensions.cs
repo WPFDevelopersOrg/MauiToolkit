@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Maui.Toolkit;
+﻿namespace Maui.Toolkit;
 public static class MauiAppBuilderExtensions
 {
     public static T? GetService<T>(this MauiAppBuilder builder) where T : class

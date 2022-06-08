@@ -1,7 +1,6 @@
 ﻿using Maui.Toolkit.Options;
 using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
-using Microsoft.Maui.LifecycleEvents;
 
 namespace Maui.Toolkit.Platforms;
 
@@ -20,7 +19,7 @@ internal class NotificationServiceImp : INotificationService
         {
             windowsLeftCycle.OnWindowCreated(window =>
             {
-                
+
 
             }).OnVisibilityChanged((window, arg) =>
             {
@@ -37,14 +36,14 @@ internal class NotificationServiceImp : INotificationService
 
             }).OnPlatformMessage((w, arg) =>
             {
-                
+
 
             }).OnResumed(window =>
             {
 
             }).OnClosed((window, arg) =>
             {
-               
+
             });
         });
         return true;

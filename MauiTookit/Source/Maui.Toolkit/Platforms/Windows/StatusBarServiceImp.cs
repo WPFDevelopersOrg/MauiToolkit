@@ -1,10 +1,8 @@
 ﻿using Maui.Toolkit.Concurrency;
-using Maui.Toolkit.Disposables;
 using Maui.Toolkit.Options;
 using Maui.Toolkit.Platforms.Windows.Runtimes;
 using Maui.Toolkit.Platforms.Windows.Runtimes.Shell32;
 using Maui.Toolkit.Services;
-using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Maui.Platform;
 using PInvoke;
 
@@ -139,7 +137,7 @@ internal class StatusBarServiceImp : IStatusBarService
         var scheduler = new TimestampedScheduler();
         _Disposable = scheduler;
 
-        scheduler.Run(period, (isFlag, canable) => 
+        scheduler.Run(period, (isFlag, canable) =>
         {
             IntPtr iconPtr = _hICon;
             if (!canable.IsDisposed)
@@ -163,7 +161,7 @@ internal class StatusBarServiceImp : IStatusBarService
             _NOTIFYICONDATA.hIcon = iconPtr;
             RuntimeInterop.Shell_NotifyIcon(NotifyCommand.NIM_Modify, ref _NOTIFYICONDATA);
         });
-        
+
         return scheduler;
     }
 }

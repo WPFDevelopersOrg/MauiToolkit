@@ -62,7 +62,7 @@ public static class RuntimeHelper
             return Runtime.GetNSObject(RuntimeInterop.IntPtr_objc_msgSend_bool(nsObject.Handle, propertySelector.Handle, boolValue));
         else if (argument is CGSize vcgSizeValue)
             return Runtime.GetNSObject(RuntimeInterop.IntPtr_objc_msgSend_CGSize(nsObject.Handle, propertySelector.Handle, vcgSizeValue));
-        else if(argument is string stringValue)
+        else if (argument is string stringValue)
             return Runtime.GetNSObject(RuntimeInterop.IntPtr_objc_msgSend_string(nsObject.Handle, propertySelector.Handle, stringValue));
         else
             return default;

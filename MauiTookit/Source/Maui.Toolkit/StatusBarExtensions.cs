@@ -1,7 +1,5 @@
 ﻿using Maui.Toolkit.Options;
 using Maui.Toolkit.Services;
-using Microsoft.Maui.LifecycleEvents;
-using System.Diagnostics;
 
 #if WINDOWS || MACCATALYST || IOS || ANDROID
 using Maui.Toolkit.Platforms;

@@ -1,5 +1,4 @@
 ﻿using Maui.Toolkit.Builders;
-using System.Reflection;
 
 namespace Maui.Toolkit;
 public class PlatformShared

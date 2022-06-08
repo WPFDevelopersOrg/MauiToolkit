@@ -1,4 +1,5 @@
 ﻿namespace Maui.Toolkit.Helpers;
+
 public static class ServiceProviderHelper
 {
     public static TService? GetService<TService>()

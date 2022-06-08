@@ -1,8 +1,4 @@
-﻿using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-
-namespace Maui.Toolkit.Utilities;
+﻿namespace Maui.Toolkit.Utilities;
 
 public static class Utility
 {

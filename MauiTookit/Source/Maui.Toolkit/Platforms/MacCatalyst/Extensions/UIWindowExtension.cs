@@ -44,7 +44,7 @@ public static class UIWindowExtension
 
         if (nsArray.Count <= 0)
             return default;
-        
+
         var nsArrays = NSArray.FromArray<NSObject>(nsArray);
         if (nsArrays is null)
             return default;
