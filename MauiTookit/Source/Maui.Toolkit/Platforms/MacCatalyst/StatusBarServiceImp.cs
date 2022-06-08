@@ -242,6 +242,7 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
             return;
 
         vSharedApplication.SetValueForNsobject<bool>("activateIgnoringOtherApps:", true);
+        vSharedApplication.SetValueForNsobject<IntPtr>("arrangeInFront:", this.Handle);
         StatusBarEventChanged?.Invoke(this, new EventArgs());
     }
 
