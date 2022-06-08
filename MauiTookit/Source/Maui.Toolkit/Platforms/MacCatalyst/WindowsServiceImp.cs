@@ -43,7 +43,6 @@ internal class WindowsServiceImp : NSObject, IWindowsService
                 _IsRegisetr = true;
 
                 _MainWindow = _Application?.Delegate.GetWindow();
-
                 RemoveTitltBar(_StartupOptions.TitleBarKind);
                 //MoveWindow(_StartupOptions.PresenterKind);
 
@@ -238,7 +237,14 @@ internal class WindowsServiceImp : NSObject, IWindowsService
 
     bool MoveWindowRestore()
     {
- 
+        var sharedApplication = UIWindowExtension.GetSharedNsApplication();
+        if (sharedApplication is null)
+            return false;
+
+        sharedApplication.SetValueForNsobject<bool>("activateIgnoringOtherApps:", true);
+
+        var uiNsWindow = _MainWindow?.GetHostWidnowForUiWindow();
+        uiNsWindow?.SetValueForNsobject<IntPtr>("makeKeyAndOrderFront:", this.Handle);
         return true;
     }
 

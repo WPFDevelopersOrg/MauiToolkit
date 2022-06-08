@@ -126,6 +126,9 @@ internal class StatusBarServiceImp : IStatusBarService
 
     IDisposable IStatusBarService.SchedulePeriodic(TimeSpan period, Func<bool, string>? action)
     {
+        if (_Disposable is not null)
+            return _Disposable;
+
         var rate = period.TotalMilliseconds;
         if (rate <= 0)
             rate = 500;

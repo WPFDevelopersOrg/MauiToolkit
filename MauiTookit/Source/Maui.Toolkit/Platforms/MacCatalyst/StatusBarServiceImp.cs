@@ -203,6 +203,9 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
 
     IDisposable IStatusBarService.SchedulePeriodic(TimeSpan period, Func<bool, string>? action)
     {
+        if (_Disposable is not null)
+            return _Disposable;
+
         var rate = period.TotalMilliseconds;
         if (rate <= 0)
             rate = 500;
@@ -228,6 +231,8 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
                         nsImage = loadNsImage;
                 }
             }
+            else
+                _Disposable = null;
 
             SetImage(nsImage);
         });
@@ -242,11 +247,7 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
     [Export("handleButtonClick:")]
     protected void HandleButtonClick(NSObject senderStatusBarButton)
     {
-        var nsApplication = Runtime.GetNSObject(Class.GetHandle("NSApplication"));
-        if (nsApplication is null)
-            return;
-
-        var sharedApplication = nsApplication.PerformSelector(new Selector("sharedApplication"));
+        var sharedApplication = UIWindowExtension.GetSharedNsApplication();
         if (sharedApplication is null)
             return;
 
