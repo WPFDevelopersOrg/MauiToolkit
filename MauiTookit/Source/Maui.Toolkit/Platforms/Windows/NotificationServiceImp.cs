@@ -44,7 +44,7 @@ internal class NotificationServiceImp : INotificationService
 
             }).OnClosed((window, arg) =>
             {
-                ((IStatusBarService)this).Hide();
+               
             });
         });
         return true;
