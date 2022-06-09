@@ -40,8 +40,6 @@ internal class WindowsServiceImp : NSObject, IWindowsService
                 _IsRegisetr = true;
 
                 _MainWindow = _Application?.Delegate.GetWindow();
-                RemoveTitltBar(_StartupOptions.TitleBarKind);
-                //MoveWindow(_StartupOptions.PresenterKind);
 
             }).OnResignActivation(app =>
             {
@@ -89,31 +87,48 @@ internal class WindowsServiceImp : NSObject, IWindowsService
         return true;
     }
 
-    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-    bool RemoveTitltBar(WindowTitleBarKind titleBar)
+    //[SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+    //bool RemoveTitleBar(WindowTitleBarKind titleBar)
+    //{
+    //    if (_MainWindow is null)
+    //        return false;
+
+    //    switch (titleBar)
+    //    {
+    //        case WindowTitleBarKind.Default:
+    //            break;
+    //        case WindowTitleBarKind.PlatformDefault:
+    //            break;
+    //        case WindowTitleBarKind.ExtendsContentIntoTitleBar:
+    //            var vTitleBar = _MainWindow.WindowScene?.Titlebar;
+    //            if (vTitleBar is null)
+    //                return false;
+
+    //            //vTitleBar.ToolbarStyle = UITitlebarToolbarStyle.Automatic;
+    //            vTitleBar.TitleVisibility = UITitlebarTitleVisibility.Hidden;
+    //            vTitleBar.Toolbar = null;
+    //            break;
+    //        default:
+    //            break;
+    //    }
+
+    //    return true;
+    //}
+
+    bool RemoveTitleBar(WindowTitleBarKind titleBar)
     {
-        if (_MainWindow is null)
+        if (_NsMainWindow is null)
             return false;
 
-        switch (titleBar)
-        {
-            case WindowTitleBarKind.Default:
-                break;
-            case WindowTitleBarKind.PlatformDefault:
-                break;
-            case WindowTitleBarKind.ExtendsContentIntoTitleBar:
-                var vTitleBar = _MainWindow.WindowScene?.Titlebar;
-                if (vTitleBar is null)
-                    return false;
+        //_NsMainWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", true);
 
-                //vTitleBar.ToolbarStyle = UITitlebarToolbarStyle.Automatic;
-                vTitleBar.TitleVisibility = UITitlebarTitleVisibility.Hidden;
-                vTitleBar.Toolbar = null;
-                break;
-            default:
-                break;
-        }
+        _NsMainWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", true);
+        _NsMainWindow.SetValueForNsobject<int>("setTitleVisibility:",1);
+        var value = _NsMainWindow.GetValueFromNsobject<int>("styleMask");
+        var newValue = value | 32768;
+        _NsMainWindow.SetValueForNsobject<int>("setStyleMask:", newValue);
 
+        //_NsMainWindow.SetValueForNsobject<bool>("setMovableByWindowBackground:", true);
         return true;
     }
 
@@ -128,9 +143,6 @@ internal class WindowsServiceImp : NSObject, IWindowsService
 
     bool MoveWindow(WidnowAlignment location, Size size)
     {
-        if (_NsMainWindow is null)
-            _NsMainWindow = _MainWindow?.GetHostWidnowForUiWindow();
-
         if (_NsMainWindow is null)
             return false;
 
@@ -227,18 +239,20 @@ internal class WindowsServiceImp : NSObject, IWindowsService
             return false;
 
         _NsMainWindow.SetValueForNsobject<CGRect, bool>("setFrame:display:", new CGRect(0, 0, _StartupOptions.Size.Width, _StartupOptions.Size.Height), true);
-        _NsApplication.SetValueForNsobject<IntPtr>("hide:", _NsMainWindow.Handle);
+        _NsMainWindow.ExecuteMethod("center");
+        _NsMainWindow.SetValueForNsobject<IntPtr>("miniaturize:", this.Handle);
+
+        //_NsApplication.SetValueForNsobject<IntPtr>("hide:", _NsMainWindow.Handle);
 
         return true;
     }
 
     bool MoveWindowRestore()
     {
-        var sharedApplication = UIWindowExtension.GetSharedNsApplication();
-        if (sharedApplication is null)
+        if (_NsApplication is null)
             return false;
 
-        sharedApplication.SetValueForNsobject<bool>("activateIgnoringOtherApps:", true);
+        _NsApplication.SetValueForNsobject<bool>("activateIgnoringOtherApps:", true);
 
         var uiNsWindow = _MainWindow?.GetHostWidnowForUiWindow();
         uiNsWindow?.SetValueForNsobject<IntPtr>("makeKeyAndOrderFront:", this.Handle);
@@ -277,7 +291,9 @@ internal class WindowsServiceImp : NSObject, IWindowsService
             return;
 
         _IsTrigger = true;
+
         MoveWindow(_StartupOptions.PresenterKind);
+        RemoveTitleBar(_StartupOptions.TitleBarKind);
     }
 
 

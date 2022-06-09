@@ -68,6 +68,55 @@ public static class RuntimeHelper
             return default;
     }
 
+    public static TValue? GetValueFromNsobject<TValue>(this NSObject nsObject, string name)
+    {
+        if (nsObject is null)
+            return default;
+
+        var propertySelector = new Selector(name);
+        if (!nsObject.RespondsToSelector(propertySelector))
+            return default;
+
+        if (typeof(TValue) == typeof(int))
+        {
+            int value = RuntimeInterop.int_objc_msgSend(nsObject.Handle, propertySelector.Handle);
+            if (value is TValue intValue)
+                return intValue;
+        }
+        else if (typeof(TValue) == typeof(bool))
+        {
+            bool value = RuntimeInterop.bool_objc_msgSend(nsObject.Handle, propertySelector.Handle);
+            if (value is TValue boolValue)
+                return boolValue;
+        }
+        else if (typeof(TValue) == typeof(float))
+        {
+            float value = RuntimeInterop.float_objc_msgSend(nsObject.Handle, propertySelector.Handle);
+            if (value is TValue floatValue)
+                return floatValue;
+        }
+        else if (typeof(TValue) == typeof(double))
+        {
+            double value = RuntimeInterop.double_objc_msgSend(nsObject.Handle, propertySelector.Handle);
+            if (value is TValue doubleValue)
+                return doubleValue;
+        }
+        else if (typeof(TValue) == typeof(long))
+        {
+            long value = RuntimeInterop.long_objc_msgSend(nsObject.Handle, propertySelector.Handle);
+            if (value is TValue longValue)
+                return longValue;
+        }
+        else if(typeof(TValue) == typeof(IntPtr))
+        {
+            IntPtr value = RuntimeInterop.IntPtr_objc_msgSend(nsObject.Handle, propertySelector.Handle);
+            if (value is TValue intPtrValue)
+                return intPtrValue;
+        }
+        
+        return default;
+    }
+
     public static bool SetValueForNsobject<T>(this NSObject nsObject, string name, T value)
     {
         if (nsObject is null)
@@ -114,4 +163,16 @@ public static class RuntimeHelper
         return true;
     }
 
+    public static bool ExecuteMethod(this NSObject nsObject, string name)
+    {
+        if (nsObject is null)
+            return default;
+
+        var propertySelector = new Selector(name);
+        if (!nsObject.RespondsToSelector(propertySelector))
+            return default;
+
+        RuntimeInterop.void_objc_msgSend(nsObject.Handle, propertySelector.Handle);
+        return true;
+    }
 }

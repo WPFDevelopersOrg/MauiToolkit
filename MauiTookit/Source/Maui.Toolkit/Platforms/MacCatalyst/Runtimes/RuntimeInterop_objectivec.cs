@@ -390,7 +390,7 @@ public static partial class RuntimeInterop
     /// <param name="selector"></param>
     /// <returns></returns>
 	[DllImport(_ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
-    public extern static double Double_objc_msgSend(IntPtr receiver, IntPtr selector);
+    public extern static double double_objc_msgSend(IntPtr receiver, IntPtr selector);
 
     /// <summary>
     /// 
