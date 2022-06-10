@@ -27,7 +27,8 @@ public partial class App : MauiWinUIApplication
     {
         if (!IsSingleInstance())
         {
-            Process.GetCurrentProcess().Kill();
+            //Process.GetCurrentProcess().Kill();
+            Environment.Exit(0);
             return;
         }
 

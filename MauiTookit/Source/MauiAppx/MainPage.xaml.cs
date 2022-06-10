@@ -27,5 +27,10 @@ public partial class MainPage : ContentPage
         vService?.SetDescription("100");
         var vDisposable = vService?.SchedulePeriodic(TimeSpan.FromMilliseconds(200), default);
     }
+
+    private void Close_Clicked(object sender, EventArgs e)
+    {
+        //Environment.Exit(0);
+    }
 }
 

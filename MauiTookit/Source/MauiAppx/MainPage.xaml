@@ -36,6 +36,13 @@
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Center" />
 
+            <Button  
+                x:Name="Close"
+                Text="Click me"
+                SemanticProperties.Hint="Counts the number of times you click"
+                Clicked="Close_Clicked"
+                HorizontalOptions="Center" />
+
         </VerticalStackLayout>
     </ScrollView>
  

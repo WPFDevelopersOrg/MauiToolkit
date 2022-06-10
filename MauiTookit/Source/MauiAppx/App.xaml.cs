@@ -6,7 +6,14 @@ public partial class App : Application
     {
         InitializeComponent();
 
+#if ANDROID || IOS
         MainPage = new AppShell();
+#else
+        //MainPage = new AppShellx();
+        //MainPage = new AppShell();
+        MainPage = new MainPage();
+#endif
+
     }
 
     protected override Window CreateWindow(IActivationState? activationState)

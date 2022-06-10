@@ -13,7 +13,8 @@ public static class MauiProgram
             .UseWindowStartup(options => 
             {
                 options.TitleBarKind = WindowTitleBarKind.ExtendsContentIntoTitleBar;
-                options.PresenterKind = WindowPresenterKind.Maximize;
+                options.PresenterKind = WindowPresenterKind.Default;
+                options.Size = new Size(1920, 1080);
             })
             .UseStatusBar(options => 
             {
