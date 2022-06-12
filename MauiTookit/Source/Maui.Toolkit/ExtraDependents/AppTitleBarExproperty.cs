@@ -3,6 +3,7 @@
 internal enum BindableActions
 {
     Add,
+    Update,
     Remove,
 }
 
