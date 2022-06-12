@@ -131,7 +131,6 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         return true;
     }
 
-
     NSObject? LoadImage(string? image)
     {
         if (string.IsNullOrEmpty(image))

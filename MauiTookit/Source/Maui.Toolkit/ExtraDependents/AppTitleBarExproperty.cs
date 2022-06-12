@@ -34,35 +34,31 @@ public class AppTitleBarExproperty
         if (bindable is not VisualElement visualElement)
             return;
 
-        visualElement.Loaded += VisualElement_Loaded;
-        visualElement.SizeChanged += VisualElement_SizeChanged;
-
         if (!bool.TryParse(newValue?.ToString(), out var bResult))
             return;
 
-
-
-        BindableObjectEvenArgs? args = default;
+        BindableObjectEvenArgs args = new();
         if (!bResult)
         {
+            visualElement.Loaded -= VisualElement_Loaded;
+            visualElement.SizeChanged -= VisualElement_SizeChanged;
+
             if (!__mapRects.Remove(bindable, out var valueRect))
                 return;
 
-            args = new()
-            {
-                Actions = BindableActions.Remove,
-                RectValue = valueRect
-            };
+            args.Actions = BindableActions.Remove;
+            args.RectValue = valueRect;
         }
         else
         {
+            visualElement.Loaded += VisualElement_Loaded;
+            visualElement.SizeChanged += VisualElement_SizeChanged;
 
-
-
+            args.Actions = BindableActions.Add;
+            //args.RectValue = valueRect;
         }
 
         BindiableObjectChangedEvent?.Invoke(bindable, args);
-
     }
 
     private static void VisualElement_SizeChanged(object? sender, EventArgs e)
