@@ -24,7 +24,7 @@
                 </Grid.ColumnDefinitions>
 
 
-                <SearchBar Grid.Column="3" toolkits:AppTitleBarExproperty.IsCanHitVisibleInTitleBar="True" Placeholder="我试试，看看行不行" WidthRequest="200" Loaded="SearchBar_Loaded"/>
+                <SearchBar Grid.Column="3" toolkits:AppTitleBarExproperty.IsCanHitVisibleInTitleBar="True" Placeholder="我试试，看看行不行" WidthRequest="300" Loaded="SearchBar_Loaded"/>
             </Grid>
 
         </Grid>
