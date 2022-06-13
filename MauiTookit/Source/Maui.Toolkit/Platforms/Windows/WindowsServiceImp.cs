@@ -2,10 +2,13 @@
 using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
 using Microsoft.Maui.Platform;
+using WinuiControls = Microsoft.UI.Xaml.Controls;
 using PInvoke;
+using Windows.Graphics;
 using static PInvoke.User32;
 using Windows_Graphics = Windows.Graphics;
-using Windows_UI = Windows.UI;
+using Winui = Windows.UI;
+using WinuiMedia = Microsoft.UI.Xaml.Media;
 
 namespace Maui.Toolkit.Platforms;
 
@@ -41,6 +44,8 @@ internal class WindowsServiceImp : IWindowsService
 
                 RemoveTitleBar(_StartupOptions.TitleBarKind);
                 MoveWindow(_StartupOptions.PresenterKind);
+
+                SetDragRectangles(_AppWindow.TitleBar);
                 RegisterApplicationThemeChangedEvent();
 
             }).OnVisibilityChanged((window, arg) =>
@@ -102,7 +107,7 @@ internal class WindowsServiceImp : IWindowsService
 
                 _MainWindow.ExtendsContentIntoTitleBar = false;
                 _AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-
+                _AppWindow.TitleBar.IconShowOptions = Microsoft.UI.Windowing.IconShowOptions.HideIconAndSystemMenu;
                 LoadTitleBarCorlor(_AppWindow.TitleBar);
                 break;
             default:
@@ -150,7 +155,7 @@ internal class WindowsServiceImp : IWindowsService
                 titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
                 titleBar.ButtonHoverBackgroundColor = Microsoft.UI.Colors.BlueViolet;
 
-                titleBar.ButtonPressedForegroundColor = Windows_UI.Color.FromArgb(80, 255, 255, 255);
+                titleBar.ButtonPressedForegroundColor = Winui.Color.FromArgb(80, 255, 255, 255);
                 titleBar.ButtonPressedBackgroundColor = Microsoft.UI.Colors.DarkSeaGreen;
 
                 // Set inactive window colors
@@ -170,7 +175,7 @@ internal class WindowsServiceImp : IWindowsService
                 titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
                 titleBar.ButtonHoverBackgroundColor = Microsoft.UI.Colors.BlueViolet;
 
-                titleBar.ButtonPressedForegroundColor = Windows_UI.Color.FromArgb(80, 255, 255, 255);
+                titleBar.ButtonPressedForegroundColor = Winui.Color.FromArgb(80, 255, 255, 255);
                 titleBar.ButtonPressedBackgroundColor = Microsoft.UI.Colors.BlueViolet;
 
                 // Set inactive window colors
@@ -181,7 +186,96 @@ internal class WindowsServiceImp : IWindowsService
                 break;
         }
 
+        //titleBar.SetDragRectangles
+
         return true;
+    }
+
+    bool SetDragRectangles(Microsoft.UI.Windowing.AppWindowTitleBar? titleBar)
+    {
+        if (_MainWindow is null)
+            return false;
+
+        if (titleBar is null)
+            return false;
+
+        if (_StartupOptions.TitleBarKind is not WindowTitleBarKind.ExtendsContentIntoTitleBar)
+            return false;
+
+        List<RectInt32> rectInt32s = new();
+
+#if DEBUG
+        int debugWidth = 250;
+        var bounds = _MainWindow.Bounds;
+        int startX = (int)((bounds.Width - debugWidth) / 2d);
+        //RectInt32 debugRect = new RectInt32(startX, 0, 150, 48);
+        //rectInt32s.Add(debugRect);
+        RectInt32 leftRect = new RectInt32(0, 0, startX, 48);
+        rectInt32s.Add(leftRect);
+        RectInt32 rightRect = new RectInt32(startX + debugWidth, 0, (int)bounds.Width - startX + debugWidth, 48);
+        rectInt32s.Add(rightRect);
+
+        //titleBar.SetDragRectangles(rectInt32s.ToArray());
+#endif
+
+        _MainWindow.SizeChanged += MainWindow_SizeChanged;
+        _MainWindow.Activated += MainWindow_Activated;
+        return true;
+    }
+
+    private void MainWindow_Activated(object sender, Microsoft.UI.Xaml.WindowActivatedEventArgs args)
+    {
+        if (_MainWindow is null)
+            return;
+
+
+        //_MainWindow.ExtendsContentIntoTitleBar = true;
+
+        //////_MainWindow.ExtendsContentIntoTitleBar = true;
+
+        //var grid = new WinuiControls.Grid
+        //{
+        //    Background = new WinuiMedia.SolidColorBrush(Microsoft.UI.Colors.Red),
+        //};
+
+        //var textblock = new WinuiControls.TextBlock();
+        //var searchBar = new WinuiControls.AutoSuggestBox
+        //{
+        //    PlaceholderText = "Test123",
+        //    Width = 120,
+        //    Height = 40
+        //};
+        //grid.Children.Add(searchBar);
+
+
+
+        //_MainWindow.SetTitleBar(grid);
+    }
+
+    private void MainWindow_SizeChanged(object sender, Microsoft.UI.Xaml.WindowSizeChangedEventArgs args)
+    {
+        if (_MainWindow is null)
+            return;
+
+        var titleBar = _AppWindow?.TitleBar;
+        if (titleBar is null)
+            return;
+
+        List<RectInt32> rectInt32s = new();
+
+#if DEBUG
+        int debugWidth = 250;
+        var bounds = _MainWindow.Bounds;
+        int startX = (int)((bounds.Width - debugWidth) / 2d);
+        //RectInt32 debugRect = new RectInt32(startX, 0, 150, 48);
+        //rectInt32s.Add(debugRect);
+        RectInt32 leftRect = new RectInt32(0, 0, startX, 48);
+        rectInt32s.Add(leftRect);
+        RectInt32 rightRect = new RectInt32(startX + debugWidth, 0, (int)bounds.Width - startX + debugWidth, 48);
+        rectInt32s.Add(rightRect);
+
+        //titleBar.SetDragRectangles(rectInt32s.ToArray());
+#endif
     }
 
     bool MoveWindow(WindowPresenterKind presenter) => presenter switch

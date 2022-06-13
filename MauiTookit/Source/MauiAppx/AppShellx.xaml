@@ -6,8 +6,8 @@
 
 
     <ContentPage.Content>
-        <Grid>
-            
+        <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="StartAndExpand">
+            <Entry Placeholder="我试试，看看行不行" HeightRequest="50"/>
         </Grid>
     </ContentPage.Content>
 

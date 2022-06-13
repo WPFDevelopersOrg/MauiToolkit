@@ -3,7 +3,6 @@
 namespace Maui.Toolkit.Platforms.Windows.Extensions;
 
 
-
 public static class MauixContextExtensions
 {
     public static NavigationRootManager GetNavigationRootManager(this IMauiContext mauiContext) =>

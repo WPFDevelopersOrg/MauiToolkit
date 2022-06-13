@@ -2,10 +2,10 @@
 using Microsoft.Maui.Platform;
 
 
-namespace Maui.Toolkit.Platforms.Windows.Helpers;
+namespace Maui.Toolkit.Platforms.Windows.Extensions;
 
 
-public static class DpiHelper
+public static class DpiHelperExtensions
 {
     public static Point LogicalPixelsToDevice(this MauiWinUIWindow window, Point logicalPoint)
     {
