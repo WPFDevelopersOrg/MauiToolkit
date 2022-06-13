@@ -9,9 +9,7 @@ public partial class App : Application
 #if ANDROID || IOS
         MainPage = new AppShell();
 #else
-        //MainPage = new AppShellx();
-        //MainPage = new AppShell();
-        MainPage = new MainPage();
+        MainPage = new AppShellx();
 #endif
 
     }

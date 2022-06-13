@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<FlyoutPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:MauiAppx"
-             x:Class="MauiAppx.AppShellx" >
+             xmlns:views="clr-namespace:MauiAppx.Views"
+             x:Class="MauiAppx.AppShellx">
 
-    <FlyoutPage.Flyout>
-        <local:MainPage Title="123" BackgroundColor="Red"/>
-    </FlyoutPage.Flyout>
 
-    <FlyoutPage.Detail>
-        <NavigationPage>
-            <x:Arguments>
-                <local:MainPage />
-            </x:Arguments>
-        </NavigationPage>
-    </FlyoutPage.Detail>
+    <ContentPage.Content>
+        <Grid>
+            
+        </Grid>
+    </ContentPage.Content>
+
     
-</FlyoutPage>
+</ContentPage>

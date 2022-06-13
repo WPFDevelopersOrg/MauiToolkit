@@ -39,4 +39,7 @@ public static partial class RuntimeInterop
     //        return Shell_NotifyIcon(dwMessage, lpData2);
     //    }
     //}
+
+    [DllImport(_Shell32, CharSet = CharSet.Auto)]
+    public static extern IntPtr ExtractAssociatedIcon(IntPtr hInst, string iconPath, ref IntPtr index);
 }

@@ -1,6 +1,6 @@
 namespace MauiAppx;
 
-public partial class AppShellx : FlyoutPage
+public partial class AppShellx : ContentPage
 {
 	public AppShellx()
 	{
