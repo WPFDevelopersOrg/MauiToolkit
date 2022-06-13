@@ -12,4 +12,9 @@ public partial class AppShellx : ContentPage
 
         
     }
+
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+
+    }
 }

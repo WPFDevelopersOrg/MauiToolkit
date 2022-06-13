@@ -319,33 +319,148 @@ internal class WindowsServiceImp : IWindowsService
         Rect leftRect = new(debugX, 0, debugWidth, titleHeight);
         rects.Add((leftRect));
 #endif
-        double minX = rects[0].X;
-        double maxX = rects[0].X;
-        foreach (var rectItem in rects)
-        {
-            var x = rectItem.X;
-            if (x < minX)
-                minX = x;
 
-            x = x + rectItem.Width;
-            if (x > maxX)
-                maxX = x;
+        //sort
+        rects.Sort((rc1, rc2) =>
+        {
+            if (rc2.X >= rc1.X)
+                return 0;
+            else
+                return 1;
+        });
+
+        //combine
+        List<Rect> newRects = new();
+        var tempRects = rects.ToList();
+        for (; ; )
+        {
+            if (tempRects.Count <= 0)
+                break;
+
+            foreach (var tempItem in tempRects)
+            {
+                Rect newRect = Rect.Zero;
+                bool bFlag = true;
+                foreach (var rectItem in rects)
+                {
+                    if (tempItem == rectItem)
+                        continue;
+
+                    //isInclude;
+                    if (rectItem.Contains(tempItem))
+                    {
+                        double x = Math.Min(rectItem.Left, tempItem.Left);
+                        double x2 = Math.Max(rectItem.Right, tempItem.Right);
+
+                        newRect = new Rect(x, 0, x2 - x, titleHeight);
+                        tempRects.Remove(tempItem);
+                        tempRects.Remove(rectItem);
+                        bFlag = false;
+                        break;
+                    }
+
+                    if (tempItem.Contains(rectItem))
+                    {
+                        double x = Math.Min(rectItem.Left, tempItem.Left);
+                        double x2 = Math.Max(rectItem.Right, tempItem.Right);
+
+                        newRect = new Rect(x, 0, x2 - x, titleHeight);
+                        tempRects.Remove(tempItem);
+                        tempRects.Remove(rectItem);
+                        bFlag = false;
+                        break;
+                    }
+
+                    //isIntersect;
+                    if (rectItem.IntersectsWith(tempItem))
+                    {
+                        double x = Math.Min(rectItem.Left, tempItem.Left);
+                        double x2 = Math.Max(rectItem.Right, tempItem.Right);
+
+                        newRect = new Rect(x, 0, x2 - x, titleHeight);
+                        tempRects.Remove(tempItem);
+                        tempRects.Remove(rectItem);
+                        bFlag = false;
+                        break;
+                    }
+
+                    if (tempItem.IntersectsWith(rectItem))
+                    {
+                        double x = Math.Min(rectItem.Left, tempItem.Left);
+                        double x2 = Math.Max(rectItem.Right, tempItem.Right);
+
+                        newRect = new Rect(x, 0, x2 - x, titleHeight);
+                        tempRects.Remove(tempItem);
+                        tempRects.Remove(rectItem);
+                        bFlag = false;
+                        break;
+                    }
+                }
+
+                if (bFlag)
+                {
+                    tempRects.Remove(tempItem);
+                    newRects.Add(tempItem);
+                }
+                else
+                    newRects.Add(newRect);
+
+                break;
+            }
+
         }
+       
 
         List<RectInt32> rectInt32s = new();
         var scaleFactorPercent = _MainWindow.GetScaleAdjustment();
 
-        int startX = 0;
-        int startY = 0;
-        int endX = (int)(minX * scaleFactorPercent);
-        int endY = (int)(titleHeight * scaleFactorPercent);
-        RectInt32 rectInt32 = new RectInt32(startX, startY, endX - startX, endY - startY);
-        rectInt32s.Add(rectInt32);
+        for (int i = 0; i < newRects.Count; i++)
+        {
+            var rectBefore = newRects[i];
+            if (i - 1 >= 0)
+                rectBefore = newRects[i - 1];
+            else
+                rectBefore = new Rect(0, 0, 0, titleHeight);
 
-        startX = (int)(maxX * scaleFactorPercent);
-        endX = (int)(bounds.X + bounds.Width);
-        rectInt32 = new RectInt32(startX, startY, endX - startX, endY - startY);
-        rectInt32s.Add(rectInt32);
+            var rect = newRects[i];
+            //var rectAfter = rects[i];
+            //if (i + 1 < rects.Count)
+            //    rectAfter = rects[i + 1];
+            //else
+            //    rectAfter = new Rect(rect.Right, 0, bounds.Right, titleHeight);
+
+            int startX = 0;
+            int endX = 0;
+
+            startX = (int)rectBefore.Right;
+            endX = (int)rect.Left;
+
+            if (endX - startX <= 0)
+                continue;
+
+            var rectInt32 = new RectInt32(startX, 0, endX - startX, (int)titleHeight);
+            rectInt32s.Add(rectInt32);
+        }
+
+        if (newRects.Count > 0)
+        {
+            var rectBefore = newRects[newRects.Count - 1];
+            var rect = new Rect(bounds.Right, 0, bounds.Right, titleHeight);
+
+            int startX = 0;
+            int endX = 0;
+
+            startX = (int)rectBefore.Right;
+            endX = (int)rect.Left;
+
+            if (endX - startX > 0)
+            {
+                var rectInt32 = new RectInt32(startX, 0, endX - startX, (int)titleHeight);
+                rectInt32s.Add(rectInt32);
+
+            }
+        }
+
 
         if (_IsLoaded)
         {
