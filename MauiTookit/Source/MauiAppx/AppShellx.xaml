@@ -2,13 +2,34 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:MauiAppx.Views"
+             xmlns:toolkits="http://www.mauitoolkit.com"
              x:Class="MauiAppx.AppShellx">
 
 
     <ContentPage.Content>
-        <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="StartAndExpand">
-            <Entry Placeholder="我试试，看看行不行" HeightRequest="50"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" HeightRequest="48">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
+                    <ColumnDefinition x:Name="IconColumn" Width="Auto"/>
+                    <ColumnDefinition x:Name="LeftDragColumn" Width="*"/>
+                    <ColumnDefinition x:Name="SearchBarColumn" Width="Auto"/>
+                    <ColumnDefinition x:Name="RightDragColumn" Width="*"/>
+                    <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
+                </Grid.ColumnDefinitions>
+
+
+                <SearchBar Grid.Column="3" toolkits:AppTitleBarExproperty.IsCanHitVisibleInTitleBar="True" Placeholder="我试试，看看行不行" WidthRequest="200" Loaded="SearchBar_Loaded"/>
+            </Grid>
+
         </Grid>
+        
+      
     </ContentPage.Content>
 
     

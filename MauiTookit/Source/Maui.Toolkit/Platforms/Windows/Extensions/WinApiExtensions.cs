@@ -8,7 +8,7 @@ namespace Maui.Toolkit.Platforms.Windows.Extensions;
 
 public static class WinApiExtensions
 {
-    public static double GetScaleAdjustment(this MauiWinUIWindow window)
+    public static double GetScaleAdjustment(this Microsoft.UI.Xaml.Window window)
     {
         var hWnd = window?.GetWindowHandle();
         if (hWnd is null || hWnd == IntPtr.Zero)

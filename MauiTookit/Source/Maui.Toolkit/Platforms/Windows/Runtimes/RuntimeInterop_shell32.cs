@@ -42,4 +42,7 @@ public static partial class RuntimeInterop
 
     [DllImport(_Shell32, CharSet = CharSet.Auto)]
     public static extern IntPtr ExtractAssociatedIcon(IntPtr hInst, string iconPath, ref IntPtr index);
+
+    //[DllImport(_Shell32, CharSet = CharSet.Auto)]
+    //public static extern CopyMe
 }

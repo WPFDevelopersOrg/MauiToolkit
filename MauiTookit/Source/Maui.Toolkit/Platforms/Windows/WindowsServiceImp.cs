@@ -9,6 +9,9 @@ using static PInvoke.User32;
 using Windows_Graphics = Windows.Graphics;
 using Winui = Windows.UI;
 using WinuiMedia = Microsoft.UI.Xaml.Media;
+using Maui.Toolkit.ExtraDependents;
+using Maui.Toolkit.Extensions;
+using Maui.Toolkit.Platforms.Windows.Extensions;
 
 namespace Maui.Toolkit.Platforms;
 
@@ -26,6 +29,8 @@ internal class WindowsServiceImp : IWindowsService
     Microsoft.UI.Xaml.Window? _MainWindow;
     Microsoft.UI.Windowing.AppWindow? _AppWindow;
 
+    bool _IsLoaded = false;
+
     public bool RegisterApplicationEvent(ILifecycleBuilder lifecycleBuilder)
     {
         ArgumentNullException.ThrowIfNull(lifecycleBuilder, nameof(lifecycleBuilder));
@@ -35,30 +40,31 @@ internal class WindowsServiceImp : IWindowsService
             windowsLeftCycle.OnWindowCreated(window =>
             {
                 _MainWindow = window;
-
                 var appWindow = _MainWindow.GetAppWindow();
                 if (appWindow is null)
                     return;
-
                 _AppWindow = appWindow;
 
                 RemoveTitleBar(_StartupOptions.TitleBarKind);
                 MoveWindow(_StartupOptions.PresenterKind);
-
-                SetDragRectangles(_AppWindow.TitleBar);
                 RegisterApplicationThemeChangedEvent();
+
+                var mainPage = Application.Current?.MainPage;
+                if (mainPage is not null)
+                {
+                    mainPage.Loaded += MainPage_Loaded;
+                    mainPage.SizeChanged += MainPage_SizeChanged;
+                }
 
             }).OnVisibilityChanged((window, arg) =>
             {
 
             }).OnActivated((window, arg) =>
             {
-
+                //
             }).OnLaunching((application, arg) =>
             {
                 _Application = application;
-
-
             }).OnLaunched((application, arg) =>
             {
 
@@ -75,6 +81,37 @@ internal class WindowsServiceImp : IWindowsService
         });
 
         return true;
+    }
+
+    private void MainPage_SizeChanged(object? sender, EventArgs e)
+    {
+        if (!_IsLoaded)
+            return;
+
+        var rects = LoadRects();
+        if (rects == null)
+            return;
+
+        SetDragRectangles(rects);
+    }
+
+    private void MainPage_Loaded(object? sender, EventArgs e)
+    {
+        TrySetDragRectangles();
+
+        //if (_MainWindow is null)
+        //    return;
+
+        //_MainWindow.ExtendsContentIntoTitleBar = true;
+        //WinuiControls.Grid grid = new WinuiControls.Grid()
+        //{
+        //    Background = new WinuiMedia.SolidColorBrush(Winui.Color.FromArgb(255, 255, 0, 0)),
+
+        //    Height = 100,
+
+        //};
+
+        //_MainWindow.SetTitleBar(default);
     }
 
     bool RegisterApplicationThemeChangedEvent()
@@ -191,91 +228,143 @@ internal class WindowsServiceImp : IWindowsService
         return true;
     }
 
-    bool SetDragRectangles(Microsoft.UI.Windowing.AppWindowTitleBar? titleBar)
+    bool TrySetDragRectangles()
     {
+        var rects = LoadRects();
+        if (rects == null)
+            return false;
+
+        LoadTrigger();
+        SetDragRectangles(rects);
+
+        _IsLoaded = true;
+
+        return true;
+    }
+
+    List<Rect>? LoadRects()
+    {
+        var bindableObjects = AppTitleBarExproperty.GetBindableObject();
+        if (bindableObjects is null)
+            return default;
+
+        if (!bindableObjects.Any())
+            return default;
+
+        List<Rect> rects = new();
+        foreach (var objItem in bindableObjects)
+        {
+            if (objItem is not View viewElement)
+                continue;
+
+            var bounds = viewElement.Bounds;
+            if (double.IsNaN(bounds.Width) || double.IsNaN(bounds.Height))
+                return default;
+
+            if (double.IsInfinity(bounds.Width) || double.IsInfinity(bounds.Height))
+                return default;
+
+            if (double.IsNegative(bounds.Width) || double.IsNegative(bounds.Height))
+                return default;
+
+            if (double.IsNegativeInfinity(bounds.Width) || double.IsNegativeInfinity(bounds.Height))
+                return default;
+
+            var horizontalOptions = viewElement.HorizontalOptions;
+            if (horizontalOptions.Alignment is LayoutAlignment.Center && bounds.X == 0)
+            {
+                var parent = viewElement.GetFirstParentWithAlignmentNotCenter();
+                if (parent is not null)
+                    bounds = parent.Bounds;
+            }
+
+            rects.Add(bounds);
+        }
+
+        return rects;
+    }
+
+    bool LoadTrigger()
+    {
+        AppTitleBarExproperty.BindiableObjectChangedEvent += BindiableObject_Changed;
+        return true;
+    }
+
+    bool SetDragRectangles(List<Rect> rects)
+    {
+        if (!Microsoft.UI.Windowing.AppWindowTitleBar.IsCustomizationSupported())
+            return false;
+
         if (_MainWindow is null)
             return false;
 
-        if (titleBar is null)
+        if (_AppWindow is null)
             return false;
 
         if (_StartupOptions.TitleBarKind is not WindowTitleBarKind.ExtendsContentIntoTitleBar)
             return false;
 
-        List<RectInt32> rectInt32s = new();
+        if (_StartupOptions.PresenterKind is WindowPresenterKind.FullScreen)
+            return false;
 
-#if DEBUG
-        int debugWidth = 250;
+        var titleBar = _AppWindow.TitleBar;
+        if (titleBar is null)
+            return false;
+
+        double titleHeight = 48;
         var bounds = _MainWindow.Bounds;
-        int startX = (int)((bounds.Width - debugWidth) / 2d);
-        //RectInt32 debugRect = new RectInt32(startX, 0, 150, 48);
-        //rectInt32s.Add(debugRect);
-        RectInt32 leftRect = new RectInt32(0, 0, startX, 48);
-        rectInt32s.Add(leftRect);
-        RectInt32 rightRect = new RectInt32(startX + debugWidth, 0, (int)bounds.Width - startX + debugWidth, 48);
-        rectInt32s.Add(rightRect);
-
-        //titleBar.SetDragRectangles(rectInt32s.ToArray());
+#if DEBUG
+        double debugWidth = 250;  
+        double debugX = (bounds.Width - debugWidth) / 2.0d;
+        Rect leftRect = new(debugX, 0, debugWidth, titleHeight);
+        rects.Add((leftRect));
 #endif
+        double minX = rects[0].X;
+        double maxX = rects[0].X;
+        foreach (var rectItem in rects)
+        {
+            var x = rectItem.X;
+            if (x < minX)
+                minX = x;
 
-        _MainWindow.SizeChanged += MainWindow_SizeChanged;
-        _MainWindow.Activated += MainWindow_Activated;
+            x = x + rectItem.Width;
+            if (x > maxX)
+                maxX = x;
+        }
+
+        List<RectInt32> rectInt32s = new();
+        var scaleFactorPercent = _MainWindow.GetScaleAdjustment();
+
+        int startX = 0;
+        int startY = 0;
+        int endX = (int)(minX * scaleFactorPercent);
+        int endY = (int)(titleHeight * scaleFactorPercent);
+        RectInt32 rectInt32 = new RectInt32(startX, startY, endX - startX, endY - startY);
+        rectInt32s.Add(rectInt32);
+
+        startX = (int)(maxX * scaleFactorPercent);
+        endX = (int)(bounds.X + bounds.Width);
+        rectInt32 = new RectInt32(startX, startY, endX - startX, endY - startY);
+        rectInt32s.Add(rectInt32);
+
+        if (_IsLoaded)
+        {
+            titleBar.ResetToDefault();
+            RemoveTitleBar(_StartupOptions.TitleBarKind);
+        }
+
+        titleBar.SetDragRectangles(rectInt32s.ToArray());
+
         return true;
     }
 
-    private void MainWindow_Activated(object sender, Microsoft.UI.Xaml.WindowActivatedEventArgs args)
+    private void BindiableObject_Changed(object? sender , BindableObjectEvenArgs args)
     {
-        if (_MainWindow is null)
+        var rects = LoadRects();
+        if (rects == null)
             return;
 
-
-        //_MainWindow.ExtendsContentIntoTitleBar = true;
-
-        //////_MainWindow.ExtendsContentIntoTitleBar = true;
-
-        //var grid = new WinuiControls.Grid
-        //{
-        //    Background = new WinuiMedia.SolidColorBrush(Microsoft.UI.Colors.Red),
-        //};
-
-        //var textblock = new WinuiControls.TextBlock();
-        //var searchBar = new WinuiControls.AutoSuggestBox
-        //{
-        //    PlaceholderText = "Test123",
-        //    Width = 120,
-        //    Height = 40
-        //};
-        //grid.Children.Add(searchBar);
-
-
-
-        //_MainWindow.SetTitleBar(grid);
-    }
-
-    private void MainWindow_SizeChanged(object sender, Microsoft.UI.Xaml.WindowSizeChangedEventArgs args)
-    {
-        if (_MainWindow is null)
-            return;
-
-        var titleBar = _AppWindow?.TitleBar;
-        if (titleBar is null)
-            return;
-
-        List<RectInt32> rectInt32s = new();
-
-#if DEBUG
-        int debugWidth = 250;
-        var bounds = _MainWindow.Bounds;
-        int startX = (int)((bounds.Width - debugWidth) / 2d);
-        //RectInt32 debugRect = new RectInt32(startX, 0, 150, 48);
-        //rectInt32s.Add(debugRect);
-        RectInt32 leftRect = new RectInt32(0, 0, startX, 48);
-        rectInt32s.Add(leftRect);
-        RectInt32 rightRect = new RectInt32(startX + debugWidth, 0, (int)bounds.Width - startX + debugWidth, 48);
-        rectInt32s.Add(rightRect);
-
-        //titleBar.SetDragRectangles(rectInt32s.ToArray());
-#endif
+        SetDragRectangles(rects);
     }
 
     bool MoveWindow(WindowPresenterKind presenter) => presenter switch
@@ -364,7 +453,6 @@ internal class WindowsServiceImp : IWindowsService
         }
 
         _AppWindow.MoveAndResize(new Windows_Graphics.RectInt32((int)startX, (int)startY, (int)width, (int)height));
-
         return true;
     }
 

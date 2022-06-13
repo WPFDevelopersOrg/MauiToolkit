@@ -1,5 +1,6 @@
 ﻿
 namespace Maui.Toolkit.Extensions;
+
 public static class HashTableExtensions
 {
     public static TValue? GetDefaultOrValue<TValue>(this Hashtable hashtable, object key)

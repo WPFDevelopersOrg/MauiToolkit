@@ -6,4 +6,10 @@ public partial class AppShellx : ContentPage
 	{
 		InitializeComponent();
 	}
+
+    private void SearchBar_Loaded(object sender, EventArgs e)
+    {
+
+        
+    }
 }
