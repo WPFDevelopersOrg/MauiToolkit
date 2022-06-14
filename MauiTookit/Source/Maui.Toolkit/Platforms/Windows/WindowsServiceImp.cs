@@ -485,8 +485,13 @@ internal class WindowsServiceImp : IWindowsService
 
         if (bFullScreen)
         {
-            if (_AppWindow.Presenter.Kind is not Microsoft.UI.Windowing.AppWindowPresenterKind.FullScreen)
-                _AppWindow.SetPresenter(Microsoft.UI.Windowing.AppWindowPresenterKind.FullScreen);
+            if (_StartupOptions.TitleBarKind != WindowTitleBarKind.ExtendsContentIntoTitleBar)
+                MoveWindowMaximize();
+            else
+            {
+                if (_AppWindow.Presenter.Kind is not Microsoft.UI.Windowing.AppWindowPresenterKind.FullScreen)
+                    _AppWindow.SetPresenter(Microsoft.UI.Windowing.AppWindowPresenterKind.FullScreen);
+            }
         }
         else
         {

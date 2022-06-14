@@ -16,6 +16,9 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return base.CreateWindow(activationState);
+        var window = base.CreateWindow(activationState);
+        window.Title = "MauiAppx";
+
+        return window;
     }
 }
