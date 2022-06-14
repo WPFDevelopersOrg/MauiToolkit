@@ -3,6 +3,7 @@ using Maui.Toolkit.ExtraDependents;
 using Maui.Toolkit.Options;
 using Maui.Toolkit.Platforms.Windows.Controllers;
 using Maui.Toolkit.Platforms.Windows.Extensions;
+using Maui.Toolkit.Platforms.Windows.Helpers;
 using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
 using Microsoft.Maui.Platform;
@@ -11,6 +12,9 @@ using Windows.Graphics;
 using static PInvoke.User32;
 using Windows_Graphics = Windows.Graphics;
 using Winui = Windows.UI;
+using MicrosoftuiXaml = Microsoft.UI.Xaml;
+//using WinuiControls = Microsoft.UI.Xaml.Controls;
+//using WinuiMediaImage = Microsoft.UI.Xaml.Media.Imaging;
 
 namespace Maui.Toolkit.Platforms;
 
@@ -176,8 +180,36 @@ internal class WindowsServiceImp : IWindowsService
                 if (_StartupOptions.TitleBarBackgroundColor != null)
                     res["WindowCaptionBackground"] = _StartupOptions.TitleBarBackgroundColor.MauiColor2WinuiBrush();
 
+                if (_StartupOptions.TitleBarBackgroundInactiveColor != null)
+                    res["WindowCaptionBackgroundDisabled"] = _StartupOptions.TitleBarBackgroundInactiveColor.MauiColor2WinuiBrush();
+
                 if (_StartupOptions.TitleBarForegroundColor != null)
                     res["WindowCaptionForeground"] = _StartupOptions.TitleBarForegroundColor.MauiColor2WinuiBrush();
+
+                if (_StartupOptions.TitleBarForegroundInactiveColor != null)
+                    res["WindowCaptionForegroundDisabled"] = _StartupOptions.TitleBarForegroundInactiveColor.MauiColor2WinuiBrush();
+
+
+                //res["NavigationViewContentMargin"] = new MicrosoftuiXaml.Thickness(0, 100, 0, 0);
+
+                //var image = ResourceHelper.GetResource<WinuiControls.Image>("AppFontIcon");
+                //if (image is null)
+                //{
+                //    image = new WinuiControls.Image();
+
+                //    var path = PlatformShared.CreatePathBuilder()
+                //                                     .AddArgument("Resources")
+                //                                     .AddArgument("AppIcon")
+                //                                     .AddArgument("app.png")
+                //                                     .Build();
+
+                //    Uri imageUri = new Uri(path, UriKind.RelativeOrAbsolute);
+                //    WinuiMediaImage.BitmapImage imageBitmap = new(imageUri);
+                //    image.Source = imageBitmap;
+                //    res["AppFontIcon"] = image;
+                //}
+
+
                 break;
         }
 

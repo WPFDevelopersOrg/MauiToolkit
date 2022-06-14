@@ -23,7 +23,17 @@ public class StartupOptions
     /// <summary>
     /// Only TitleBarKind is default can take effect
     /// </summary>
+    public Color? TitleBarBackgroundInactiveColor { get; set; }
+
+    /// <summary>
+    /// Only TitleBarKind is default can take effect
+    /// </summary>
     public Color? TitleBarForegroundColor { get; set; }
+
+    /// <summary>
+    /// Only TitleBarKind is default can take effect
+    /// </summary>
+    public Color? TitleBarForegroundInactiveColor { get; set; }
 
     /// <summary>
     /// fullscreen or Max Min

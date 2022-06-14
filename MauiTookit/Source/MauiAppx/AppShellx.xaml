@@ -1,40 +1,57 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:views="clr-namespace:MauiAppx.Views"
-             xmlns:toolkits="http://www.mauitoolkit.com"
-             x:Class="MauiAppx.AppShellx">
+<Shell
+    x:Class="MauiAppx.AppShellx"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:MauiAppx.Views"
+    Shell.FlyoutBehavior="Locked" 
+    Shell.NavBarIsVisible="True"  
+    FlyoutWidth="180"  >
+
+    <Shell.SearchHandler>
+        <SearchHandler ShowsResults="True" DisplayMemberName="Name" Placeholder="let me try" />
+    </Shell.SearchHandler>
 
 
-    <ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
+    <FlyoutItem Title="Home"  FlyoutIcon="im_home.png">
+        <ShellContent  ContentTemplate="{DataTemplate views:HomePage}" Route="HomeRouter"/>
+    </FlyoutItem>
 
-            <Grid Grid.Row="0" HeightRequest="48">
+    <FlyoutItem Title="Apply"  FlyoutIcon="im_apply.png">
+        <ShellContent  ContentTemplate="{DataTemplate views:ApplyPage}" Route="ApplyRouter"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Result"  FlyoutIcon="im_result.png">
+        <ShellContent ContentTemplate="{DataTemplate views:ResultPage}" Route="ResultRouter" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Settings"  FlyoutIcon="im_search.png">
+        <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}" Route="SettingsRouter" />
+    </FlyoutItem>
+
+    <!--<Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid WidthRequest="180" HeightRequest="50">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
-                    <ColumnDefinition x:Name="BackButtonColumn" Width="Auto"/>
-                    <ColumnDefinition x:Name="IconColumn" Width="Auto"/>
-                    <ColumnDefinition x:Name="LeftDragColumn" Width="*"/>
-                    <ColumnDefinition x:Name="SearchBarColumn" Width="Auto"/>
-                    <ColumnDefinition x:Name="RightDragColumn" Width="*"/>
-                    <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" 
+                       Source="{Binding FlyoutIcon}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"                               
+                       HeightRequest="25"
+                       WidthRequest="25" />
 
+                <Label Grid.Column="2" 
+                       HorizontalTextAlignment="Start"
+                       VerticalTextAlignment="Center"
+                       Text="{Binding Title}"/>
 
-                <Button Grid.Column="1" toolkits:AppTitleBarExproperty.IsCanHitVisibleInTitleBar="True"  Text="&lt;&lt;" Clicked="Button_Clicked" />
-
-
-                <SearchBar Grid.Column="4" toolkits:AppTitleBarExproperty.IsCanHitVisibleInTitleBar="True" Placeholder="我试试，看看行不行" WidthRequest="300" Loaded="SearchBar_Loaded"/>
             </Grid>
+        </DataTemplate>
 
-        </Grid>
-        
-      
-    </ContentPage.Content>
+    </Shell.ItemTemplate>-->
 
-    
-</ContentPage>
+</Shell>
+

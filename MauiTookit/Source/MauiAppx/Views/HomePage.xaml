@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkits="http://www.mauitoolkit.com"
              x:Class="MauiAppx.Views.HomePage"
              Title="HomePage">
-    <StackLayout>
-        <Label Text="Welcome to .NET MAUI!"
-                VerticalOptions="Center" 
-                HorizontalOptions="Center" />
-    </StackLayout>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" HeightRequest="48">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
+                <ColumnDefinition x:Name="BackButtonColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="IconColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="LeftDragColumn" Width="*"/>
+                <ColumnDefinition x:Name="SearchBarColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="RightDragColumn" Width="*"/>
+                <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
+            </Grid.ColumnDefinitions>
+
+
+            <Button Grid.Column="1" toolkits:AppTitleBarExproperty.IsCanHitVisibleInTitleBar="True"  Text="&lt;&lt;" Clicked="Button_Clicked" />
+
+
+            <SearchBar Grid.Column="4" toolkits:AppTitleBarExproperty.IsCanHitVisibleInTitleBar="True" Placeholder="我试试，看看行不行" WidthRequest="300" Loaded="SearchBar_Loaded"/>
+        </Grid>
+
+    </Grid>
+
 </ContentPage>

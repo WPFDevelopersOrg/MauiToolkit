@@ -6,4 +6,14 @@ public partial class HomePage : ContentPage
 	{
 		InitializeComponent();
 	}
+
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+
+    }
+
+    private void SearchBar_Loaded(object sender, EventArgs e)
+    {
+
+    }
 }

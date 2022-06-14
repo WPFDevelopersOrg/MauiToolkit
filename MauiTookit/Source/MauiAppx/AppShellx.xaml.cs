@@ -1,20 +1,13 @@
+using MauiAppx.Views;
+
 namespace MauiAppx;
 
-public partial class AppShellx : ContentPage
+public partial class AppShellx : Shell
 {
-	public AppShellx()
-	{
-		InitializeComponent();
-	}
-
-    private void SearchBar_Loaded(object sender, EventArgs e)
+    public AppShellx()
     {
+        InitializeComponent();
 
-        
-    }
-
-    private void Button_Clicked(object sender, EventArgs e)
-    {
-
+        //Routing.RegisterRoute("HomeRouter", typeof(HomePage));
     }
 }

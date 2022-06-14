@@ -50,7 +50,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<MauiImage Include="Resources\AppIcon\app.png" />
+		<MauiImage Include="Resources\AppIcon\app.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</MauiImage>
+		<MauiIcon Include="Resources\AppIcon\application128.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</MauiIcon>
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
@@ -88,6 +93,18 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Maui.Toolkit\Maui.Toolkit.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\ApplyPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\ResultPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SettingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>
