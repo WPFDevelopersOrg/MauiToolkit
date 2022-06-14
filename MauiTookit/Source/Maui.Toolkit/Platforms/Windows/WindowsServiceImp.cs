@@ -1,17 +1,15 @@
-﻿using Maui.Toolkit.Options;
+﻿using Maui.Toolkit.Extensions;
+using Maui.Toolkit.ExtraDependents;
+using Maui.Toolkit.Options;
+using Maui.Toolkit.Platforms.Windows.Extensions;
 using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
 using Microsoft.Maui.Platform;
-using WinuiControls = Microsoft.UI.Xaml.Controls;
 using PInvoke;
 using Windows.Graphics;
 using static PInvoke.User32;
 using Windows_Graphics = Windows.Graphics;
 using Winui = Windows.UI;
-using WinuiMedia = Microsoft.UI.Xaml.Media;
-using Maui.Toolkit.ExtraDependents;
-using Maui.Toolkit.Extensions;
-using Maui.Toolkit.Platforms.Windows.Extensions;
 
 namespace Maui.Toolkit.Platforms;
 
@@ -98,20 +96,6 @@ internal class WindowsServiceImp : IWindowsService
     private void MainPage_Loaded(object? sender, EventArgs e)
     {
         TrySetDragRectangles();
-
-        //if (_MainWindow is null)
-        //    return;
-
-        //_MainWindow.ExtendsContentIntoTitleBar = true;
-        //WinuiControls.Grid grid = new WinuiControls.Grid()
-        //{
-        //    Background = new WinuiMedia.SolidColorBrush(Winui.Color.FromArgb(255, 255, 0, 0)),
-
-        //    Height = 100,
-
-        //};
-
-        //_MainWindow.SetTitleBar(default);
     }
 
     bool RegisterApplicationThemeChangedEvent()
@@ -148,6 +132,15 @@ internal class WindowsServiceImp : IWindowsService
                 LoadTitleBarCorlor(_AppWindow.TitleBar);
                 break;
             default:
+                if (_Application is null)
+                    break;
+
+                var res = _Application.Resources;
+                if (_StartupOptions.TitleBarBackgroundColor != null)
+                    res["WindowCaptionBackground"] = _StartupOptions.TitleBarBackgroundColor.MauiColor2WinuiBrush();
+
+                if (_StartupOptions.TitleBarForegroundColor != null)
+                    res["WindowCaptionForeground"] = _StartupOptions.TitleBarForegroundColor.MauiColor2WinuiBrush();
                 break;
         }
 
@@ -314,7 +307,7 @@ internal class WindowsServiceImp : IWindowsService
         double titleHeight = 48;
         var bounds = _MainWindow.Bounds;
 #if DEBUG
-        double debugWidth = 250;  
+        double debugWidth = 250;
         double debugX = (bounds.Width - debugWidth) / 2.0d;
         Rect leftRect = new(debugX, 0, debugWidth, titleHeight);
         rects.Add((leftRect));
@@ -409,7 +402,7 @@ internal class WindowsServiceImp : IWindowsService
             }
 
         }
-       
+
 
         List<RectInt32> rectInt32s = new();
         var scaleFactorPercent = _MainWindow.GetScaleAdjustment();
@@ -423,11 +416,6 @@ internal class WindowsServiceImp : IWindowsService
                 rectBefore = new Rect(0, 0, 0, titleHeight);
 
             var rect = newRects[i];
-            //var rectAfter = rects[i];
-            //if (i + 1 < rects.Count)
-            //    rectAfter = rects[i + 1];
-            //else
-            //    rectAfter = new Rect(rect.Right, 0, bounds.Right, titleHeight);
 
             int startX = 0;
             int endX = 0;
@@ -461,7 +449,6 @@ internal class WindowsServiceImp : IWindowsService
             }
         }
 
-
         if (_IsLoaded)
         {
             titleBar.ResetToDefault();
@@ -473,7 +460,7 @@ internal class WindowsServiceImp : IWindowsService
         return true;
     }
 
-    private void BindiableObject_Changed(object? sender , BindableObjectEvenArgs args)
+    private void BindiableObject_Changed(object? sender, BindableObjectEvenArgs args)
     {
         var rects = LoadRects();
         if (rects == null)

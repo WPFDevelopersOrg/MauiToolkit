@@ -10,6 +10,16 @@ public class StartupOptions
     public WindowTitleBarKind TitleBarKind { get; set; }
 
     /// <summary>
+    /// Only TitleBarKind is default can take effect
+    /// </summary>
+    public Color? TitleBarBackgroundColor { get; set; }
+
+    /// <summary>
+    /// Only TitleBarKind is default can take effect
+    /// </summary>
+    public Color? TitleBarForegroundColor { get; set; }
+
+    /// <summary>
     /// fullscreen or Max Min
     /// the tookit default value is  Maximize
     /// </summary>
