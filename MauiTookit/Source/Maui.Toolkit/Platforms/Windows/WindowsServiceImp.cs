@@ -118,6 +118,8 @@ internal class WindowsServiceImp : IWindowsService
                 LoadAcrylic();
                 break;
             default:
+                _WinuiController?.Stop();
+                _WinuiController = default;
                 break;
         }
 
@@ -315,11 +317,11 @@ internal class WindowsServiceImp : IWindowsService
     bool LoadMainWindowEvent()
     {
         var mainPage = Application.Current?.MainPage;
-        if (mainPage is not null)
-        {
-            mainPage.Loaded += MainPage_Loaded;
-            mainPage.SizeChanged += MainPage_SizeChanged;
-        }
+        if (mainPage is null)
+            return false;
+
+        mainPage.Loaded += MainPage_Loaded;
+        mainPage.SizeChanged += MainPage_SizeChanged;
 
         return true;
     }
