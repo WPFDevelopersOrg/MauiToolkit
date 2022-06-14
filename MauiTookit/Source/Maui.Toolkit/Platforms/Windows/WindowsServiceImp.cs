@@ -1,6 +1,7 @@
 ﻿using Maui.Toolkit.Extensions;
 using Maui.Toolkit.ExtraDependents;
 using Maui.Toolkit.Options;
+using Maui.Toolkit.Platforms.Windows.Controllers;
 using Maui.Toolkit.Platforms.Windows.Extensions;
 using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
@@ -27,6 +28,8 @@ internal class WindowsServiceImp : IWindowsService
     Microsoft.UI.Xaml.Window? _MainWindow;
     Microsoft.UI.Windowing.AppWindow? _AppWindow;
 
+    IWinuiController? _WinuiController;
+
     bool _IsLoaded = false;
 
     public bool RegisterApplicationEvent(ILifecycleBuilder lifecycleBuilder)
@@ -43,16 +46,11 @@ internal class WindowsServiceImp : IWindowsService
                     return;
                 _AppWindow = appWindow;
 
+                LoadBackgroundMaterial(_StartupOptions.BackdropsKind);
                 RemoveTitleBar(_StartupOptions.TitleBarKind);
                 MoveWindow(_StartupOptions.PresenterKind);
+                LoadMainWindowEvent();
                 RegisterApplicationThemeChangedEvent();
-
-                var mainPage = Application.Current?.MainPage;
-                if (mainPage is not null)
-                {
-                    mainPage.Loaded += MainPage_Loaded;
-                    mainPage.SizeChanged += MainPage_SizeChanged;
-                }
 
             }).OnVisibilityChanged((window, arg) =>
             {
@@ -107,6 +105,43 @@ internal class WindowsServiceImp : IWindowsService
         application.RequestedThemeChanged += (sender, arg) => LoadTitleBarCorlor(_AppWindow?.TitleBar);
 
         return true;
+    }
+
+    bool LoadBackgroundMaterial(BackdropsKind kind)
+    {
+        switch (kind)
+        {
+            case BackdropsKind.Mica:
+                LoadMica();
+                break;
+            case BackdropsKind.Acrylic:
+                LoadAcrylic();
+                break;
+            default:
+                break;
+        }
+
+        return true;
+    }
+
+    bool LoadMica()
+    {
+        if (_MainWindow is null)
+            return false;
+
+        _WinuiController?.Stop();
+        _WinuiController = new WinuiMicaController(_MainWindow);
+        return _WinuiController.Run();
+    }
+
+    bool LoadAcrylic()
+    {
+        if (_MainWindow is null)
+            return false;
+
+        _WinuiController?.Stop();
+        _WinuiController = new WinuiAcrylicController(_MainWindow);
+        return _WinuiController.Run();
     }
 
     bool RemoveTitleBar(WindowTitleBarKind titleBar)
@@ -277,8 +312,22 @@ internal class WindowsServiceImp : IWindowsService
         return rects;
     }
 
+    bool LoadMainWindowEvent()
+    {
+        var mainPage = Application.Current?.MainPage;
+        if (mainPage is not null)
+        {
+            mainPage.Loaded += MainPage_Loaded;
+            mainPage.SizeChanged += MainPage_SizeChanged;
+        }
+
+        return true;
+    }
+    
     bool LoadTrigger()
     {
+
+
         AppTitleBarExproperty.BindiableObjectChangedEvent += BindiableObject_Changed;
         return true;
     }

@@ -4,6 +4,12 @@ namespace Maui.Toolkit.Options;
 public class StartupOptions
 {
     /// <summary>
+    /// You can use Mica Acrylic in Windows
+    /// You can use vibrancy in macos
+    /// </summary>
+    public BackdropsKind BackdropsKind { get; set; }
+
+    /// <summary>
     /// hide titlebar or not 
     /// the tookit default value is ExtendsContentIntoTitleBar
     /// </summary>

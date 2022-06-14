@@ -115,6 +115,12 @@ internal class WindowsServiceImp : NSObject, IWindowsService
     //    return true;
     //}
 
+    bool LoadBackgroundMaterial(BackdropsKind kind)
+    {
+
+        return true;
+    }
+
     bool RemoveTitleBar(WindowTitleBarKind titleBar)
     {
         if (_NsMainWindow is null)
@@ -292,6 +298,7 @@ internal class WindowsServiceImp : NSObject, IWindowsService
 
         _IsTrigger = true;
 
+        LoadBackgroundMaterial(_StartupOptions.BackdropsKind);
         MoveWindow(_StartupOptions.PresenterKind);
         RemoveTitleBar(_StartupOptions.TitleBarKind);
     }
