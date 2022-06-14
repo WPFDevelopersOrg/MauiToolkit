@@ -3,18 +3,38 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:MauiAppx.Views"
+    xmlns:sys="clr-namespace:System;assembly=netstandard"
     Shell.FlyoutBehavior="Locked" 
-    Shell.NavBarIsVisible="True"  
-    FlyoutWidth="180"  >
+    Shell.NavBarIsVisible="false"  
+    Shell.PresentationMode="Animated"
+    FlyoutWidth="180" >
 
     <Shell.SearchHandler>
-        <SearchHandler ShowsResults="True" DisplayMemberName="Name" Placeholder="let me try" />
+        <SearchHandler ShowsResults="True" DisplayMemberName="Name" SearchBoxVisibility="Expanded" Placeholder="let me try" />
     </Shell.SearchHandler>
 
+    <Shell.FlyoutHeader>
+        <Grid>
+            <Image Aspect="AspectFill"
+               Source="im_endoc.png" 
+               Opacity="0.6" />
+            <Label Text="Animals"
+               TextColor="White"
+               FontAttributes="Bold"
+               HorizontalTextAlignment="Center"
+               VerticalTextAlignment="Center" />
+        </Grid>
+    </Shell.FlyoutHeader>
+    
 
-    <FlyoutItem Title="Home"  FlyoutIcon="im_home.png">
-        <ShellContent  ContentTemplate="{DataTemplate views:HomePage}" Route="HomeRouter"/>
+    <FlyoutItem Title="Home" FlyoutIcon="im_home.png" >
+        <ShellContent ContentTemplate="{DataTemplate views:HomePage}" Route="HomeRouter"/>
     </FlyoutItem>
+
+    <!--<FlyoutItem Title="Home" FlyoutDisplayOptions="AsSingleItem" >
+        <ShellContent Title="Home1" FlyoutIcon="im_home.png" ContentTemplate="{DataTemplate views:HomePage}" Route="HomeRouter"/>
+        <ShellContent  Title="Home2" FlyoutIcon="im_home.png" ContentTemplate="{DataTemplate views:HomePage}" Route="HomeRouter1"/>
+    </FlyoutItem>-->
 
     <FlyoutItem Title="Apply"  FlyoutIcon="im_apply.png">
         <ShellContent  ContentTemplate="{DataTemplate views:ApplyPage}" Route="ApplyRouter"/>
@@ -52,6 +72,22 @@
         </DataTemplate>
 
     </Shell.ItemTemplate>-->
+
+    <Shell.FlyoutFooter>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Text="Xaminals"
+               TextColor="GhostWhite"
+               FontAttributes="Bold"
+               HorizontalOptions="Center" />
+            <Label  Grid.Row="1" Text="{Binding Source={x:Static sys:DateTime.Now}, StringFormat='{0:MMMM dd, yyyy}'}"
+               TextColor="GhostWhite"
+               HorizontalOptions="Center" />
+        </Grid>
+    </Shell.FlyoutFooter>
 
 </Shell>
 

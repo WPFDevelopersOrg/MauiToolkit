@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkits="http://www.mauitoolkit.com"
              x:Class="MauiAppx.Views.HomePage"
+             BackgroundColor="Yellow"
              Title="HomePage">
     <Grid>
         <Grid.RowDefinitions>
