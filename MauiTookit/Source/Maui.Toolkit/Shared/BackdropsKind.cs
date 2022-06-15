@@ -15,5 +15,10 @@ public enum BackdropsKind
     /// <summary>
     /// only for winui3
     /// </summary>
-    Acrylic
+    Acrylic,
+
+    /// <summary>
+    /// For mac os and ios
+    /// </summary>
+    BlurEffect
 }

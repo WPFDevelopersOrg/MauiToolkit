@@ -67,9 +67,7 @@ internal class StatusBarServiceImp : IStatusBarService
                     return;
 
                 if (arg.MessageId == (uint)NOTIFYMESSAGESINK.NotifyCallBackMessage)
-                {
-
-                }
+                    StatusBarEventChanged?.Invoke(this, EventArgs.Empty);
 
             }).OnResumed(window =>
             {

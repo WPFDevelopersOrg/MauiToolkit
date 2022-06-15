@@ -1,11 +1,12 @@
-﻿using Maui.Toolkit.Platforms.Windows.Helpers;
+﻿using Maui.Toolkit.Core;
+using Maui.Toolkit.Platforms.Windows.Helpers;
 using WinRT;
 using MicrosoftBackdrops = Microsoft.UI.Composition.SystemBackdrops;
 using Microsoftui = Microsoft.UI.Xaml;
 using MicrosoftuiComposition = Microsoft.UI.Composition;
 
 namespace Maui.Toolkit.Platforms.Windows.Controllers;
-internal class WinuiAcrylicController : IWinuiController
+internal class WinuiAcrylicController : IWindowController
 {
     public WinuiAcrylicController(Microsoftui.Window window)
     {
@@ -18,7 +19,7 @@ internal class WinuiAcrylicController : IWinuiController
     MicrosoftBackdrops.DesktopAcrylicController? _AcrylicController;
     MicrosoftBackdrops.SystemBackdropConfiguration? _SystemBackdropConfiguration;
 
-    bool IWinuiController.Run()
+    bool IWindowController.Run()
     {
         if (_IsStart)
             return true;
@@ -47,7 +48,7 @@ internal class WinuiAcrylicController : IWinuiController
         return true;
     }
 
-    bool IWinuiController.Stop()
+    bool IWindowController.Stop()
     {
         if (_IsStart)
         {

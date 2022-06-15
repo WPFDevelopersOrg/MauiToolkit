@@ -14,12 +14,12 @@ internal class BindableObjectEvenArgs : EventArgs
 }
 
 
-public class AppTitleBarExproperty
+public class AppTitleBarExProperty
 {
     private static Dictionary<BindableObject, BindableObject> __mapRects = new();
 
     public static readonly BindableProperty IsCanHitVisibleInTitleBarProperty =
-                           BindableProperty.CreateAttached("IsCanHitVisibleInTitleBar", typeof(bool), typeof(AppTitleBarExproperty), false, propertyChanged: IsCanHitVisibleInTitleBarPropertyChanged);
+                           BindableProperty.CreateAttached("IsCanHitVisibleInTitleBar", typeof(bool), typeof(AppTitleBarExProperty), false, propertyChanged: IsCanHitVisibleInTitleBarPropertyChanged);
 
 
     internal static EventHandler<BindableObjectEvenArgs>? BindiableObjectChangedEvent = default;

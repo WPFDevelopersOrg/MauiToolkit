@@ -1,18 +1,18 @@
-﻿using Maui.Toolkit.Extensions;
+﻿using Maui.Toolkit.Core;
+using Maui.Toolkit.Extensions;
 using Maui.Toolkit.ExtraDependents;
 using Maui.Toolkit.Options;
 using Maui.Toolkit.Platforms.Windows.Controllers;
 using Maui.Toolkit.Platforms.Windows.Extensions;
-using Maui.Toolkit.Platforms.Windows.Helpers;
 using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
 using Microsoft.Maui.Platform;
 using PInvoke;
 using Windows.Graphics;
 using static PInvoke.User32;
+using MicrosoftuiXaml = Microsoft.UI.Xaml;
 using Windows_Graphics = Windows.Graphics;
 using Winui = Windows.UI;
-using MicrosoftuiXaml = Microsoft.UI.Xaml;
 //using WinuiControls = Microsoft.UI.Xaml.Controls;
 //using WinuiMediaImage = Microsoft.UI.Xaml.Media.Imaging;
 
@@ -34,7 +34,7 @@ internal class WindowsServiceImp : IWindowsService
 
     double _Offset = 0;
 
-    IWinuiController? _WinuiController;
+    IWindowController? _WinuiController;
 
     bool _IsLoaded = false;
 
@@ -314,7 +314,7 @@ internal class WindowsServiceImp : IWindowsService
 
     List<Rect>? LoadRects()
     {
-        var bindableObjects = AppTitleBarExproperty.GetBindableObject();
+        var bindableObjects = AppTitleBarExProperty.GetBindableObject();
         if (bindableObjects is null)
             return default;
 
@@ -375,7 +375,7 @@ internal class WindowsServiceImp : IWindowsService
 
     bool LoadTrigger()
     {
-        AppTitleBarExproperty.BindiableObjectChangedEvent += BindiableObject_Changed;
+        AppTitleBarExProperty.BindiableObjectChangedEvent += BindiableObject_Changed;
         return true;
     }
 

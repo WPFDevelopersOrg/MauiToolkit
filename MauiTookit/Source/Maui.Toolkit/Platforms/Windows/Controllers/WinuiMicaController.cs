@@ -1,4 +1,5 @@
-﻿using Maui.Toolkit.Platforms.Windows.Helpers;
+﻿using Maui.Toolkit.Core;
+using Maui.Toolkit.Platforms.Windows.Helpers;
 using WinRT;
 using MicrosoftBackdrops = Microsoft.UI.Composition.SystemBackdrops;
 using Microsoftui = Microsoft.UI.Xaml;
@@ -6,7 +7,7 @@ using MicrosoftuiComposition = Microsoft.UI.Composition;
 
 namespace Maui.Toolkit.Platforms.Windows.Controllers;
 
-internal class WinuiMicaController : IWinuiController
+internal class WinuiMicaController : IWindowController
 {
     public WinuiMicaController(Microsoftui.Window window)
     {
@@ -20,7 +21,7 @@ internal class WinuiMicaController : IWinuiController
     MicrosoftBackdrops.MicaController? _MicaController;
     MicrosoftBackdrops.SystemBackdropConfiguration? _SystemBackdropConfiguration;
 
-    bool IWinuiController.Run()
+    bool IWindowController.Run()
     {
         if (_IsStart)
             return true;
@@ -50,7 +51,7 @@ internal class WinuiMicaController : IWinuiController
         return true;
     }
 
-    bool IWinuiController.Stop()
+    bool IWindowController.Stop()
     {
         if (_IsStart)
         {
@@ -61,7 +62,7 @@ internal class WinuiMicaController : IWinuiController
                 _Window.Activated -= Window_Activated;
                 if (_Window.Content is Microsoftui.FrameworkElement frameworkElement)
                     frameworkElement.ActualThemeChanged -= FrameworkElement_ActualThemeChanged;
-}
+            }
         }
 
         _Window = default;
