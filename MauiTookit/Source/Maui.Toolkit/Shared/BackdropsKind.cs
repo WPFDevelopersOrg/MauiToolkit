@@ -2,7 +2,18 @@
 
 public enum BackdropsKind
 {
+    /// <summary>
+    /// default
+    /// </summary>
     Default,
+
+    /// <summary>
+    /// Only for winui3
+    /// </summary>
     Mica,
+
+    /// <summary>
+    /// only for winui3
+    /// </summary>
     Acrylic
 }
