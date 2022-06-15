@@ -6,6 +6,16 @@ namespace Maui.Toolkit.Platforms.Windows.Helpers;
 
 public class CoreMessageHelper
 {
+    private CoreMessageHelper()
+    {
+
+    }
+
+
+    private static CoreMessageHelper? __Instance = default;
+    public static CoreMessageHelper Instance => __Instance ??= new CoreMessageHelper();
+
+
     private object? _DispatcherQueueController = default;
 
     public bool EnsureWindowsSystemDispatcherQueueController()

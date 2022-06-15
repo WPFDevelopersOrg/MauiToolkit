@@ -15,6 +15,8 @@ public static class MauiProgram
                 options.TitleBarKind = WindowTitleBarKind.Default;
                 options.PresenterKind = WindowPresenterKind.Default;
                 options.TitleBarBackgroundColor = Colors.Transparent;
+                options.TitleBarBackgroundInactiveColor = Colors.Transparent;
+                options.BackdropsKind = BackdropsKind.Acrylic;
                 //options.TitleBarForegroundColor = Colors.White;
                 options.Size = new Size(1920, 1080);
             })

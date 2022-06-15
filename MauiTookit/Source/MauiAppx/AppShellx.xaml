@@ -7,6 +7,7 @@
     Shell.FlyoutBehavior="Locked" 
     Shell.NavBarIsVisible="false"  
     Shell.PresentationMode="Animated"
+    BackgroundColor="Transparent"
     FlyoutWidth="180" >
 
     <Shell.SearchHandler>

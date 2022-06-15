@@ -2,8 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkits="http://www.mauitoolkit.com"
-             x:Class="MauiAppx.Views.HomePage"
-             BackgroundColor="Yellow"
+             x:Class="MauiAppx.Views.HomePage" 
+             BackgroundColor="Transparent"
              Title="HomePage">
     <Grid>
         <Grid.RowDefinitions>

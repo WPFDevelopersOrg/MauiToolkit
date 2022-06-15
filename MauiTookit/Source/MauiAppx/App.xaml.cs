@@ -1,4 +1,6 @@
-﻿namespace MauiAppx;
+﻿using MauiAppx.Views;
+
+namespace MauiAppx;
 
 public partial class App : Application
 {
@@ -9,7 +11,8 @@ public partial class App : Application
 #if ANDROID || IOS
         MainPage = new AppShell();
 #else
-        MainPage = new AppShellx();
+        //MainPage = new AppShellx();
+        MainPage = new HomePage();
 #endif
 
     }

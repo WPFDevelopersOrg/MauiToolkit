@@ -76,7 +76,7 @@ internal class WindowsServiceImp : IWindowsService
 
             }).OnClosed((window, arg) =>
             {
-
+                _WinuiController?.Stop();
             });
         });
 
