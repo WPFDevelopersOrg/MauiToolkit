@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace MauiAppx.Platforms.MacCatalyst;
+namespace MauiAppx;
 
 [Register("SceneDelegate")]
 public class SceneDelegate : MauiUISceneDelegate
