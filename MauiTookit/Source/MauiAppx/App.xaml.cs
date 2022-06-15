@@ -11,8 +11,8 @@ public partial class App : Application
 #if ANDROID || IOS
         MainPage = new AppShell();
 #else
-        //MainPage = new AppShellx();
-        MainPage = new HomePage();
+        MainPage = new AppShellx();
+        //MainPage = new HomePage();
 #endif
 
     }

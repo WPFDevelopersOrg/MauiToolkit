@@ -7,12 +7,18 @@
     Shell.FlyoutBehavior="Locked" 
     Shell.NavBarIsVisible="false"  
     Shell.PresentationMode="Animated"
+    Shell.BackgroundColor="Transparent"
     BackgroundColor="Transparent"
+    FlyoutBackgroundColor="Transparent"
     FlyoutWidth="180" >
 
     <Shell.SearchHandler>
-        <SearchHandler ShowsResults="True" DisplayMemberName="Name" SearchBoxVisibility="Expanded" Placeholder="let me try" />
+        <SearchHandler ShowsResults="True" IsSearchEnabled="True" DisplayMemberName="Name" SearchBoxVisibility="Expanded" Placeholder="let me try" />
     </Shell.SearchHandler>
+
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="True" IsVisible="True" IconOverride="im_document.png"/>
+    </Shell.BackButtonBehavior>
 
     <Shell.FlyoutHeader>
         <Grid>
@@ -28,7 +34,7 @@
     </Shell.FlyoutHeader>
     
 
-    <FlyoutItem Title="Home" FlyoutIcon="im_home.png" >
+    <FlyoutItem Title="Home" FlyoutIcon="im_home.png">
         <ShellContent ContentTemplate="{DataTemplate views:HomePage}" Route="HomeRouter"/>
     </FlyoutItem>
 

@@ -28,9 +28,11 @@ internal class WindowsServiceImp : IWindowsService
 
     readonly StartupOptions _StartupOptions;
 
-    Microsoft.UI.Xaml.Application? _Application;
-    Microsoft.UI.Xaml.Window? _MainWindow;
+    MicrosoftuiXaml.Application? _Application;
+    MicrosoftuiXaml.Window? _MainWindow;
     Microsoft.UI.Windowing.AppWindow? _AppWindow;
+
+    double _Offset = 0;
 
     IWinuiController? _WinuiController;
 
@@ -97,6 +99,12 @@ internal class WindowsServiceImp : IWindowsService
 
     private void MainPage_Loaded(object? sender, EventArgs e)
     {
+        if (sender is Shell shell)
+        {
+            if (shell.FlyoutBehavior == FlyoutBehavior.Locked)
+                _Offset = shell.FlyoutWidth;
+        }
+
         TrySetDragRectangles();
     }
 
@@ -360,8 +368,6 @@ internal class WindowsServiceImp : IWindowsService
     
     bool LoadTrigger()
     {
-
-
         AppTitleBarExproperty.BindiableObjectChangedEvent += BindiableObject_Changed;
         return true;
     }
@@ -503,8 +509,8 @@ internal class WindowsServiceImp : IWindowsService
             int startX = 0;
             int endX = 0;
 
-            startX = (int)rectBefore.Right;
-            endX = (int)rect.Left;
+            startX = (int)(rectBefore.Right + _Offset);
+            endX = (int)(rect.Left + _Offset);
 
             if (endX - startX <= 0)
                 continue;
@@ -521,14 +527,13 @@ internal class WindowsServiceImp : IWindowsService
             int startX = 0;
             int endX = 0;
 
-            startX = (int)rectBefore.Right;
-            endX = (int)rect.Left;
+            startX = (int)(rectBefore.Right + _Offset);
+            endX = (int)(rect.Left + _Offset);
 
             if (endX - startX > 0)
             {
                 var rectInt32 = new RectInt32(startX, 0, endX - startX, (int)titleHeight);
                 rectInt32s.Add(rectInt32);
-
             }
         }
 
