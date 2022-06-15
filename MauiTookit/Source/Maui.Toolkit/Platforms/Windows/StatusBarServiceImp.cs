@@ -26,7 +26,7 @@ internal class StatusBarServiceImp : IStatusBarService
 
     IDisposable? _Disposable;
 
-    private event EventHandler<EventArgs>? StatusBarEventChanged;
+    private event EventHandler<EventArgs>? StatusBarEventChanged = default;
 
     event EventHandler<EventArgs> IStatusBarService.StatusBarEventChanged
     {

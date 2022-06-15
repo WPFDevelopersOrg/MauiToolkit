@@ -21,7 +21,6 @@ public static class UIWindowExtension
         return sharedApplication;
     }
 
-    static UIWindow? testWindow;
     public static NSObject? GetHostWidnowForUiWindow(this UIWindow window)
     {
         if (window is null)

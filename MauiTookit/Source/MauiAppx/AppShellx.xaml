@@ -90,7 +90,7 @@
                TextColor="GhostWhite"
                FontAttributes="Bold"
                HorizontalOptions="Center" />
-            <Label  Grid.Row="1" Text="{Binding Source={x:Static sys:DateTime.Now}, StringFormat='{0:MMMM dd, yyyy}'}"
+            <Label Grid.Row="1" Text="{Binding Source={x:Static sys:DateTime.Now}, StringFormat='{0:MMMM dd, yyyy}'}"
                TextColor="GhostWhite"
                HorizontalOptions="Center" />
         </Grid>

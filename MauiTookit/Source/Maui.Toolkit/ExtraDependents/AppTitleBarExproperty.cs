@@ -22,7 +22,7 @@ public class AppTitleBarExproperty
                            BindableProperty.CreateAttached("IsCanHitVisibleInTitleBar", typeof(bool), typeof(AppTitleBarExproperty), false, propertyChanged: IsCanHitVisibleInTitleBarPropertyChanged);
 
 
-    internal static EventHandler<BindableObjectEvenArgs>? BindiableObjectChangedEvent;
+    internal static EventHandler<BindableObjectEvenArgs>? BindiableObjectChangedEvent = default;
 
     public static bool GetIsCanHitVisibleInTitleBar(BindableObject target) => (bool)target.GetValue(IsCanHitVisibleInTitleBarProperty);
     public static void SetIsCanHitVisibleInTitleBar(BindableObject target, bool value) => target.SetValue(IsCanHitVisibleInTitleBarProperty, value);

@@ -361,11 +361,18 @@ internal class WindowsServiceImp : IWindowsService
             return false;
 
         mainPage.Loaded += MainPage_Loaded;
-        mainPage.SizeChanged += MainPage_SizeChanged;
+
+        if (mainPage is Shell shell)
+        {
+            if (shell.CurrentPage is not null)
+                shell.CurrentPage.SizeChanged += MainPage_SizeChanged;
+        }
+        else
+            mainPage.SizeChanged += MainPage_SizeChanged;
 
         return true;
     }
-    
+
     bool LoadTrigger()
     {
         AppTitleBarExproperty.BindiableObjectChangedEvent += BindiableObject_Changed;
@@ -502,7 +509,7 @@ internal class WindowsServiceImp : IWindowsService
             if (i - 1 >= 0)
                 rectBefore = newRects[i - 1];
             else
-                rectBefore = new Rect(0, 0, 0, titleHeight);
+                rectBefore = new Rect((int)-_Offset, 0, 0, titleHeight);
 
             var rect = newRects[i];
 
