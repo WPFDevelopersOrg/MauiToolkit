@@ -31,12 +31,13 @@
 		<Platforms>AnyCPU;x64;x86;ARM64</Platforms>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Platform)' != 'AnyCPU'">
+	<PropertyGroup Condition="'$(Platform)' != 'AnyCPU' And $(TargetFramework.Contains('-windows'))">
 		<!-- Unpack : SelfContainedDeployment for winui3 -->
 		<PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
 		<WindowsPackageType>None</WindowsPackageType>
 		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 	</PropertyGroup>
+
 
 	<ItemGroup>
 		<!-- App Icon -->
