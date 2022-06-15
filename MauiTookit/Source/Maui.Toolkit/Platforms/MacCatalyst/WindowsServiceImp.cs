@@ -39,7 +39,7 @@ internal class WindowsServiceImp : NSObject, IWindowsService
                     return;
                 _IsRegisetr = true;
 
-                _MainWindow = _Application?.Delegate.GetWindow();
+                //_MainWindow = _Application?.Delegate.GetWindow();
 
             }).OnResignActivation(app =>
             {
@@ -287,13 +287,17 @@ internal class WindowsServiceImp : NSObject, IWindowsService
 
     void WindowDidBecomeVisible(object? sender, NSNotificationEventArgs args)
     {
+        if (_IsTrigger)
+            return;
+
+        if (_MainWindow is null)
+            _MainWindow = _Application?.Windows.FirstOrDefault();
+        //_MainWindow = _Application?.Delegate.GetWindow();
+
         if (_NsMainWindow is null)
             _NsMainWindow = _MainWindow?.GetHostWidnowForUiWindow();
 
         if (_NsMainWindow is null)
-            return;
-
-        if (_IsTrigger)
             return;
 
         _IsTrigger = true;

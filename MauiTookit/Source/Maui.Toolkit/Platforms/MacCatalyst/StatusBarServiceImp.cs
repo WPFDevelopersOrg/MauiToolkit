@@ -30,6 +30,7 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
     //NSObject? _StatusBarImage;
     NSObject? _NsImage;
 
+    NSObject? _NsApplication;
     UIApplication? _Application;
     UIWindow? _MainWindow;
 
@@ -50,16 +51,16 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         {
             windowsLeftCycle.OnActivated(app =>
             {
-                if (_IsRegisetr)
-                    return;
+                //if (_IsRegisetr)
+                //    return;
 
-                _IsRegisetr = true;
+                //_IsRegisetr = true;
 
-                _Application = app;
-                _MainWindow = _Application.Delegate.GetWindow();
+                //_Application = app;
+                //_MainWindow = _Application.Delegate.GetWindow();
 
-                LoadStatusBar();
-                ((IStatusBarService)this).Show(_StatusBarOptions.IconFilePath);
+                //LoadStatusBar();
+                //((IStatusBarService)this).Show(_StatusBarOptions.IconFilePath);
 
             }).OnResignActivation(app =>
             {
@@ -74,6 +75,11 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
 
             }).WillFinishLaunching((app, options) =>
             {
+                _Application = app;
+                _NsApplication = UIWindowExtension.GetSharedNsApplication();
+
+                UIWindow.Notifications.ObserveDidBecomeVisible(WindowDidBecomeVisible);
+
                 return true;
             }).FinishedLaunching((app, options) =>
             {
@@ -252,6 +258,23 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         uiNsWindow?.SetValueForNsobject<IntPtr>("makeKeyAndOrderFront:", this.Handle);
 
         StatusBarEventChanged?.Invoke(this, new EventArgs());
+    }
+
+    void WindowDidBecomeVisible(object? sender, NSNotificationEventArgs args)
+    {
+        if (_IsRegisetr)
+            return;
+
+        if (_MainWindow is null)
+            _MainWindow = _Application?.Windows.FirstOrDefault();
+
+        if (_MainWindow is null)
+            return;
+
+        _IsRegisetr = true;
+
+        LoadStatusBar();
+        ((IStatusBarService)this).Show(_StatusBarOptions.IconFilePath);
     }
 
 }
