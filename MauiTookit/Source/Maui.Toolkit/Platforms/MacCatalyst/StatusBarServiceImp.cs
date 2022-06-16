@@ -260,13 +260,18 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         StatusBarEventChanged?.Invoke(this, new EventArgs());
     }
 
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     void WindowDidBecomeVisible(object? sender, NSNotificationEventArgs args)
     {
         if (_IsRegisetr)
             return;
 
         if (_MainWindow is null)
-            _MainWindow = _Application?.Windows.FirstOrDefault();
+        {
+            _MainWindow = _Application?.Delegate.GetWindow();
+            if (_MainWindow is null)
+                _MainWindow = _Application?.Windows.FirstOrDefault();
+        }
 
         if (_MainWindow is null)
             return;

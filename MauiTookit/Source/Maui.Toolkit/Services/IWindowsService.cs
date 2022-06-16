@@ -1,6 +1,22 @@
-﻿namespace Maui.Toolkit.Services;
+﻿using Maui.Toolkit.Shared;
+
+namespace Maui.Toolkit.Services;
 public interface IWindowsService
 {
+    /// <summary>
+    /// can control titlebar
+    /// </summary>
+    /// <param name="kind"></param>
+    /// <returns></returns>
+    bool SetTitleBar(WindowTitleBarKind kind);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="kind"></param>
+    /// <returns></returns>
+    bool SetBackdrop(BackdropsKind kind);
+
     /// <summary>
     /// Max window
     /// </summary>

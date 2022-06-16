@@ -19,11 +19,11 @@ internal class StatusBarServiceImp : IStatusBarService
 
     readonly StatusBarOptions _StatusBarOptions;
     Microsoft.UI.Xaml.Window? _MainWindow;
+
     NOTIFYICONDATA _NOTIFYICONDATA = default;
     bool _IsShowIn = false;
 
     IntPtr _hICon;
-
     IDisposable? _Disposable;
 
     private event EventHandler<EventArgs>? StatusBarEventChanged = default;
@@ -42,10 +42,11 @@ internal class StatusBarServiceImp : IStatusBarService
         {
             windowsLeftCycle.OnWindowCreated(window =>
             {
+                if (_MainWindow is not null)
+                    return;
+
                 _MainWindow = window;
-
                 _NOTIFYICONDATA = NOTIFYICONDATA.GetDefaultNotifyData(_MainWindow.GetWindowHandle());
-
                 ((IStatusBarService)this).Show(_StatusBarOptions.IconFilePath);
 
             }).OnVisibilityChanged((window, arg) =>
@@ -74,6 +75,9 @@ internal class StatusBarServiceImp : IStatusBarService
 
             }).OnClosed((window, arg) =>
             {
+                if (window != _MainWindow)
+                    return;
+
                 ((IStatusBarService)this).Hide();
             });
         });

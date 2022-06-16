@@ -45,7 +45,7 @@ public class StartupOptions
     /// center or not
     /// the tookit default value is  center
     /// </summary>
-    public WidnowAlignment Location { get; set; }
+    public WindowAlignment Location { get; set; }
 
     /// <summary>
     /// if the window is not max min or fullscreen the size will use

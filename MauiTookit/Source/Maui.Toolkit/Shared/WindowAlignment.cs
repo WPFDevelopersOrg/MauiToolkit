@@ -1,5 +1,5 @@
 ﻿namespace Maui.Toolkit.Shared;
-public enum WidnowAlignment
+public enum WindowAlignment
 {
     /// <summary>
     /// 

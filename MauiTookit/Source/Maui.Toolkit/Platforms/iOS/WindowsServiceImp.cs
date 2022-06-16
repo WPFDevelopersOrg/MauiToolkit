@@ -1,5 +1,6 @@
 ﻿using Maui.Toolkit.Options;
 using Maui.Toolkit.Services;
+using Maui.Toolkit.Shared;
 
 namespace Maui.Toolkit.Platforms;
 
@@ -62,6 +63,15 @@ internal class WindowsServiceImp : IWindowsService
         return true;
     }
 
+    bool IWindowsService.SetBackdrop(BackdropsKind kind)
+    {
+        return true;
+    }
+
+    bool IWindowsService.SetTitleBar(WindowTitleBarKind kind)
+    {
+        return true;
+    }
 
     bool IWindowsService.ResizeWindow(Size size)
     {

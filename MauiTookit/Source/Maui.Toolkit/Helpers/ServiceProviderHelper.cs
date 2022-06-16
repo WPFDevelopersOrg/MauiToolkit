@@ -2,6 +2,8 @@
 
 public static class ServiceProviderHelper
 {
+    static object __Lock = new();
+
     public static TService? GetService<TService>()
     {
         if (Current is null)
@@ -11,14 +13,23 @@ public static class ServiceProviderHelper
     }
 
     public static IServiceProvider? Current
-        =>
+    {
+        get
+        {
+            lock (__Lock)
+            {
 #if WINDOWS10_0_17763_0_OR_GREATER
-            MauiWinUIApplication.Current.Services;
+                return MauiWinUIApplication.Current.Services;
 #elif ANDROID
-            MauiApplication.Current.Services;
+                return MauiApplication.Current.Services;
 #elif IOS || MACCATALYST
-            MauiUIApplicationDelegate.Current.Services;
+                return  MauiUIApplicationDelegate.Current.Services;
 #else
-            null;
+                return null;
 #endif
+            }
+        }
+    }
+
+
 }

@@ -112,6 +112,7 @@ internal class StatusBarServiceImp : IStatusBarService
 
     IDisposable IStatusBarService.SchedulePeriodic(TimeSpan period, Func<bool, string>? action)
     {
+        StatusBarEventChanged?.Invoke(this, EventArgs.Empty);
         return new NullDisposable();
     }
 }

@@ -147,7 +147,7 @@ internal class WindowsServiceImp : NSObject, IWindowsService
         _ => false,
     };
 
-    bool MoveWindow(WidnowAlignment location, Size size)
+    bool MoveWindow(WindowAlignment location, Size size)
     {
         if (_NsMainWindow is null)
             return false;
@@ -180,27 +180,27 @@ internal class WindowsServiceImp : NSObject, IWindowsService
 
         switch (location)
         {
-            case WidnowAlignment.LeftTop:
+            case WindowAlignment.LeftTop:
                 break;
-            case WidnowAlignment.RightTop:
+            case WindowAlignment.RightTop:
                 {
                     startX = vCGRect.Width - realWidth;
                     startY = 0;
                 }
                 break;
-            case WidnowAlignment.Center:
+            case WindowAlignment.Center:
                 {
                     startX = (vCGRect.Width - realWidth) / 2.0;
                     startY = (vCGRect.Height - realHeight) / 2.0;
                 }
                 break;
-            case WidnowAlignment.LeftBottom:
+            case WindowAlignment.LeftBottom:
                 {
                     startX = 0;
                     startY = vCGRect.Height - realHeight;
                 }
                 break;
-            case WidnowAlignment.RightBottom:
+            case WindowAlignment.RightBottom:
                 {
                     startX = vCGRect.Width - realWidth;
                     startY = vCGRect.Height - realHeight;
@@ -275,6 +275,16 @@ internal class WindowsServiceImp : NSObject, IWindowsService
         return true;
     }
 
+    bool IWindowsService.SetBackdrop(BackdropsKind kind)
+    {
+        return true;
+    }
+
+    bool IWindowsService.SetTitleBar(WindowTitleBarKind kind)
+    {
+        return true;
+    }
+
     bool IWindowsService.ResizeWindow(Size size) => MoveWindow(_StartupOptions.Location, size);
 
     bool IWindowsService.RestoreWindow() => MoveWindowRestore();
@@ -285,15 +295,19 @@ internal class WindowsServiceImp : NSObject, IWindowsService
 
     bool IWindowsService.SwitchWindow(bool fullScreen) => ToggleFullScreen(fullScreen);
 
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     void WindowDidBecomeVisible(object? sender, NSNotificationEventArgs args)
     {
         if (_IsTrigger)
             return;
 
         if (_MainWindow is null)
-            _MainWindow = _Application?.Windows.FirstOrDefault();
-        //_MainWindow = _Application?.Delegate.GetWindow();
-
+        {
+            _MainWindow = _Application?.Delegate.GetWindow();
+            if (_MainWindow is null)
+                _MainWindow = _Application?.Windows.FirstOrDefault();
+        }
+           
         if (_NsMainWindow is null)
             _NsMainWindow = _MainWindow?.GetHostWidnowForUiWindow();
 

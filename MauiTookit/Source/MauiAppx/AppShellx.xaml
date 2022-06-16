@@ -20,8 +20,9 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="True" IconOverride="im_document.png"/>
     </Shell.BackButtonBehavior>-->
 
+
     <Shell.FlyoutHeader>
-        <!--<StackLayout>
+        <StackLayout IsVisible="{OnPlatform MacCatalyst=False}">
             <Image Aspect="AspectFill"
                Source="im_endoc.png" 
                Opacity="0.6" />
@@ -30,7 +31,7 @@
                FontAttributes="Bold"
                HorizontalTextAlignment="Center"
                VerticalTextAlignment="Center" />
-        </StackLayout>-->
+        </StackLayout>
     </Shell.FlyoutHeader>
 
 

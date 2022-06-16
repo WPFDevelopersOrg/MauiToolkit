@@ -20,7 +20,7 @@ public static class StartupExtensions
         {
             TitleBarKind = WindowTitleBarKind.ExtendsContentIntoTitleBar,
             PresenterKind = WindowPresenterKind.Maximize,
-            Location = WidnowAlignment.Center,
+            Location = WindowAlignment.Center,
             Size = new Size(1000, 500),
         };
         configureDelegate?.Invoke(options);

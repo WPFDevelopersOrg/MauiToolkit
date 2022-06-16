@@ -12,7 +12,7 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .UseWindowStartup(options => 
             {
-                options.TitleBarKind = WindowTitleBarKind.ExtendsContentIntoTitleBar;
+                options.TitleBarKind = WindowTitleBarKind.Default;
                 options.PresenterKind = WindowPresenterKind.Default;
                 options.TitleBarBackgroundColor = Colors.Transparent;
                 options.TitleBarBackgroundInactiveColor = Colors.Transparent;

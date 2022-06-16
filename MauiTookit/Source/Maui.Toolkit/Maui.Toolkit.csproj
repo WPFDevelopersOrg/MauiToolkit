@@ -25,10 +25,4 @@
 		<PackageReference Include="PInvoke.User32" Version="0.7.104" /> 
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Remove="Platforms\MacCatalyst\Helpers\" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Platforms\MacCatalyst\Helpers\" />
-	</ItemGroup>
 </Project>

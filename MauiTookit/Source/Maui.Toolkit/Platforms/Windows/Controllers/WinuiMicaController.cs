@@ -7,7 +7,7 @@ using MicrosoftuiComposition = Microsoft.UI.Composition;
 
 namespace Maui.Toolkit.Platforms.Windows.Controllers;
 
-internal class WinuiMicaController : IWindowController
+internal class WinuiMicaController : IBackdropController
 {
     public WinuiMicaController(Microsoftui.Window window)
     {
@@ -21,7 +21,7 @@ internal class WinuiMicaController : IWindowController
     MicrosoftBackdrops.MicaController? _MicaController;
     MicrosoftBackdrops.SystemBackdropConfiguration? _SystemBackdropConfiguration;
 
-    bool IWindowController.Run()
+    bool IBackdropController.Run()
     {
         if (_IsStart)
             return true;
@@ -51,7 +51,7 @@ internal class WinuiMicaController : IWindowController
         return true;
     }
 
-    bool IWindowController.Stop()
+    bool IBackdropController.Stop()
     {
         if (_IsStart)
         {
