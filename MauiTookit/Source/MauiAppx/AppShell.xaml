@@ -14,23 +14,19 @@
         <ShellContent
         Title="Home"
         Icon="im_home.png"
-        ContentTemplate="{DataTemplate views:HomePage}"
-        Route="HomeRouter" />
+        ContentTemplate="{DataTemplate views:HomePage}"/>
         <ShellContent
         Title="Apply"
         Icon="im_apply.png"
-        ContentTemplate="{DataTemplate views:ApplyPage}"
-        Route="ApplyRouter" />
+        ContentTemplate="{DataTemplate views:ApplyPage}" />
         <ShellContent
         Title="Result"
         Icon="im_result.png"
-        ContentTemplate="{DataTemplate views:ResultPage}"
-        Route="ResultRouter" />
+        ContentTemplate="{DataTemplate views:ResultPage}"/>
         <ShellContent
         Title="Settings"
         Icon="im_search.png"
-        ContentTemplate="{DataTemplate views:SettingsPage}"
-        Route="SettingsRouter" />
+        ContentTemplate="{DataTemplate views:SettingsPage}"/>
     </TabBar>
 
         
