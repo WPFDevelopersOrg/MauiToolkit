@@ -87,33 +87,33 @@ internal class WindowsServiceImp : NSObject, IWindowsService
         return true;
     }
 
-    //[SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-    //bool RemoveTitleBar(WindowTitleBarKind titleBar)
-    //{
-    //    if (_MainWindow is null)
-    //        return false;
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+    bool RemoveTitleBarEx(WindowTitleBarKind titleBar)
+    {
+        if (_MainWindow is null)
+            return false;
 
-    //    switch (titleBar)
-    //    {
-    //        case WindowTitleBarKind.Default:
-    //            break;
-    //        case WindowTitleBarKind.PlatformDefault:
-    //            break;
-    //        case WindowTitleBarKind.ExtendsContentIntoTitleBar:
-    //            var vTitleBar = _MainWindow.WindowScene?.Titlebar;
-    //            if (vTitleBar is null)
-    //                return false;
+        switch (titleBar)
+        {
+            case WindowTitleBarKind.Default:
+                break;
+            case WindowTitleBarKind.PlatformDefault:
+                break;
+            case WindowTitleBarKind.ExtendsContentIntoTitleBar:
+                var vTitleBar = _MainWindow.WindowScene?.Titlebar;
+                if (vTitleBar is null)
+                    return false;
 
-    //            //vTitleBar.ToolbarStyle = UITitlebarToolbarStyle.Automatic;
-    //            vTitleBar.TitleVisibility = UITitlebarTitleVisibility.Hidden;
-    //            vTitleBar.Toolbar = null;
-    //            break;
-    //        default:
-    //            break;
-    //    }
+                //vTitleBar.ToolbarStyle = UITitlebarToolbarStyle.Automatic;
+                vTitleBar.TitleVisibility = UITitlebarTitleVisibility.Hidden;
+                vTitleBar.Toolbar = null;
+                break;
+            default:
+                break;
+        }
 
-    //    return true;
-    //}
+        return true;
+    }
 
     bool LoadBackgroundMaterial(BackdropsKind kind)
     {
@@ -304,6 +304,7 @@ internal class WindowsServiceImp : NSObject, IWindowsService
 
         LoadBackgroundMaterial(_StartupOptions.BackdropsKind);
         MoveWindow(_StartupOptions.PresenterKind);
+        //RemoveTitleBarEx(_StartupOptions.TitleBarKind);
         RemoveTitleBar(_StartupOptions.TitleBarKind);
     }
 

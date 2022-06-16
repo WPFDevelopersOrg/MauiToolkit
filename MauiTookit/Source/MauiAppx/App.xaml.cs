@@ -12,7 +12,6 @@ public partial class App : Application
         MainPage = new AppShell();
 #else
         MainPage = new AppShellx();
-        //MainPage = new HomePage();
 #endif
 
     }

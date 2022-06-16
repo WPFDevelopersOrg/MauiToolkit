@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <Shell
     x:Class="MauiAppx.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:MauiAppx.Views"
-    Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True">
+    Shell.FlyoutBehavior="Flyout" Shell.NavBarIsVisible="True">
 
     <Shell.SearchHandler>
         <SearchHandler ShowsResults="True" DisplayMemberName="Name" Placeholder="let me try" />
@@ -13,7 +13,39 @@
     
     <ShellContent
         Title="Home"
+        Icon="im_home.png"
         ContentTemplate="{DataTemplate views:HomePage}"
-        Route="MainPage" />
+        Route="HomeRouter" />
+    <ShellContent
+        Title="Apply"
+        Icon="im_apply.png"
+        ContentTemplate="{DataTemplate views:ApplyPage}"
+        Route="ApplyRouter" />
+    <ShellContent
+        Title="Result"
+        Icon="im_result.png"
+        ContentTemplate="{DataTemplate views:ResultPage}"
+        Route="ResultRouter" />
+    <ShellContent
+        Title="Settings"
+        Icon="im_search.png"
+        ContentTemplate="{DataTemplate views:SettingsPage}"
+        Route="SettingsRouter" />
+
+    <!--<FlyoutItem Title="Home" FlyoutIcon="im_home.png">
+        <ShellContent ContentTemplate="{DataTemplate views:HomePage}" Route="HomeRouter"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Apply"  FlyoutIcon="im_apply.png">
+        <ShellContent  ContentTemplate="{DataTemplate views:ApplyPage}" Route="ApplyRouter"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Result"  FlyoutIcon="im_result.png">
+        <ShellContent ContentTemplate="{DataTemplate views:ResultPage}" Route="ResultRouter" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Settings"  FlyoutIcon="im_search.png">
+        <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}" Route="SettingsRouter" />
+    </FlyoutItem>-->
 
 </Shell>

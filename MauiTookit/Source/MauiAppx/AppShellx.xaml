@@ -1,4 +1,4 @@
-<Shell
+﻿<Shell
     x:Class="MauiAppx.AppShellx"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -12,16 +12,16 @@
     FlyoutBackgroundColor="Transparent"
     FlyoutWidth="180" >
 
-    <Shell.SearchHandler>
+    <!--<Shell.SearchHandler>
         <SearchHandler ShowsResults="True" IsSearchEnabled="True" DisplayMemberName="Name" SearchBoxVisibility="Expanded" Placeholder="let me try" />
-    </Shell.SearchHandler>
+    </Shell.SearchHandler>-->
 
-    <Shell.BackButtonBehavior>
+    <!--<Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="True" IconOverride="im_document.png"/>
-    </Shell.BackButtonBehavior>
+    </Shell.BackButtonBehavior>-->
 
     <Shell.FlyoutHeader>
-        <Grid>
+        <!--<StackLayout>
             <Image Aspect="AspectFill"
                Source="im_endoc.png" 
                Opacity="0.6" />
@@ -30,18 +30,18 @@
                FontAttributes="Bold"
                HorizontalTextAlignment="Center"
                VerticalTextAlignment="Center" />
-        </Grid>
+        </StackLayout>-->
     </Shell.FlyoutHeader>
-    
 
-    <FlyoutItem Title="Home" FlyoutIcon="im_home.png">
-        <ShellContent ContentTemplate="{DataTemplate views:HomePage}" Route="HomeRouter"/>
-    </FlyoutItem>
 
     <!--<FlyoutItem Title="Home" FlyoutDisplayOptions="AsSingleItem" >
         <ShellContent Title="Home1" FlyoutIcon="im_home.png" ContentTemplate="{DataTemplate views:HomePage}" Route="HomeRouter"/>
         <ShellContent  Title="Home2" FlyoutIcon="im_home.png" ContentTemplate="{DataTemplate views:HomePage}" Route="HomeRouter1"/>
     </FlyoutItem>-->
+
+    <!--<FlyoutItem Title="Home" FlyoutIcon="im_home.png">
+        <ShellContent ContentTemplate="{DataTemplate views:HomePage}" Route="HomeRouter"/>
+    </FlyoutItem>
 
     <FlyoutItem Title="Apply"  FlyoutIcon="im_apply.png">
         <ShellContent  ContentTemplate="{DataTemplate views:ApplyPage}" Route="ApplyRouter"/>
@@ -53,7 +53,28 @@
 
     <FlyoutItem Title="Settings"  FlyoutIcon="im_search.png">
         <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}" Route="SettingsRouter" />
-    </FlyoutItem>
+    </FlyoutItem>-->
+
+    <ShellContent
+        Title="Home"
+        Icon="im_home.png"
+        ContentTemplate="{DataTemplate views:HomePage}"
+        Route="HomeRouter" />
+    <ShellContent
+        Title="Apply"
+        Icon="im_apply.png"
+        ContentTemplate="{DataTemplate views:ApplyPage}"
+        Route="ApplyRouter" />
+    <ShellContent
+        Title="Result"
+        Icon="im_result.png"
+        ContentTemplate="{DataTemplate views:ResultPage}"
+        Route="ResultRouter" />
+    <ShellContent
+        Title="Settings"
+        Icon="im_search.png"
+        ContentTemplate="{DataTemplate views:SettingsPage}"
+        Route="SettingsRouter" />
 
     <!--<Shell.ItemTemplate>
         <DataTemplate>
