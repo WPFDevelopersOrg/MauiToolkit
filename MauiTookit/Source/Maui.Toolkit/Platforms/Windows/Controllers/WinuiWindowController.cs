@@ -572,7 +572,7 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
         else
         {
             if (_AppWindow.Presenter.Kind is MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen)
-                _AppWindow.SetPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped);
+                _AppWindow.SetPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.Default);
         }
 
         return true;
