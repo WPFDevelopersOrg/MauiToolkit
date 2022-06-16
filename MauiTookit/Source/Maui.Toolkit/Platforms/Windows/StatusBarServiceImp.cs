@@ -1,10 +1,12 @@
 ﻿using Maui.Toolkit.Concurrency;
 using Maui.Toolkit.Options;
+using Maui.Toolkit.Platforms.Windows.Extensions;
 using Maui.Toolkit.Platforms.Windows.Runtimes;
 using Maui.Toolkit.Platforms.Windows.Runtimes.Shell32;
 using Maui.Toolkit.Services;
 using Microsoft.Maui.Platform;
 using PInvoke;
+using MicrosoftuiXaml = Microsoft.UI.Xaml;
 
 
 namespace Maui.Toolkit.Platforms;
@@ -18,7 +20,7 @@ internal class StatusBarServiceImp : IStatusBarService
     }
 
     readonly StatusBarOptions _StatusBarOptions;
-    Microsoft.UI.Xaml.Window? _MainWindow;
+    MicrosoftuiXaml.Window? _MainWindow;
 
     NOTIFYICONDATA _NOTIFYICONDATA = default;
     bool _IsShowIn = false;
@@ -58,7 +60,7 @@ internal class StatusBarServiceImp : IStatusBarService
 
             }).OnLaunching((application, arg) =>
             {
-
+ 
             }).OnLaunched((application, arg) =>
             {
 

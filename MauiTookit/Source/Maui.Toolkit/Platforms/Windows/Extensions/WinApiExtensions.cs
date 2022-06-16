@@ -3,12 +3,14 @@ using Maui.Toolkit.Platforms.Windows.Runtimes.Shcore;
 using Microsoft.Maui.Platform;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
+using WinRT;
+using MicrosoftuiXaml = Microsoft.UI.Xaml;
 
 namespace Maui.Toolkit.Platforms.Windows.Extensions;
 
 public static class WinApiExtensions
 {
-    public static double GetScaleAdjustment(this Microsoft.UI.Xaml.Window window)
+    public static double GetScaleAdjustment(this MicrosoftuiXaml.Window window)
     {
         var hWnd = window?.GetWindowHandle();
         if (hWnd is null || hWnd == IntPtr.Zero)
@@ -25,5 +27,17 @@ public static class WinApiExtensions
         uint scaleFactorPercent = (uint)(((long)dpiX * 100 + (96 >> 1)) / 96);
         return scaleFactorPercent / 100.0;
     }
+
+    public static IntPtr GetApplicationHandle(this MicrosoftuiXaml.Application app)
+    {
+        if (app is null)
+            return IntPtr.Zero;
+
+        if (app is not IWinRTObject winRTObject)
+            return IntPtr.Zero;
+
+        return winRTObject.NativeObject.ThisPtr;
+    }
+
 
 }

@@ -8,15 +8,17 @@ using Maui.Toolkit.Shared;
 using Microsoft.Maui.Platform;
 using PInvoke;
 using Windows.Graphics;
+using Windows.Graphics.Display;
 using static PInvoke.User32;
 using Microsoftui = Microsoft.UI;
+using MicrosoftuiControls = Microsoft.UI.Xaml.Controls;
 using MicrosoftuiWindowing = Microsoft.UI.Windowing;
 using MicrosoftuiXaml = Microsoft.UI.Xaml;
 using Windowsgraphics = Windows.Graphics;
 using Winui = Windows.UI;
-using MicrosoftuiControls = Microsoft.UI.Xaml.Controls;
-using MicrosoftuixamlMedia = Microsoft.UI.Xaml.Media;
-
+using MicrosoftuixamlDocument = Microsoft.UI.Xaml.Documents;
+using MicrosoftuixamlmediaImaging = Microsoft.UI.Xaml.Media.Imaging;
+using Maui.Toolkit.Builders;
 
 namespace Maui.Toolkit.Platforms.Windows.Controllers;
 
@@ -24,8 +26,8 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
 {
     public WinuiWindowController(MicrosoftuiXaml.Application app, MicrosoftuiXaml.Window window, StartupOptions options, bool isMainWindow = false)
     {
-        ArgumentNullException.ThrowIfNull(app, nameof(Application));
-        ArgumentNullException.ThrowIfNull(window, nameof(Window));
+        ArgumentNullException.ThrowIfNull(app, nameof(MicrosoftuiXaml.Application));
+        ArgumentNullException.ThrowIfNull(window, nameof(MicrosoftuiXaml.Window));
         ArgumentNullException.ThrowIfNull(options, nameof(StartupOptions));
         _Application = app;
         _Window = window;
@@ -48,6 +50,8 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
 
     bool IWindowController.Run()
     {
+        //_Application.OnThisPlatform()
+
         lock (this)
         {
             LoadBackgroundMaterial(_Options.BackdropsKind);
@@ -169,6 +173,20 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
             default:
                 if (_Application is null)
                     break;
+
+
+
+
+                //var applicationView = ApplicationView.GetForCurrentView();
+                //if (applicationView is not null)
+                //{
+                //    applicationView.TitleBar.BackgroundColor = Colors.Red.MauiColor2WinuiColor();
+                //}
+
+                //var view = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
+                //view.TitleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
+                // view.TitleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
+
                 var isTitleBarIsSetExtension = Volatile.Read(ref _IsTitleBarIsSetExtension);
                 if (isTitleBarIsSetExtension)
                 {
@@ -188,7 +206,7 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
 
                 if (_Options.TitleBarForegroundInactiveColor != null)
                     res["WindowCaptionForegroundDisabled"] = _Options.TitleBarForegroundInactiveColor.MauiColor2WinuiBrush();
- 
+
                 break;
         }
 
@@ -327,6 +345,9 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
 
     bool LoadMainWindowEvent()
     {
+
+        //DisplayInformation.GetForCurrentView().DpiChanged += WinuiWindowController_DpiChanged;
+
         var mainPage = Application.Current?.MainPage;
         if (mainPage is null)
             return false;
@@ -342,6 +363,11 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
             mainPage.SizeChanged += MainPage_SizeChanged;
 
         return true;
+    }
+
+    private void WinuiWindowController_DpiChanged(DisplayInformation sender, object args)
+    {
+
     }
 
     bool RemoveMainWindowEvent()
@@ -655,7 +681,7 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
             return false;
 
         //if (_AppWindow is null)
-            //return false;
+        //return false;
 
         //_AppWindow.Hide();
 
@@ -698,6 +724,163 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
             if (shell.FlyoutBehavior == FlyoutBehavior.Locked)
                 _Offset = shell.FlyoutWidth;
         }
+
+        //var applicationView = ApplicationView.GetForCurrentView();
+        //if (applicationView is not null)
+        //{
+        //    applicationView.TitleBar.BackgroundColor = Colors.Red.MauiColor2WinuiColor();
+        //}
+
+        var window = _Window;
+
+        if (sender is VisualElement visualElement)
+        {
+            var mauiContext = visualElement.Handler?.MauiContext;
+            var rootManager = mauiContext?.GetNavigationRootManager();
+
+            var windowRootView = rootManager?.RootView as WindowRootView;
+            var navigationViewControl = windowRootView?.NavigationViewControl;
+
+            if (navigationViewControl is not null)
+            {
+                //                if (windowRootView is not null)
+                //                {
+                //                    var titleBarTemplate = (MicrosoftuiXaml.DataTemplate)MicrospftuixamlMarkup.XamlReader.Load(
+                //                        @"<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
+                //                                        xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'>
+                //                            <Grid x:Name=""AppTitleBar""  
+                //      Height=""78"">
+                //    <Grid.ColumnDefinitions>
+                //        <ColumnDefinition x:Name=""LeftPaddingColumn"" Width=""0""/>
+                //        <ColumnDefinition x:Name=""IconColumn"" Width=""Auto""/>
+                //        <ColumnDefinition x:Name=""TitleColumn"" Width=""Auto""/>
+                //        <ColumnDefinition x:Name=""LeftDragColumn"" Width=""*""/>
+                //        <ColumnDefinition x:Name=""SearchColumn"" Width=""Auto""/>
+                //        <ColumnDefinition x:Name=""RightDragColumn"" Width=""*""/>
+                //        <ColumnDefinition x:Name=""RightPaddingColumn"" Width=""0""/>
+                //    </Grid.ColumnDefinitions>
+
+                //    <TextBlock x:Name=""TitleTextBlock"" 
+                //               Text=""App title"" 
+                //               Style=""{StaticResource CaptionTextBlockStyle}""
+                //               Grid.Column=""2""
+                //               VerticalAlignment=""Center""
+                //               Margin=""4,0,0,0""/>
+                //    <AutoSuggestBox Grid.Column=""4"" QueryIcon=""Find""
+                //                    PlaceholderText=""Search""
+                //                    VerticalAlignment=""Center""
+                //                    Width=""260"" Margin=""4,0""/>
+                //</Grid>
+                //                          </DataTemplate>");
+
+
+
+
+                //                    windowRootView.AppTitleBarTemplate = titleBarTemplate;
+                //                }
+
+                
+
+                var propertyInfo1 = typeof(WindowRootView).GetProperty("AppFontIcon", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (propertyInfo1?.GetValue(windowRootView) is MicrosoftuiControls.Image image)
+                {
+                    var path = PlatformShared.CreatePathBuilder()
+                                             .AddArgument("Resources")
+                                             .AddArgument("AppIcon")
+                                             .AddArgument("application128.ico")
+                                             .Build();
+                    Uri imageUri = new(path, UriKind.RelativeOrAbsolute);
+                    MicrosoftuixamlmediaImaging.BitmapImage imageBitmap = new(imageUri);
+                    image.Source = imageBitmap;
+                    image.Width = 25;
+                    image.Height = 25;
+
+                    image.Margin = new MicrosoftuiXaml.Thickness(-5, 5, 0, 0);
+                    //image.Visibility = MicrosoftuiXaml.Visibility.Visible;
+                }
+
+                var propertyInfo = typeof(WindowRootView).GetProperty("AppTitleBar", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (propertyInfo?.GetValue(windowRootView) is MicrosoftuiXaml.FrameworkElement frameworkElement)
+                {
+                    frameworkElement.Height = 50;
+                    var textBlock = frameworkElement.GetFirstDescendant<MicrosoftuiControls.TextBlock>();
+                    if (textBlock is not null)
+                    {
+                        textBlock.FontSize = 16;
+                        textBlock.VerticalAlignment = MicrosoftuiXaml.VerticalAlignment.Center;
+                    }
+
+                    if (frameworkElement is MicrosoftuiControls.Border border)
+                        border.Padding = new MicrosoftuiXaml.Thickness(0, 0, 0, 15);
+                    else if (frameworkElement is MicrosoftuiControls.Grid grid)
+                        grid.Padding = new MicrosoftuiXaml.Thickness(0, 0, 0, 15);
+                }
+
+
+                navigationViewControl.NavigationViewBackButtonMargin = new MicrosoftuiXaml.Thickness(10);
+                navigationViewControl.IsBackButtonVisible = MicrosoftuiControls.NavigationViewBackButtonVisible.Visible;
+                navigationViewControl.IsBackEnabled = true;
+                navigationViewControl.Background = Colors.Transparent.MauiColor2WinuiBrush();
+                //navigationViewControl.BackgroundSizing = MicrosoftuiControls.BackgroundSizing.OuterBorderEdge;
+                //navigationViewControl.ElementSoundMode = MicrosoftuiXaml.ElementSoundMode.FocusOnly;
+                //navigationViewControl.AlwaysShowHeader = true;
+                //navigationViewControl.Header = "MyHeader";
+                navigationViewControl.ShoulderNavigationEnabled = MicrosoftuiControls.NavigationViewShoulderNavigationEnabled.Always;
+                navigationViewControl.IsSettingsVisible = true;
+                navigationViewControl.AutoSuggestBox = new MicrosoftuiControls.AutoSuggestBox()
+                {
+                    IsSuggestionListOpen = true,
+                    PlaceholderText = "Search",
+                    QueryIcon = new MicrosoftuiControls.SymbolIcon(MicrosoftuiControls.Symbol.Find),
+                    LightDismissOverlayMode = MicrosoftuiControls.LightDismissOverlayMode.Auto
+                };
+                navigationViewControl.IsTitleBarAutoPaddingEnabled = false;
+                navigationViewControl.IsPaneVisible = true;
+                navigationViewControl.IsTitleBarAutoPaddingEnabled = false;
+                navigationViewControl.PaneDisplayMode = MicrosoftuiControls.NavigationViewPaneDisplayMode.Left;
+                navigationViewControl.PaneTitle = "Menus";
+                navigationViewControl.IsTabStop = false;
+                navigationViewControl.SelectionFollowsFocus = MicrosoftuiControls.NavigationViewSelectionFollowsFocus.Disabled;
+                navigationViewControl.ExpandedModeThresholdWidth = 500;
+                var settingsItem = navigationViewControl.SettingsItem as MicrosoftuiControls.NavigationViewItem;
+                if (settingsItem is not null)
+                {
+                    settingsItem.Height = 35;
+                    settingsItem.Margin = new MicrosoftuiXaml.Thickness(0, 5, 0, 5);
+                    //settingsItem.HorizontalAlignment = MicrosoftuiXaml.HorizontalAlignment.Center;
+                    //settingsItem.HorizontalContentAlignment = MicrosoftuiXaml.HorizontalAlignment.Center;
+                }
+
+
+                //navigationViewControl.DisplayMode = MicrosoftuiControls.NavigationViewDisplayMode.Expanded;
+                //navigationViewControl.BorderThickness = new MicrosoftuiXaml.Thickness(10);
+            }
+
+        }
+
+        var appTitleBar = new MicrosoftuiControls.Border
+        {
+            IsHitTestVisible = true,
+            VerticalAlignment = MicrosoftuiXaml.VerticalAlignment.Top,
+            Height = 70,
+            Child = new MicrosoftuiControls.TextBlock
+            {
+                VerticalAlignment = MicrosoftuiXaml.VerticalAlignment.Top,
+                Margin = new MicrosoftuiXaml.Thickness(0, 15, 0, 0),
+                Text = "Test123",
+            },
+        };
+
+        MicrosoftuiControls.Grid.SetColumn(appTitleBar, 1);
+        MicrosoftuiControls.Canvas.SetZIndex(appTitleBar, 1);
+
+
+
+        // _Window?.SetTitleBar(appTitleBar);
+
+        //ShellView
+
+
 
         TrySetDragRectangles();
     }

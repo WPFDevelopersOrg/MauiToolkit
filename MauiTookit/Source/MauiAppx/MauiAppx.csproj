@@ -15,7 +15,7 @@
 		<ApplicationTitle>MauiAppx</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.mauiappx</ApplicationId>
+		<ApplicationId>com.mauitoolkit.mauiappx</ApplicationId>
 		<ApplicationIdGuid>94CD1068-AA73-4D23-9F77-92855F64EB08</ApplicationIdGuid>
 
 		<!-- Versions -->
@@ -97,6 +97,9 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<None Update="Resources\AppIcon\application32.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Resources\AppIcon\app.png">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>

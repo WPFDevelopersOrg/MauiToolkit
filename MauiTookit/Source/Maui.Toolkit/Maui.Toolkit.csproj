@@ -24,5 +24,4 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
 		<PackageReference Include="PInvoke.User32" Version="0.7.104" /> 
 	</ItemGroup>
-
 </Project>
