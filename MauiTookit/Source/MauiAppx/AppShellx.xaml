@@ -12,17 +12,8 @@
     FlyoutBackgroundColor="Transparent"
     FlyoutWidth="180" >
 
-    <!--<Shell.SearchHandler>
-        <SearchHandler ShowsResults="True" IsSearchEnabled="True" DisplayMemberName="Name" SearchBoxVisibility="Expanded" Placeholder="let me try" />
-    </Shell.SearchHandler>-->
-
-    <!--<Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="True" IconOverride="im_document.png"/>
-    </Shell.BackButtonBehavior>-->
-
-
-    <Shell.FlyoutHeader>
-        <StackLayout IsVisible="{OnPlatform MacCatalyst=False}">
+    <Shell.Resources>
+        <StackLayout x:Key="FlyoutHeaderKey" IsVisible="{OnPlatform MacCatalyst=False}">
             <Image Aspect="AspectFill"
                Source="im_endoc.png" 
                Opacity="0.6" />
@@ -32,8 +23,18 @@
                HorizontalTextAlignment="Center"
                VerticalTextAlignment="Center" />
         </StackLayout>
-    </Shell.FlyoutHeader>
+    </Shell.Resources>
+    
+    <!--<Shell.SearchHandler>
+        <SearchHandler ShowsResults="True" IsSearchEnabled="True" DisplayMemberName="Name" SearchBoxVisibility="Expanded" Placeholder="let me try" />
+    </Shell.SearchHandler>-->
 
+    <!--<Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="True" IsVisible="True" IconOverride="im_document.png"/>
+    </Shell.BackButtonBehavior>-->
+
+
+ 
 
     <!--<FlyoutItem Title="Home" FlyoutDisplayOptions="AsSingleItem" >
         <ShellContent Title="Home1" FlyoutIcon="im_home.png" ContentTemplate="{DataTemplate views:HomePage}" Route="HomeRouter"/>
