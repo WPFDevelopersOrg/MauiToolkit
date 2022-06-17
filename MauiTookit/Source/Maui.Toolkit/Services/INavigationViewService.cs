@@ -3,10 +3,10 @@
 public interface INavigationViewService
 {
 
-    INavigationViewBuilder GetRootShellViewBuilder();
+    //INavigationViewBuilder GetRootShellViewBuilder();
 
-    INavigationViewBuilder CreateShellViewBuilder(in Window window);
+    //INavigationViewBuilder CreateShellViewBuilder(in Window window);
 
-    INavigationViewBuilder CreateNavigationViewBuilder(in VisualElement visualElement);
+    //INavigationViewBuilder CreateNavigationViewBuilder(in VisualElement visualElement);
 
 }

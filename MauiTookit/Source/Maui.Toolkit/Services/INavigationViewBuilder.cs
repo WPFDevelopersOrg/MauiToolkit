@@ -5,6 +5,6 @@ public interface INavigationViewBuilder
 
     bool SetViewContentBackground(Color color);
 
-    bool SetToggl
+    //bool SetToggl
 
 }

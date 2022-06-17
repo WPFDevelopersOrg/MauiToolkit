@@ -4,35 +4,35 @@ public class ShellViewOptions
     /// <summary>
     /// this is app icon file path 
     /// </summary>
-    string? Icon;
+    public string? Icon;
 
     /// <summary>
     /// can show or hide togglebutton
     /// </summary>
-    bool IsPaneToggleButtonVisible;
+    public bool IsPaneToggleButtonVisible;
 
     /// <summary>
     /// can show or hide the  back button
     /// </summary>
-    bool IsBackButtonVisible;
+    public bool IsBackButtonVisible;
 
     /// <summary>
     /// can show or  hide settings button
     /// </summary>
-    bool IsSettingsVisible;
+    public bool IsSettingsVisible;
 
     /// <summary>
     /// can show or hide searchbar 
     /// </summary>
-    bool IsSerchBarVisible;
+    public bool IsSerchBarVisible;
 
     /// <summary>
     /// this is all window color
     /// </summary>
-    Color? BackgroundColor;
+    public Color? BackgroundColor;
 
     /// <summary>
     /// this is only frame color
     /// </summary>
-    Color? ContentBackgroundColor;
+    public Color? ContentBackgroundColor;
 }

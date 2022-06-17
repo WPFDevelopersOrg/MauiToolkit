@@ -1,6 +1,14 @@
 ﻿<Project>
-	<PropertyGroup>
+
+	<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('windows'))">
+		<BaseIntermediateOutputPath>$(MSBuildThisFileDirectory).vs\$(SolutionName)\Intermediate\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup  Condition="$([MSBuild]::IsOSPlatform('maccatalyst'))">
 		<IntermediateOutputPath>$(MSBuildThisFileDirectory).vs\$(SolutionName)\Intermediate\$(MSBuildProjectName)\</IntermediateOutputPath>
+	</PropertyGroup>
+	
+	<PropertyGroup>
 		<OutputPath>$(MSBuildThisFileDirectory)Binary\</OutputPath>
 		<LangVersion>latest</LangVersion>
 		
@@ -35,4 +43,5 @@
 		<!--<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>-->
 		<!--<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>-->
 	</PropertyGroup>
+	
 </Project>

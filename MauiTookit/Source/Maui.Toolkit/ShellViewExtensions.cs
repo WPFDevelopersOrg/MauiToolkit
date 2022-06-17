@@ -8,7 +8,7 @@ namespace Maui.Toolkit;
 public static class ShellViewExtensions
 {
    
-    public static MauiAppBuilder UseRootShellViewSettings(this MauiAppBuilder builder,)
+    public static MauiAppBuilder UseRootShellViewSettings(this MauiAppBuilder builder)
     {
 
 
