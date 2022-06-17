@@ -20,7 +20,7 @@ internal class WindowsServiceImp : IWindowsService
     MicrosoftuiXaml.Application? _Application;
     MicrosoftuiXaml.Window? _MainWindow;
 
-    volatile ConcurrentDictionary<MicrosoftuiXaml.Window, Core.IWindowController> _mapWindows = new();
+    volatile ConcurrentDictionary<MicrosoftuiXaml.Window, Core.IController> _mapWindows = new();
 
     public bool RegisterApplicationEvent(ILifecycleBuilder lifecycleBuilder)
     {
@@ -40,7 +40,7 @@ internal class WindowsServiceImp : IWindowsService
                 if (_Application is null)
                     return;
 
-                Core.IWindowController controller = new WinuiWindowController(_Application, window, _StartupOptions, isMainWindow);
+                Core.IController controller = new WinuiWindowController(_Application, window, _StartupOptions, isMainWindow);
                 controller.Run();
                 _mapWindows.GetOrAdd(window, controller);
 

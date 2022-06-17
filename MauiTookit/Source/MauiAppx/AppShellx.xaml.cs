@@ -15,6 +15,15 @@ public partial class AppShellx : Shell
 
         if (Resources.TryGetValue("FlyoutHeaderKey", out var value))
             FlyoutHeader = value;
+
+#elif MACCATALYST
+        
+        if (Resources.TryGetValue("ShellItemTemplateKey", out var value))
+        {
+            if (value is DataTemplate dataTemplate)
+                ItemTemplate = dataTemplate;
+        }
+
 #endif
 
     }

@@ -8,19 +8,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Maui.Toolkit.Platforms.MacCatalyst.Controllers;
-internal class UIKitWindowController : IWindowController, IWindowsService
+internal class UIKitWindowController : IController, IWindowsService
 {
     public UIKitWindowController()
     {
 
     }
 
-    bool IWindowController.Run()
+    bool IController.Run()
     {
         throw new NotImplementedException();
     }
 
-    bool IWindowController.Stop()
+    bool IController.Stop()
     {
         throw new NotImplementedException();
     }

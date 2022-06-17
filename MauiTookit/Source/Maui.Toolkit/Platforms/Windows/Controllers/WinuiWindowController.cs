@@ -22,7 +22,7 @@ using Maui.Toolkit.Builders;
 
 namespace Maui.Toolkit.Platforms.Windows.Controllers;
 
-internal partial class WinuiWindowController : IWindowController, IWindowsService
+internal partial class WinuiWindowController : IController, IWindowsService
 {
     public WinuiWindowController(MicrosoftuiXaml.Application app, MicrosoftuiXaml.Window window, StartupOptions options, bool isMainWindow = false)
     {
@@ -48,7 +48,7 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
 
     bool _IsTitleBarIsSetExtension = false;
 
-    bool IWindowController.Run()
+    bool IController.Run()
     {
         //_Application.OnThisPlatform()
 
@@ -70,7 +70,7 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
         return true;
     }
 
-    bool IWindowController.Stop()
+    bool IController.Stop()
     {
         lock (this)
         {
@@ -345,25 +345,45 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
 
     bool LoadMainWindowEvent()
     {
-
-        //DisplayInformation.GetForCurrentView().DpiChanged += WinuiWindowController_DpiChanged;
-
-        var mainPage = Application.Current?.MainPage;
-        if (mainPage is null)
+        var content = _Window.Content;
+        if (content is not MicrosoftuiXaml.FrameworkElement frameworkElement)
             return false;
 
-        mainPage.Loaded += MainPage_Loaded;
-
-        if (mainPage is Shell shell)
-        {
-            if (shell.CurrentPage is not null)
-                shell.CurrentPage.SizeChanged += MainPage_SizeChanged;
-        }
-        else
-            mainPage.SizeChanged += MainPage_SizeChanged;
+        frameworkElement.Loaded += FrameworkElement_Loaded;
+        frameworkElement.Unloaded += FrameworkElement_Unloaded;
+        frameworkElement.SizeChanged += FrameworkElement_SizeChanged;
 
         return true;
     }
+
+    private void FrameworkElement_SizeChanged(object sender, MicrosoftuiXaml.SizeChangedEventArgs e)
+    {
+        if (!_IsLoaded)
+            return;
+
+        var rects = LoadRects();
+        if (rects == null)
+            return;
+
+        SetDragRectangles(rects);
+    }
+
+    private void FrameworkElement_Loaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
+    {
+        if (Application.Current?.MainPage is Shell shell)
+        {
+            if (shell.FlyoutBehavior == FlyoutBehavior.Locked)
+                _Offset = shell.FlyoutWidth;
+        }
+
+        TrySetDragRectangles();
+    }
+
+    private void FrameworkElement_Unloaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
+    {
+
+    }
+
 
     private void WinuiWindowController_DpiChanged(DisplayInformation sender, object args)
     {
@@ -372,19 +392,13 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
 
     bool RemoveMainWindowEvent()
     {
-        var mainPage = Application.Current?.MainPage;
-        if (mainPage is null)
+        var content = _Window.Content;
+        if (content is not MicrosoftuiXaml.FrameworkElement frameworkElement)
             return false;
 
-        mainPage.Loaded -= MainPage_Loaded;
-        if (mainPage is Shell shell)
-        {
-            if (shell.CurrentPage is not null)
-                shell.CurrentPage.SizeChanged -= MainPage_SizeChanged;
-        }
-        else
-            mainPage.SizeChanged -= MainPage_SizeChanged;
-
+        frameworkElement.Loaded -= FrameworkElement_Loaded;
+        frameworkElement.Unloaded -= FrameworkElement_Unloaded;
+        frameworkElement.SizeChanged -= FrameworkElement_SizeChanged;
         return true;
     }
 
@@ -705,18 +719,6 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
         return true;
     }
 
-    private void MainPage_SizeChanged(object? sender, EventArgs e)
-    {
-        if (!_IsLoaded)
-            return;
-
-        var rects = LoadRects();
-        if (rects == null)
-            return;
-
-        SetDragRectangles(rects);
-    }
-
     private void MainPage_Loaded(object? sender, EventArgs e)
     {
         if (sender is Shell shell)
@@ -740,6 +742,11 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
 
             var windowRootView = rootManager?.RootView as WindowRootView;
             var navigationViewControl = windowRootView?.NavigationViewControl;
+
+            //if (windowRootView is not null)
+                //windowRootView.Style = default;
+
+            
 
             if (navigationViewControl is not null)
             {
@@ -778,8 +785,7 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
 
                 //                    windowRootView.AppTitleBarTemplate = titleBarTemplate;
                 //                }
-
-                
+                //navigationViewControl.Style = default;
 
                 var propertyInfo1 = typeof(WindowRootView).GetProperty("AppFontIcon", BindingFlags.Instance | BindingFlags.NonPublic);
                 if (propertyInfo1?.GetValue(windowRootView) is MicrosoftuiControls.Image image)
@@ -802,7 +808,7 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
                 var propertyInfo = typeof(WindowRootView).GetProperty("AppTitleBar", BindingFlags.Instance | BindingFlags.NonPublic);
                 if (propertyInfo?.GetValue(windowRootView) is MicrosoftuiXaml.FrameworkElement frameworkElement)
                 {
-                    frameworkElement.Height = 50;
+                    frameworkElement.Height = 48;
                     var textBlock = frameworkElement.GetFirstDescendant<MicrosoftuiControls.TextBlock>();
                     if (textBlock is not null)
                     {
@@ -834,14 +840,18 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
                     QueryIcon = new MicrosoftuiControls.SymbolIcon(MicrosoftuiControls.Symbol.Find),
                     LightDismissOverlayMode = MicrosoftuiControls.LightDismissOverlayMode.Auto
                 };
-                navigationViewControl.IsTitleBarAutoPaddingEnabled = false;
+
+                navigationViewControl.IsPaneToggleButtonVisible = true;
+                navigationViewControl.IsTitleBarAutoPaddingEnabled = true;
                 navigationViewControl.IsPaneVisible = true;
-                navigationViewControl.IsTitleBarAutoPaddingEnabled = false;
                 navigationViewControl.PaneDisplayMode = MicrosoftuiControls.NavigationViewPaneDisplayMode.Left;
                 navigationViewControl.PaneTitle = "Menus";
                 navigationViewControl.IsTabStop = false;
+                //navigationViewControl.OverflowLabelMode = MicrosoftuiControls.NavigationViewOverflowLabelMode.MoreLabel;
                 navigationViewControl.SelectionFollowsFocus = MicrosoftuiControls.NavigationViewSelectionFollowsFocus.Disabled;
-                navigationViewControl.ExpandedModeThresholdWidth = 500;
+                //navigationViewControl.ExpandedModeThresholdWidth = 500;
+                //navigationViewControl.CompactModeThresholdWidth = 200;
+                //navigationViewControl.CompactPaneLength = 200;
                 var settingsItem = navigationViewControl.SettingsItem as MicrosoftuiControls.NavigationViewItem;
                 if (settingsItem is not null)
                 {
@@ -851,6 +861,17 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
                     //settingsItem.HorizontalContentAlignment = MicrosoftuiXaml.HorizontalAlignment.Center;
                 }
 
+                var navigationViewContent = navigationViewControl.Content;
+                if (navigationViewContent is MauiNavigationView mauiNavigationView)
+                {
+                    mauiNavigationView.Background = Colors.Transparent.MauiColor2WinuiBrush();
+                }
+
+                //navigationViewControl.ContentOverlay = null;
+                //if (windowRootView is not null)
+                //windowRootView.Background = Colors.Red.MauiColor2WinuiBrush();
+
+                //navigationViewControl.Content = null;
 
                 //navigationViewControl.DisplayMode = MicrosoftuiControls.NavigationViewDisplayMode.Expanded;
                 //navigationViewControl.BorderThickness = new MicrosoftuiXaml.Thickness(10);
@@ -881,8 +902,6 @@ internal partial class WinuiWindowController : IWindowController, IWindowsServic
         //ShellView
 
 
-
-        TrySetDragRectangles();
     }
 
     private void Application_RequestedThemeChanged(object? sender, AppThemeChangedEventArgs e)

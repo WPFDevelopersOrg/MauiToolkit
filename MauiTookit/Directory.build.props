@@ -1,8 +1,6 @@
 ﻿<Project>
 	<PropertyGroup>
-		<!--<BaseIntermediateOutputPath>$(SolutionDir).vs\$(SolutionName)\Intermediate\$(MSBuildProjectName)\</BaseIntermediateOutputPath>-->
-		<IntermediateOutputPath>$(SolutionDir).vs\$(SolutionName)\Intermediate\$(MSBuildProjectName)\</IntermediateOutputPath>
-		<!--<IntermediateOutputPath>$(MSBuildThisFileDirectory).vs\$(SolutionName)\Intermediate\$(MSBuildProjectName)\</IntermediateOutputPath>-->
+		<IntermediateOutputPath>$(MSBuildThisFileDirectory).vs\$(SolutionName)\Intermediate\$(MSBuildProjectName)\</IntermediateOutputPath>
 		<OutputPath>$(MSBuildThisFileDirectory)Binary\</OutputPath>
 		<LangVersion>latest</LangVersion>
 		

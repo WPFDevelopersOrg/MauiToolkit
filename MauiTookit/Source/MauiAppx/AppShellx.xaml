@@ -23,15 +23,38 @@
                HorizontalTextAlignment="Center"
                VerticalTextAlignment="Center" />
         </StackLayout>
+
+        <DataTemplate x:Key="ShellItemTemplateKey" x:DataType="BaseShellItem">
+            <Grid WidthRequest="180" HeightRequest="50">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" 
+                       Source="{Binding FlyoutIcon}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"                               
+                       HeightRequest="25"
+                       WidthRequest="25" />
+
+                <Label Grid.Column="2" 
+                       HorizontalTextAlignment="Start"
+                       VerticalTextAlignment="Center"
+                       Text="{Binding Title}"/>
+
+            </Grid>
+        </DataTemplate>
+        
     </Shell.Resources>
     
-    <!--<Shell.SearchHandler>
+    <Shell.SearchHandler>
         <SearchHandler ShowsResults="True" IsSearchEnabled="True" DisplayMemberName="Name" SearchBoxVisibility="Expanded" Placeholder="let me try" />
-    </Shell.SearchHandler>-->
+    </Shell.SearchHandler>
 
-    <!--<Shell.BackButtonBehavior>
+    <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="True" IconOverride="im_document.png"/>
-    </Shell.BackButtonBehavior>-->
+    </Shell.BackButtonBehavior>
 
 
  

@@ -2,7 +2,7 @@
 
 namespace Maui.Toolkit.Core;
 
-internal interface IWindowController
+internal interface IController
 {
     bool Run();
 
