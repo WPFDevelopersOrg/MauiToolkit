@@ -1,4 +1,4 @@
-﻿namespace Maui.Toolkit.Services;
+﻿namespace Maui.Toolkit.Core;
 public interface INavigationViewBuilder
 {
     bool SetViewBackground(Color color);

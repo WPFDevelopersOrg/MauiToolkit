@@ -89,7 +89,7 @@ public static class XFrameworkElementExtensions
         platformControl.VerticalAlignment = textAlignment.VerticalTextAlignment.ToPlatformVerticalAlignment();
     }
 
-    internal static IEnumerable<T?> GetDescendantsByName<T>(this DependencyObject parent, string elementName) where T : DependencyObject
+    public static IEnumerable<T?> GetDescendantsByName<T>(this DependencyObject parent, string elementName) where T : DependencyObject
     {
         var myChildrenCount = VisualTreeHelper.GetChildrenCount(parent);
         for (int i = 0; i < myChildrenCount; i++)
@@ -108,7 +108,7 @@ public static class XFrameworkElementExtensions
         }
     }
 
-    internal static T? GetDescendantByName<T>(this DependencyObject parent, string elementName) where T : DependencyObject
+    public static T? GetDescendantByName<T>(this DependencyObject parent, string elementName) where T : DependencyObject
     {
         var myChildrenCount = VisualTreeHelper.GetChildrenCount(parent);
         for (int i = 0; i < myChildrenCount; i++)
@@ -123,7 +123,7 @@ public static class XFrameworkElementExtensions
         return null;
     }
 
-    internal static T? GetFirstDescendant<T>(this DependencyObject element) where T : FrameworkElement
+    public static T? GetFirstDescendant<T>(this DependencyObject element) where T : FrameworkElement
     {
         var count = VisualTreeHelper.GetChildrenCount(element);
         for (var i = 0; i < count; i++)
@@ -136,7 +136,7 @@ public static class XFrameworkElementExtensions
         return null;
     }
 
-    internal static WinuiResourceDictionary CloneResources(this FrameworkElement element)
+    public static WinuiResourceDictionary CloneResources(this FrameworkElement element)
     {
         var rd = new WinuiResourceDictionary();
 
@@ -146,7 +146,7 @@ public static class XFrameworkElementExtensions
         return rd;
     }
 
-    internal static void TryUpdateResource(this FrameworkElement element, object newValue, params string[] keys)
+    public static void TryUpdateResource(this FrameworkElement element, object newValue, params string[] keys)
     {
         var rd = element?.Resources;
 
@@ -160,7 +160,7 @@ public static class XFrameworkElementExtensions
         }
     }
 
-    static DependencyProperty? GetForegroundProperty(FrameworkElement element)
+    public static DependencyProperty? GetForegroundProperty(FrameworkElement element)
     {
         if (element is Control)
             return Control.ForegroundProperty;
@@ -183,7 +183,7 @@ public static class XFrameworkElementExtensions
         return foregroundProperty;
     }
 
-    internal static IEnumerable<T?> GetChildren<T>(this DependencyObject parent) where T : DependencyObject
+    public static IEnumerable<T?> GetChildren<T>(this DependencyObject parent) where T : DependencyObject
     {
         int myChildrenCount = VisualTreeHelper.GetChildrenCount(parent);
         for (int i = 0; i < myChildrenCount; i++)
@@ -200,10 +200,10 @@ public static class XFrameworkElementExtensions
         }
     }
 
-    internal static bool IsLoaded(this FrameworkElement frameworkElement) =>
+    public static bool IsLoaded(this FrameworkElement frameworkElement) =>
         frameworkElement.IsLoaded;
 
-    internal static IDisposable OnLoaded(this FrameworkElement frameworkElement, Action action)
+    public static IDisposable OnLoaded(this FrameworkElement frameworkElement, Action action)
     {
         if (frameworkElement.IsLoaded())
         {
@@ -228,7 +228,7 @@ public static class XFrameworkElementExtensions
         return disposable;
     }
 
-    internal static IDisposable OnUnloaded(this FrameworkElement frameworkElement, Action action)
+    public static IDisposable OnUnloaded(this FrameworkElement frameworkElement, Action action)
     {
         if (!frameworkElement.IsLoaded())
         {
@@ -254,7 +254,7 @@ public static class XFrameworkElementExtensions
         return disposable;
     }
 
-    internal static void Arrange(this IView view, FrameworkElement frameworkElement)
+    public static void Arrange(this IView view, FrameworkElement frameworkElement)
     {
         var rect = new Rect(0, 0, frameworkElement.ActualWidth, frameworkElement.ActualHeight);
 
@@ -263,7 +263,7 @@ public static class XFrameworkElementExtensions
     }
 
 
-    internal static void SetApplicationResource(this FrameworkElement frameworkElement, string propertyKey, object? value)
+    public static void SetApplicationResource(this FrameworkElement frameworkElement, string propertyKey, object? value)
     {
         if (value is null)
         {
@@ -276,14 +276,14 @@ public static class XFrameworkElementExtensions
             frameworkElement.Resources[propertyKey] = value;
     }
 
-    internal static WinuiPoint? GetLocationOnScreen(this UIElement element)
+    public static WinuiPoint? GetLocationOnScreen(this UIElement element)
     {
         var ttv = element.TransformToVisual(element.XamlRoot.Content);
         WinuiPoint screenCoords = ttv.TransformPoint(new WinuiPoint(0, 0));
         return new WinuiPoint(screenCoords.X, screenCoords.Y);
     }
 
-    internal static WinuiPoint? GetLocationOnScreen(this IElement element)
+    public static WinuiPoint? GetLocationOnScreen(this IElement element)
     {
         if (element.Handler?.MauiContext == null)
             return null;
@@ -293,14 +293,14 @@ public static class XFrameworkElementExtensions
             view.GetLocationRelativeTo(view.XamlRoot.Content);
     }
 
-    internal static WinuiPoint? GetLocationRelativeTo(this UIElement element, UIElement relativeTo)
+    public static WinuiPoint? GetLocationRelativeTo(this UIElement element, UIElement relativeTo)
     {
         var ttv = element.TransformToVisual(relativeTo);
         WinuiPoint screenCoords = ttv.TransformPoint(new WinuiPoint(0, 0));
         return new WinuiPoint(screenCoords.X, screenCoords.Y);
     }
 
-    internal static WinuiPoint? GetLocationRelativeTo(this IElement element, UIElement relativeTo)
+    public static WinuiPoint? GetLocationRelativeTo(this IElement element, UIElement relativeTo)
     {
         if (element.Handler?.MauiContext == null)
             return null;
@@ -311,7 +311,7 @@ public static class XFrameworkElementExtensions
                 .GetLocationRelativeTo(relativeTo);
     }
 
-    internal static WinuiPoint? GetLocationRelativeTo(this IElement element, IElement relativeTo)
+    public static WinuiPoint? GetLocationRelativeTo(this IElement element, IElement relativeTo)
     {
         if (element.Handler?.MauiContext == null)
             return null;

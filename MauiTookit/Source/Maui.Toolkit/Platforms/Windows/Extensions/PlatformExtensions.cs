@@ -15,9 +15,6 @@ public static class PlatformExtensions
         return Winui.Color.FromArgb(alpha, red, green, blue);
     }
 
-    public static WinuiMedia.Brush MauiColor2WinuiBrush(this Color color)
-    {
-       return new WinuiMedia.SolidColorBrush(color.MauiColor2WinuiColor());
-    }
+    public static WinuiMedia.Brush MauiColor2WinuiBrush(this Color color) =>  new WinuiMedia.SolidColorBrush(color.MauiColor2WinuiColor());
 
 }

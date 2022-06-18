@@ -23,7 +23,6 @@ public static class DpiHelperExtensions
         return transformToDip.Transform(devicePoint);
     }
 
-    [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
     public static Rect LogicalRectToDevice(this MauiWinUIWindow window, Rect logicalRectangle)
     {
         Point point = window.LogicalPixelsToDevice(new Point(logicalRectangle.Left, logicalRectangle.Top));
@@ -38,7 +37,6 @@ public static class DpiHelperExtensions
         return new Rect(point, new Size(Math.Abs(point2.X - point.X), Math.Abs(point2.Y - point.Y)));
     }
 
-    [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
     public static Size LogicalSizeToDevice(this MauiWinUIWindow window, Size logicalSize)
     {
         Point point = window.LogicalPixelsToDevice(new Point(logicalSize.Width, logicalSize.Height));
