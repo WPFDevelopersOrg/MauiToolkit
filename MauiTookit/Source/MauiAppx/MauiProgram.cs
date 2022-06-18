@@ -40,6 +40,24 @@ public static class MauiProgram
 #endif
 
             })
+            .UseShellViewSettings(options => 
+            {
+#if WINDOWS
+
+                options.Icon = PlatformShared.CreatePathBuilder()
+                                                     .AddArgument("Resources")
+                                                     .AddArgument("AppIcon")
+                                                     .AddArgument("application128.ico")
+                                                     .Build();
+
+#elif MACCATALYST
+
+                 options.Icon = PlatformShared.CreatePathBuilder()
+                                                     .AddArgument("Resources")
+                                                     .AddArgument("app.png")
+                                                     .Build();
+#endif
+            })
             .UseMessageNotify()
             .ConfigureFonts(fonts =>
             {

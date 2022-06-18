@@ -1,11 +1,7 @@
 ﻿using Maui.Toolkit.Core;
 using Maui.Toolkit.Options;
-using Maui.Toolkit.Platforms.Windows.Controllers;
-using Maui.Toolkit.Platforms.Windows.Runtimes.Shell32;
 using Maui.Toolkit.Providers;
 using Maui.Toolkit.Services;
-using Microsoft.Maui.Platform;
-using MicrosoftuiXaml = Microsoft.UI.Xaml;
 
 namespace Maui.Toolkit.Platforms;
 
@@ -13,74 +9,57 @@ internal class NavigationViewServiceImp : INavigationViewService, INatvigationVi
 {
     public NavigationViewServiceImp(ShellViewOptions options)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
-        _Options = options;
+
     }
-
-    readonly ShellViewOptions _Options;
-    bool _IsRegister = false;
-
-    WinuiWindowRootViewController? _RootNavigationViewBuilder;
 
     public bool RegisterApplicationEvent(ILifecycleBuilder lifecycleBuilder)
     {
-        ArgumentNullException.ThrowIfNull(lifecycleBuilder, nameof(lifecycleBuilder));
-
-        lifecycleBuilder.AddWindows(windowsLeftCycle =>
+        lifecycleBuilder.AddiOS(windowsLeftCycle =>
         {
-            windowsLeftCycle.OnWindowCreated(window =>
-            {
-                if (_IsRegister)
-                    return;
-
-                _IsRegister = true;
-
-                _RootNavigationViewBuilder = CreateShellViewBuilder(window);
-
-
-            }).OnVisibilityChanged((window, arg) =>
-            {
-
-            }).OnActivated((window, arg) =>
+            windowsLeftCycle.OnActivated(app =>
             {
 
 
-            }).OnLaunching((application, arg) =>
+            }).OnResignActivation(app =>
             {
 
-            }).OnLaunched((application, arg) =>
+            }).ContinueUserActivity((app, user, handler) =>
             {
 
-            }).OnPlatformMessage((w, arg) =>
+                return true;
+
+            }).DidEnterBackground(app =>
             {
 
-
-            }).OnResumed(window =>
+            }).WillFinishLaunching((app, options) =>
+            {
+                return true;
+            }).FinishedLaunching((app, options) =>
+            {
+                return true;
+            }).OpenUrl((app, url, options) =>
+            {
+                return true;
+            }).PerformActionForShortcutItem((app, item, handler) =>
             {
 
-            }).OnClosed((window, arg) =>
+            }).WillEnterForeground(app =>
+            {
+
+            }).WillTerminate(app =>
+            {
+
+            }).SceneWillConnect((scrne, session, options) =>
+            {
+
+            }).SceneDidDisconnect(scene =>
             {
 
             });
         });
+
         return true;
     }
-
-
-    WinuiWindowRootViewController? CreateShellViewBuilder(MicrosoftuiXaml.Window window)
-    {
-        if (window is null)
-            return default;
-
-        if (window.Content is not WindowRootView windowRootView)
-            return default;
-
-
-
-
-        return default;
-    }
-
 
     INavigationViewBuilder? INatvigationViewProvider.CreateNavigationViewBuilder(in VisualElement visualElement)
     {
@@ -91,8 +70,6 @@ internal class NavigationViewServiceImp : INavigationViewService, INatvigationVi
     {
         return default;
     }
-
-
 
     INavigationViewBuilder? INatvigationViewProvider.GetRootShellViewBuilder()
     {

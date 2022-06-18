@@ -2,6 +2,11 @@
 public class ShellViewOptions
 {
     /// <summary>
+    /// this is title 
+    /// </summary>
+    public string? Title;
+
+    /// <summary>
     /// this is app icon file path 
     /// </summary>
     public string? Icon;
@@ -32,7 +37,17 @@ public class ShellViewOptions
     public Color? BackgroundColor;
 
     /// <summary>
+    /// this is all window brush
+    /// </summary>
+    public Brush? Background;
+
+    /// <summary>
     /// this is only frame color
     /// </summary>
     public Color? ContentBackgroundColor;
+
+    /// <summary>
+    /// this is only frame brush
+    /// </summary>
+    public Brush? ContentBackground;
 }

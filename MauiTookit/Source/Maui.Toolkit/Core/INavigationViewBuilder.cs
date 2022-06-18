@@ -1,10 +1,35 @@
-﻿namespace Maui.Toolkit.Core;
+﻿using Maui.Toolkit.Controls;
+
+namespace Maui.Toolkit.Core;
 public interface INavigationViewBuilder
 {
-    bool SetViewBackground(Color color);
+    string? Title { get; set; }
 
-    bool SetViewContentBackground(Color color);
+    string? AppIcon { get; set; }
 
-    //bool SetToggl
+    Color? ViewBackgroundColor { get; set; }
 
+    Brush? ViewBackground { get; set; }
+
+    Color? ViewContentBackgroundColor { get; set; }
+
+    Brush? ViewContentBackground { get; set; }
+
+    bool IsToggleButtonVisible { get; set; }
+
+    Button BackButton { get; set; }
+
+    SettingsControl? Settings { get; set; }
+
+    SearchBar? SearchBar { get; set; }
+
+    double ViewTitleBarHeight { get;set; }
+
+    double ViewTileBarFontSize { get; set; }
+
+    object? SelectedItem { get; set; }
+
+    event EventHandler SelectionChanged;
+
+    event EventHandler ItemInvoked;
 }

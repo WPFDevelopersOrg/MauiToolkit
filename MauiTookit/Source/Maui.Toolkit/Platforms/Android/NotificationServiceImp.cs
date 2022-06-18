@@ -84,7 +84,6 @@ internal class NotificationServiceImp : INotificationService
         return true;
     }
 
-
     bool INotificationService.AddArgument<T>(string key, T value)
     {
         throw new NotImplementedException();

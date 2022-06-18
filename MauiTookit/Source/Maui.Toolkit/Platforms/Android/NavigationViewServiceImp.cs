@@ -1,11 +1,7 @@
 ﻿using Maui.Toolkit.Core;
 using Maui.Toolkit.Options;
-using Maui.Toolkit.Platforms.Windows.Controllers;
-using Maui.Toolkit.Platforms.Windows.Runtimes.Shell32;
 using Maui.Toolkit.Providers;
 using Maui.Toolkit.Services;
-using Microsoft.Maui.Platform;
-using MicrosoftuiXaml = Microsoft.UI.Xaml;
 
 namespace Maui.Toolkit.Platforms;
 
@@ -13,74 +9,81 @@ internal class NavigationViewServiceImp : INavigationViewService, INatvigationVi
 {
     public NavigationViewServiceImp(ShellViewOptions options)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
-        _Options = options;
+
     }
-
-    readonly ShellViewOptions _Options;
-    bool _IsRegister = false;
-
-    WinuiWindowRootViewController? _RootNavigationViewBuilder;
 
     public bool RegisterApplicationEvent(ILifecycleBuilder lifecycleBuilder)
     {
-        ArgumentNullException.ThrowIfNull(lifecycleBuilder, nameof(lifecycleBuilder));
-
-        lifecycleBuilder.AddWindows(windowsLeftCycle =>
+        lifecycleBuilder.AddAndroid(windowsLeftCycle =>
         {
-            windowsLeftCycle.OnWindowCreated(window =>
-            {
-                if (_IsRegister)
-                    return;
-
-                _IsRegister = true;
-
-                _RootNavigationViewBuilder = CreateShellViewBuilder(window);
-
-
-            }).OnVisibilityChanged((window, arg) =>
-            {
-
-            }).OnActivated((window, arg) =>
+            windowsLeftCycle.OnApplicationCreating(app =>
             {
 
 
-            }).OnLaunching((application, arg) =>
+            }).OnNewIntent((activity, intent) =>
             {
 
-            }).OnLaunched((application, arg) =>
+            }).OnConfigurationChanged((activity, config) =>
             {
 
-            }).OnPlatformMessage((w, arg) =>
+            }).OnBackPressed(activity =>
+            {
+                return true;
+            }).OnActivityResult((activity, requestCode, resultCode, data) =>
             {
 
-
-            }).OnResumed(window =>
+            }).OnPostResume(activity =>
+            {
+            }).OnPostCreate((activity, state) =>
             {
 
-            }).OnClosed((window, arg) =>
+            }).OnRestart(activity =>
+            {
+
+            }).OnDestroy(activity =>
+            {
+
+            }).OnRequestPermissionsResult((activity, requestCode, permissions, grantResults) =>
+            {
+
+            }).OnSaveInstanceState((activity, state) =>
+            {
+
+            }).OnRestoreInstanceState((activity, state) =>
+            {
+
+            }).OnPause(activity =>
+            {
+
+            }).OnResume(activity =>
+            {
+
+            }).OnStart(activity =>
+            {
+
+            }).OnCreate((activity, state) =>
+            {
+
+            }).OnStop(activity =>
+            {
+
+            }).OnApplicationConfigurationChanged((App, config) =>
+            {
+
+            }).OnApplicationTrimMemory((app, level) =>
+            {
+
+            }).OnApplicationLowMemory(app =>
+            {
+
+            }).OnApplicationCreate(app =>
             {
 
             });
         });
+
         return true;
     }
-
-
-    WinuiWindowRootViewController? CreateShellViewBuilder(MicrosoftuiXaml.Window window)
-    {
-        if (window is null)
-            return default;
-
-        if (window.Content is not WindowRootView windowRootView)
-            return default;
-
-
-
-
-        return default;
-    }
-
 
     INavigationViewBuilder? INatvigationViewProvider.CreateNavigationViewBuilder(in VisualElement visualElement)
     {
@@ -91,8 +94,6 @@ internal class NavigationViewServiceImp : INavigationViewService, INatvigationVi
     {
         return default;
     }
-
-
 
     INavigationViewBuilder? INatvigationViewProvider.GetRootShellViewBuilder()
     {

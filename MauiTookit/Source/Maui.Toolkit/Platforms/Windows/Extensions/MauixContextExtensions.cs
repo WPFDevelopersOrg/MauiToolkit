@@ -6,7 +6,7 @@ namespace Maui.Toolkit.Platforms.Windows.Extensions;
 public static class MauixContextExtensions
 {
     public static NavigationRootManager GetNavigationRootManager(this IMauiContext mauiContext) =>
-            mauiContext.Services.GetRequiredService<NavigationRootManager>();
+    mauiContext.Services.GetRequiredService<NavigationRootManager>();
 
     public static Microsoft.UI.Xaml.Window GetPlatformWindow(this IMauiContext mauiContext) =>
         mauiContext.Services.GetRequiredService<Microsoft.UI.Xaml.Window>();

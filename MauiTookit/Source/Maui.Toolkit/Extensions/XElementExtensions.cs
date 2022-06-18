@@ -87,6 +87,32 @@ public static class XElementExtensions
 
     }
 
+    public static IEnumerable<Element> GetParentsPath(this Element self)
+    {
+        Element current = self;
+
+        while (!current.RealParent.IsApplicationOrNull())
+        {
+            current = current.RealParent;
+            yield return current;
+        }
+    }
+
+    public static Element? FindParentWith(this Element element, Func<Element?, bool>? withMatch, bool includeThis = false)
+    {
+
+        if (includeThis && withMatch?.Invoke(element) == true)
+            return element;
+
+        foreach (var parent in element.GetParentsPath())
+        {
+            if (withMatch?.Invoke(parent) == true)
+                return parent;
+        }
+
+        return default;
+    }
+
     public static T? FindParentOfType<T>(this IElement element, bool includeThis = false) where T : IElement
     {
         if (includeThis && element is T view)

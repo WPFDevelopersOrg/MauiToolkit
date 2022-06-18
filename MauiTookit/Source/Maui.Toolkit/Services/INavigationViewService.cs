@@ -2,11 +2,28 @@
 
 public interface INavigationViewService
 {
+    bool SetAppIcon(string icon);
 
-    //INavigationViewBuilder GetRootShellViewBuilder();
+    bool SetTitle(string title);
 
-    //INavigationViewBuilder CreateShellViewBuilder(in Window window);
+    bool SetTitleBarFontSize(double size);
 
-    //INavigationViewBuilder CreateNavigationViewBuilder(in VisualElement visualElement);
+    bool SetTitleBarHeight(double height);
+
+    bool SetBackButtonVisible(bool isVisible);
+
+    bool SetToggleButtonVisible(bool isVisible);
+
+    bool SetSearchBarVisible(bool isVisible);
+
+    bool SetSettingsVisible(bool isVisible);
+
+    bool SetBackgroundColor(Color color);
+
+    bool SetBackground(Brush brush);
+
+    bool SetContentBackgroundColor(Color color);
+
+    bool SetContentBackground(Brush brush);
 
 }
