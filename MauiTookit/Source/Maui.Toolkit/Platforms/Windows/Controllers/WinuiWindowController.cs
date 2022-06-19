@@ -11,15 +11,10 @@ using Windows.Graphics;
 using Windows.Graphics.Display;
 using static PInvoke.User32;
 using Microsoftui = Microsoft.UI;
-using MicrosoftuiControls = Microsoft.UI.Xaml.Controls;
 using MicrosoftuiWindowing = Microsoft.UI.Windowing;
 using MicrosoftuiXaml = Microsoft.UI.Xaml;
 using Windowsgraphics = Windows.Graphics;
 using Winui = Windows.UI;
-using MicrosoftuixamlDocument = Microsoft.UI.Xaml.Documents;
-using MicrosoftuixamlmediaImaging = Microsoft.UI.Xaml.Media.Imaging;
-using Maui.Toolkit.Builders;
-using WinuiViewManagement = Windows.UI.ViewManagement;
 
 namespace Maui.Toolkit.Platforms.Windows.Controllers;
 
@@ -702,11 +697,6 @@ internal partial class WinuiWindowController : IController, IWindowsService
         if (_Window is null)
             return false;
 
-        //if (_AppWindow is null)
-        //return false;
-
-        //_AppWindow.Hide();
-
         var windowHanlde = _Window.GetWindowHandle();
         User32.PostMessage(windowHanlde, WindowMessage.WM_SYSCOMMAND, new IntPtr((int)SysCommands.SC_MINIMIZE), IntPtr.Zero);
         return true;
@@ -717,199 +707,9 @@ internal partial class WinuiWindowController : IController, IWindowsService
         if (_Window is null)
             return false;
 
-        //if (_Options.Size.IsZero)
-        //    MoveWindow(WindowAlignment.Center, new Size(1920, 1080));
-        //else
-        //    MoveWindow(WindowAlignment.Center, _Options.Size);
-
         var windowHanlde = _Window.GetWindowHandle();
         User32.PostMessage(windowHanlde, WindowMessage.WM_SYSCOMMAND, new IntPtr((int)SysCommands.SC_RESTORE), IntPtr.Zero);
         return true;
-    }
-
-    private void MainPage_Loaded(object? sender, EventArgs e)
-    {
-        if (sender is Shell shell)
-        {
-            if (shell.FlyoutBehavior == FlyoutBehavior.Locked)
-                _Offset = shell.FlyoutWidth;
-        }
-
-        //var applicationView = ApplicationView.GetForCurrentView();
-        //if (applicationView is not null)
-        //{
-        //    applicationView.TitleBar.BackgroundColor = Colors.Red.MauiColor2WinuiColor();
-        //}
-
-        var window = _Window;
-
-        if (sender is VisualElement visualElement)
-        {
-            var mauiContext = visualElement.Handler?.MauiContext;
-            var rootManager = mauiContext?.GetNavigationRootManager();
-
-            var windowRootView = rootManager?.RootView as WindowRootView;
-            var navigationViewControl = windowRootView?.NavigationViewControl;
-
-            //if (windowRootView is not null)
-                //windowRootView.Style = default;
-
-            
-
-            if (navigationViewControl is not null)
-            {
-                //                if (windowRootView is not null)
-                //                {
-                //                    var titleBarTemplate = (MicrosoftuiXaml.DataTemplate)MicrospftuixamlMarkup.XamlReader.Load(
-                //                        @"<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
-                //                                        xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'>
-                //                            <Grid x:Name=""AppTitleBar""  
-                //      Height=""78"">
-                //    <Grid.ColumnDefinitions>
-                //        <ColumnDefinition x:Name=""LeftPaddingColumn"" Width=""0""/>
-                //        <ColumnDefinition x:Name=""IconColumn"" Width=""Auto""/>
-                //        <ColumnDefinition x:Name=""TitleColumn"" Width=""Auto""/>
-                //        <ColumnDefinition x:Name=""LeftDragColumn"" Width=""*""/>
-                //        <ColumnDefinition x:Name=""SearchColumn"" Width=""Auto""/>
-                //        <ColumnDefinition x:Name=""RightDragColumn"" Width=""*""/>
-                //        <ColumnDefinition x:Name=""RightPaddingColumn"" Width=""0""/>
-                //    </Grid.ColumnDefinitions>
-
-                //    <TextBlock x:Name=""TitleTextBlock"" 
-                //               Text=""App title"" 
-                //               Style=""{StaticResource CaptionTextBlockStyle}""
-                //               Grid.Column=""2""
-                //               VerticalAlignment=""Center""
-                //               Margin=""4,0,0,0""/>
-                //    <AutoSuggestBox Grid.Column=""4"" QueryIcon=""Find""
-                //                    PlaceholderText=""Search""
-                //                    VerticalAlignment=""Center""
-                //                    Width=""260"" Margin=""4,0""/>
-                //</Grid>
-                //                          </DataTemplate>");
-
-
-
-
-                //                    windowRootView.AppTitleBarTemplate = titleBarTemplate;
-                //                }
-                //navigationViewControl.Style = default;
-
-                var propertyInfo1 = typeof(WindowRootView).GetProperty("AppFontIcon", BindingFlags.Instance | BindingFlags.NonPublic);
-                if (propertyInfo1?.GetValue(windowRootView) is MicrosoftuiControls.Image image)
-                {
-                    var path = PlatformShared.CreatePathBuilder()
-                                             .AddArgument("Resources")
-                                             .AddArgument("AppIcon")
-                                             .AddArgument("application128.ico")
-                                             .Build();
-                    Uri imageUri = new(path, UriKind.RelativeOrAbsolute);
-                    MicrosoftuixamlmediaImaging.BitmapImage imageBitmap = new(imageUri);
-                    image.Source = imageBitmap;
-                    image.Width = 25;
-                    image.Height = 25;
-
-                    image.Margin = new MicrosoftuiXaml.Thickness(-5, 5, 0, 0);
-                    //image.Visibility = MicrosoftuiXaml.Visibility.Visible;
-                }
-
-                var propertyInfo = typeof(WindowRootView).GetProperty("AppTitleBar", BindingFlags.Instance | BindingFlags.NonPublic);
-                if (propertyInfo?.GetValue(windowRootView) is MicrosoftuiXaml.FrameworkElement frameworkElement)
-                {
-                    frameworkElement.Height = 48;
-                    var textBlock = frameworkElement.GetFirstDescendant<MicrosoftuiControls.TextBlock>();
-                    if (textBlock is not null)
-                    {
-                        textBlock.FontSize = 16;
-                        textBlock.VerticalAlignment = MicrosoftuiXaml.VerticalAlignment.Center;
-                    }
-
-                    if (frameworkElement is MicrosoftuiControls.Border border)
-                        border.Padding = new MicrosoftuiXaml.Thickness(0, 0, 0, 15);
-                    else if (frameworkElement is MicrosoftuiControls.Grid grid)
-                        grid.Padding = new MicrosoftuiXaml.Thickness(0, 0, 0, 15);
-                }
-
-
-                navigationViewControl.NavigationViewBackButtonMargin = new MicrosoftuiXaml.Thickness(10);
-                navigationViewControl.IsBackButtonVisible = MicrosoftuiControls.NavigationViewBackButtonVisible.Visible;
-                navigationViewControl.IsBackEnabled = true;
-                navigationViewControl.Background = Colors.Transparent.MauiColor2WinuiBrush();
-                //navigationViewControl.BackgroundSizing = MicrosoftuiControls.BackgroundSizing.OuterBorderEdge;
-                //navigationViewControl.ElementSoundMode = MicrosoftuiXaml.ElementSoundMode.FocusOnly;
-                //navigationViewControl.AlwaysShowHeader = true;
-                //navigationViewControl.Header = "MyHeader";
-                navigationViewControl.ShoulderNavigationEnabled = MicrosoftuiControls.NavigationViewShoulderNavigationEnabled.Always;
-                navigationViewControl.IsSettingsVisible = true;
-                navigationViewControl.AutoSuggestBox = new MicrosoftuiControls.AutoSuggestBox()
-                {
-                    IsSuggestionListOpen = true,
-                    PlaceholderText = "Search",
-                    QueryIcon = new MicrosoftuiControls.SymbolIcon(MicrosoftuiControls.Symbol.Find),
-                    LightDismissOverlayMode = MicrosoftuiControls.LightDismissOverlayMode.Auto
-                };
-
-                navigationViewControl.IsPaneToggleButtonVisible = true;
-                navigationViewControl.IsTitleBarAutoPaddingEnabled = true;
-                navigationViewControl.IsPaneVisible = true;
-                navigationViewControl.PaneDisplayMode = MicrosoftuiControls.NavigationViewPaneDisplayMode.Left;
-                navigationViewControl.PaneTitle = "Menus";
-                navigationViewControl.IsTabStop = false;
-                //navigationViewControl.OverflowLabelMode = MicrosoftuiControls.NavigationViewOverflowLabelMode.MoreLabel;
-                navigationViewControl.SelectionFollowsFocus = MicrosoftuiControls.NavigationViewSelectionFollowsFocus.Disabled;
-                //navigationViewControl.ExpandedModeThresholdWidth = 500;
-                //navigationViewControl.CompactModeThresholdWidth = 200;
-                //navigationViewControl.CompactPaneLength = 200;
-                var settingsItem = navigationViewControl.SettingsItem as MicrosoftuiControls.NavigationViewItem;
-                if (settingsItem is not null)
-                {
-                    settingsItem.Height = 35;
-                    settingsItem.Margin = new MicrosoftuiXaml.Thickness(0, 5, 0, 5);
-                    //settingsItem.HorizontalAlignment = MicrosoftuiXaml.HorizontalAlignment.Center;
-                    //settingsItem.HorizontalContentAlignment = MicrosoftuiXaml.HorizontalAlignment.Center;
-                }
-
-                var navigationViewContent = navigationViewControl.Content;
-                if (navigationViewContent is MauiNavigationView mauiNavigationView)
-                {
-                    mauiNavigationView.Background = Colors.Transparent.MauiColor2WinuiBrush();
-                }
-
-                //navigationViewControl.ContentOverlay = null;
-                //if (windowRootView is not null)
-                //windowRootView.Background = Colors.Red.MauiColor2WinuiBrush();
-
-                //navigationViewControl.Content = null;
-
-                //navigationViewControl.DisplayMode = MicrosoftuiControls.NavigationViewDisplayMode.Expanded;
-                //navigationViewControl.BorderThickness = new MicrosoftuiXaml.Thickness(10);
-            }
-
-        }
-
-        var appTitleBar = new MicrosoftuiControls.Border
-        {
-            IsHitTestVisible = true,
-            VerticalAlignment = MicrosoftuiXaml.VerticalAlignment.Top,
-            Height = 70,
-            Child = new MicrosoftuiControls.TextBlock
-            {
-                VerticalAlignment = MicrosoftuiXaml.VerticalAlignment.Top,
-                Margin = new MicrosoftuiXaml.Thickness(0, 15, 0, 0),
-                Text = "Test123",
-            },
-        };
-
-        MicrosoftuiControls.Grid.SetColumn(appTitleBar, 1);
-        MicrosoftuiControls.Canvas.SetZIndex(appTitleBar, 1);
-
-
-
-        // _Window?.SetTitleBar(appTitleBar);
-
-        //ShellView
-
-
     }
 
     private void Application_RequestedThemeChanged(object? sender, AppThemeChangedEventArgs e)
