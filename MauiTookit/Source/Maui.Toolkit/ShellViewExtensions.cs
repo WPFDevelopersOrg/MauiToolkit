@@ -1,6 +1,7 @@
 ﻿using Maui.Toolkit.Options;
 using Maui.Toolkit.Providers;
 using Maui.Toolkit.Services;
+using Maui.Toolkit.Shared;
 
 #if WINDOWS || MACCATALYST || IOS || ANDROID
 using Maui.Toolkit.Platforms;
@@ -18,7 +19,17 @@ public static class ShellViewExtensions
 
         var options = new ShellViewOptions
         {
-
+            TitleBarHeight = 48,
+            TitleFontSize = 16,
+            BackButtonVisible = VisibilityKind.Default,
+            IsSettingsVisible = true,
+            SettingsHeight = 35,
+            SettingsMargin = new Thickness(0, 5, 0, 5),
+            IsSerchBarVisible = true,
+            SearchaBarPlaceholderText = "Query",
+            //BackgroundColor = Colors.Red,
+            //ContentBackgroundColor = Colors.Blue,
+            //IsPaneToggleButtonVisible = true,
         };
         configureDelegate?.Invoke(options);
 

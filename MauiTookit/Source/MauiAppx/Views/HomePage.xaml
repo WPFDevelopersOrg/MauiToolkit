@@ -23,6 +23,7 @@
 
 
             <Button Grid.Column="1" toolkits:AppTitleBarExProperty.IsCanHitVisibleInTitleBar="True"  Text="&lt;&lt;" Clicked="Button_Clicked" />
+            <Button Grid.Column="2" toolkits:AppTitleBarExProperty.IsCanHitVisibleInTitleBar="True"  Text="AppShell" Clicked="Button_Clicked_1" />
 
 
             <SearchBar Grid.Column="4" toolkits:AppTitleBarExProperty.IsCanHitVisibleInTitleBar="True"  Placeholder="我试试，看看行不行" WidthRequest="300" Loaded="SearchBar_Loaded"/>

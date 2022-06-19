@@ -1,7 +1,6 @@
 ﻿using Maui.Toolkit.Core;
 using Maui.Toolkit.Options;
 using Maui.Toolkit.Platforms.Windows.Controllers;
-using Maui.Toolkit.Platforms.Windows.Runtimes.Shell32;
 using Maui.Toolkit.Providers;
 using Maui.Toolkit.Services;
 using Microsoft.Maui.Platform;
@@ -36,7 +35,8 @@ internal class NavigationViewServiceImp : INavigationViewService, INatvigationVi
                 _IsRegister = true;
 
                 _RootNavigationViewBuilder = CreateShellViewBuilder(window);
-
+                IController? controller = _RootNavigationViewBuilder;
+                controller?.Run();
 
             }).OnVisibilityChanged((window, arg) =>
             {
@@ -75,10 +75,7 @@ internal class NavigationViewServiceImp : INavigationViewService, INatvigationVi
         if (window.Content is not WindowRootView windowRootView)
             return default;
 
-
-
-
-        return default;
+        return new WinuiWindowRootViewController(windowRootView, _Options);
     }
 
 

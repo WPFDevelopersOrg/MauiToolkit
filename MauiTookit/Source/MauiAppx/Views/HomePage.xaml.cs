@@ -16,4 +16,11 @@ public partial class HomePage : ContentPage
     {
 
     }
+
+    private void Button_Clicked_1(object sender, EventArgs e)
+    {
+        //if (Application.Current is not null)
+        //    Application.Current.MainPage = new AppShellx();
+
+    }
 }

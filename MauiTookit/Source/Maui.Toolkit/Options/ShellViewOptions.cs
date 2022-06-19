@@ -1,4 +1,6 @@
-﻿namespace Maui.Toolkit.Options;
+﻿using Maui.Toolkit.Shared;
+
+namespace Maui.Toolkit.Options;
 public class ShellViewOptions
 {
     /// <summary>
@@ -12,6 +14,16 @@ public class ShellViewOptions
     public string? Icon;
 
     /// <summary>
+    /// TitleBarHeight
+    /// </summary>
+    public double TitleBarHeight;
+
+    /// <summary>
+    /// FontSize
+    /// </summary>
+    public double TitleFontSize;
+
+    /// <summary>
     /// can show or hide togglebutton
     /// </summary>
     public bool IsPaneToggleButtonVisible;
@@ -19,17 +31,23 @@ public class ShellViewOptions
     /// <summary>
     /// can show or hide the  back button
     /// </summary>
-    public bool IsBackButtonVisible;
+    public VisibilityKind BackButtonVisible;
 
     /// <summary>
     /// can show or  hide settings button
     /// </summary>
     public bool IsSettingsVisible;
 
+    public double SettingsHeight;
+
+    public Thickness SettingsMargin;
+
     /// <summary>
     /// can show or hide searchbar 
     /// </summary>
     public bool IsSerchBarVisible;
+
+    public string? SearchaBarPlaceholderText;
 
     /// <summary>
     /// this is all window color
