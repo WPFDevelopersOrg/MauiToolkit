@@ -4,12 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:MauiAppx.Views"
     xmlns:sys="clr-namespace:System;assembly=netstandard"
-    Shell.FlyoutBehavior="Locked" 
+    Shell.FlyoutBehavior="Disabled" 
     Shell.NavBarIsVisible="false"  
     Shell.PresentationMode="Animated"
     Shell.BackgroundColor="Transparent"
     BackgroundColor="Transparent"
     FlyoutBackgroundColor="Transparent"
+    Loaded="Shell_Loaded"
     FlyoutWidth="180" >
 
     <Shell.Resources>
@@ -47,13 +48,13 @@
         </DataTemplate>
         
     </Shell.Resources>
-    
+   
     <Shell.SearchHandler>
         <SearchHandler ShowsResults="True" IsSearchEnabled="True" DisplayMemberName="Name" SearchBoxVisibility="Expanded" Placeholder="let me try" />
     </Shell.SearchHandler>
 
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="True" IconOverride="im_document.png"/>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
 
@@ -133,11 +134,9 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Text="Xaminals"
-               TextColor="GhostWhite"
                FontAttributes="Bold"
                HorizontalOptions="Center" />
             <Label Grid.Row="1" Text="{Binding Source={x:Static sys:DateTime.Now}, StringFormat='{0:MMMM dd, yyyy}'}"
-               TextColor="GhostWhite"
                HorizontalOptions="Center" />
         </Grid>
     </Shell.FlyoutFooter>

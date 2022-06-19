@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppx.Views.LoginPage"
+             Title="LoginPage">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Image Source="im_document.png" HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="400" WidthRequest="400"/>
+
+        <Grid Grid.Column="1" HorizontalOptions="Start" VerticalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="20"/>
+                <RowDefinition/>
+                <RowDefinition Height="20"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Entry Grid.Row="0" WidthRequest="200" Placeholder="UserName"/>
+
+            <Entry Grid.Row="2" WidthRequest="200" IsPassword="True" Placeholder="Password"/>
+
+            <StackLayout Grid.Row="4" Orientation="Vertical" Spacing="10">
+                <Button Text="Login" Clicked="Button_Clicked"/>
+            </StackLayout>
+            
+        </Grid>
+    </Grid>
+</ContentPage>

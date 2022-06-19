@@ -7,12 +7,9 @@ public partial class HomePage : ContentPage
 		InitializeComponent();
 	}
 
-    private void Button_Clicked(object sender, EventArgs e)
+    private async void Button_Clicked(object sender, EventArgs e)
     {
-        if (Application.Current is null)
-            return;
-
-        Application.Current.MainPage = new AppShellx();
+        await Shell.Current.GoToAsync("LoginRouter");  
     }
 
     private void SearchBar_Loaded(object sender, EventArgs e)

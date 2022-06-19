@@ -1,5 +1,6 @@
 ﻿using Maui.Toolkit.Controls;
 using Maui.Toolkit.Core;
+using Microsoft.Maui.Platform;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,10 @@ using System.Threading.Tasks;
 namespace Maui.Toolkit.Platforms.Windows.Controllers;
 internal class WinuiWindowRootViewController : INavigationViewBuilder
 {
-    //public 
+    public WinuiWindowRootViewController(WindowRootView windowRootView)
+    {
+
+    }
 
     string? INavigationViewBuilder.Title { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     string? INavigationViewBuilder.AppIcon { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

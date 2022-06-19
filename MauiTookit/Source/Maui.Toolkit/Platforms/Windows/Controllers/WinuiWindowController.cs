@@ -19,6 +19,7 @@ using Winui = Windows.UI;
 using MicrosoftuixamlDocument = Microsoft.UI.Xaml.Documents;
 using MicrosoftuixamlmediaImaging = Microsoft.UI.Xaml.Media.Imaging;
 using Maui.Toolkit.Builders;
+using WinuiViewManagement = Windows.UI.ViewManagement;
 
 namespace Maui.Toolkit.Platforms.Windows.Controllers;
 
@@ -148,6 +149,9 @@ internal partial class WinuiWindowController : IController, IWindowsService
 
     bool RemoveTitleBar(WindowTitleBarKind titleBar)
     {
+        if (_Application is null)
+            return false;
+
         if (_Window is null)
             return false;
 
@@ -161,7 +165,13 @@ internal partial class WinuiWindowController : IController, IWindowsService
                 break;
             case WindowTitleBarKind.ExtendsContentIntoTitleBar:
                 if (!MicrosoftuiWindowing.AppWindowTitleBar.IsCustomizationSupported())
+                {
+                    var res = _Application.Resources;
+                    res["WindowCaptionBackground"] = Colors.Transparent.MauiColor2WinuiBrush();
+                    res["WindowCaptionBackgroundDisabled"] = Colors.Transparent.MauiColor2WinuiBrush();
+
                     break;
+                }
 
                 _Window.ExtendsContentIntoTitleBar = false;
                 _AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
@@ -171,13 +181,8 @@ internal partial class WinuiWindowController : IController, IWindowsService
                 Volatile.Write(ref _IsTitleBarIsSetExtension, true);
                 break;
             default:
-                if (_Application is null)
-                    break;
-
-
-
-
-                //var applicationView = ApplicationView.GetForCurrentView();
+                //WinuiViewManagement.ApplicationView.TryEnterFullScreenMode();
+                //var applicationView = WinuiViewManagement.ApplicationView.GetForCurrentView();
                 //if (applicationView is not null)
                 //{
                 //    applicationView.TitleBar.BackgroundColor = Colors.Red.MauiColor2WinuiColor();
@@ -187,25 +192,28 @@ internal partial class WinuiWindowController : IController, IWindowsService
                 //view.TitleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
                 // view.TitleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
 
-                var isTitleBarIsSetExtension = Volatile.Read(ref _IsTitleBarIsSetExtension);
-                if (isTitleBarIsSetExtension)
                 {
-                    _AppWindow.TitleBar.ExtendsContentIntoTitleBar = false;
-                    _AppWindow.TitleBar.ResetToDefault();
+                    var isTitleBarIsSetExtension = Volatile.Read(ref _IsTitleBarIsSetExtension);
+                    if (isTitleBarIsSetExtension)
+                    {
+                        _AppWindow.TitleBar.ExtendsContentIntoTitleBar = false;
+                        _AppWindow.TitleBar.ResetToDefault();
+                    }
+
+                    var res = _Application.Resources;
+                    if (_Options.TitleBarBackgroundColor != null)
+                        res["WindowCaptionBackground"] = _Options.TitleBarBackgroundColor.MauiColor2WinuiBrush();
+
+                    if (_Options.TitleBarBackgroundInactiveColor != null)
+                        res["WindowCaptionBackgroundDisabled"] = _Options.TitleBarBackgroundInactiveColor.MauiColor2WinuiBrush();
+
+                    if (_Options.TitleBarForegroundColor != null)
+                        res["WindowCaptionForeground"] = _Options.TitleBarForegroundColor.MauiColor2WinuiBrush();
+
+                    if (_Options.TitleBarForegroundInactiveColor != null)
+                        res["WindowCaptionForegroundDisabled"] = _Options.TitleBarForegroundInactiveColor.MauiColor2WinuiBrush();
+
                 }
-
-                var res = _Application.Resources;
-                if (_Options.TitleBarBackgroundColor != null)
-                    res["WindowCaptionBackground"] = _Options.TitleBarBackgroundColor.MauiColor2WinuiBrush();
-
-                if (_Options.TitleBarBackgroundInactiveColor != null)
-                    res["WindowCaptionBackgroundDisabled"] = _Options.TitleBarBackgroundInactiveColor.MauiColor2WinuiBrush();
-
-                if (_Options.TitleBarForegroundColor != null)
-                    res["WindowCaptionForeground"] = _Options.TitleBarForegroundColor.MauiColor2WinuiBrush();
-
-                if (_Options.TitleBarForegroundInactiveColor != null)
-                    res["WindowCaptionForegroundDisabled"] = _Options.TitleBarForegroundInactiveColor.MauiColor2WinuiBrush();
 
                 break;
         }
