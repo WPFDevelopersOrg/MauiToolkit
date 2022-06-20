@@ -4,6 +4,11 @@ namespace Maui.Toolkit.Options;
 public class StartupOptions
 {
     /// <summary>
+    /// showintaskbar
+    /// </summary>
+    public bool IsShowInTaskbar { get; set; }
+
+    /// <summary>
     /// You can use Mica Acrylic in Windows
     /// You can use vibrancy in macos
     /// </summary>

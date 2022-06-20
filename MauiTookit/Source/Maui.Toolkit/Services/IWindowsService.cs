@@ -3,6 +3,8 @@
 namespace Maui.Toolkit.Services;
 public interface IWindowsService
 {
+    bool ShowInTaskBar(bool isShow);
+
     /// <summary>
     /// can control titlebar
     /// </summary>

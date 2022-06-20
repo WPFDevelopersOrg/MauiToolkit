@@ -295,6 +295,11 @@ internal class WindowsServiceImp : NSObject, IWindowsService
 
     bool IWindowsService.SwitchWindow(bool fullScreen) => ToggleFullScreen(fullScreen);
 
+    bool IWindowsService.ShowInTaskBar(bool isShow)
+    {
+        return true;
+    }
+
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     void WindowDidBecomeVisible(object? sender, NSNotificationEventArgs args)
     {

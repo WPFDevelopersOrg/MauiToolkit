@@ -17,6 +17,7 @@ public static class MauiProgram
                 options.TitleBarBackgroundColor = Colors.Transparent;
                 options.TitleBarBackgroundInactiveColor = Colors.Transparent;
                 options.BackdropsKind = BackdropsKind.Mica;
+                options.IsShowInTaskbar = true;
                 //options.TitleBarForegroundColor = Colors.White;
                 options.Size = new Size(1920, 1080);
             })

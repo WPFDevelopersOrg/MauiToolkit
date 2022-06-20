@@ -172,5 +172,17 @@ internal class WindowsServiceImp : IWindowsService
         return service.SwitchWindow(fullScreen);
     }
 
+    bool IWindowsService.ShowInTaskBar(bool isShow)
+    {
+        if (_MainWindow is null)
+            return false;
 
+        if (!_mapWindows.TryGetValue(_MainWindow, out var value))
+            return false;
+
+        if (value is not IWindowsService service)
+            return false;
+
+        return service.ShowInTaskBar(isShow);
+    }
 }

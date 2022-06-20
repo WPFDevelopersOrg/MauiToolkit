@@ -9,6 +9,7 @@ using Microsoft.Maui.Platform;
 using PInvoke;
 using Windows.Graphics;
 using Windows.Graphics.Display;
+using WinRT;
 using static PInvoke.User32;
 using Microsoftui = Microsoft.UI;
 using MicrosoftuiWindowing = Microsoft.UI.Windowing;
@@ -54,13 +55,18 @@ internal partial class WinuiWindowController : IController, IWindowsService
 
             if (_IsMainWindow)
             {
+                ShownInSwitchers(_Options.IsShowInTaskbar);
                 RemoveTitleBar(_Options.TitleBarKind);
                 MoveWindow(_Options.PresenterKind);
                 LoadMainWindowEvent();
                 RegisterApplicationThemeChangedEvent();
             }
             else
+            {
                 MoveWindow(WindowAlignment.Center, new Size(900, 450));
+                ShownInSwitchers(false);
+                SetWindowPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped);
+            }
         }
 
         return true;
@@ -290,6 +296,308 @@ internal partial class WinuiWindowController : IController, IWindowsService
         return true;
     }
 
+    bool LoadMainWindowEvent()
+    {
+        var content = _Window.Content;
+        if (content is not MicrosoftuiXaml.FrameworkElement frameworkElement)
+            return false;
+
+        frameworkElement.Loaded += FrameworkElement_Loaded;
+        frameworkElement.Unloaded += FrameworkElement_Unloaded;
+        frameworkElement.SizeChanged += FrameworkElement_SizeChanged;
+
+        return true;
+    }
+
+    void FrameworkElement_SizeChanged(object sender, MicrosoftuiXaml.SizeChangedEventArgs e)
+    {
+        if (!_IsLoaded)
+            return;
+
+        var rects = LoadRects();
+        if (rects == null)
+            return;
+
+        SetDragRectangles(rects);
+    }
+
+    void FrameworkElement_Loaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
+    {
+        if (Application.Current?.MainPage is Shell shell)
+        {
+            if (shell.FlyoutBehavior == FlyoutBehavior.Locked)
+                _Offset = shell.FlyoutWidth;
+        }
+
+        TrySetDragRectangles();
+    }
+
+    void FrameworkElement_Unloaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
+    {
+
+    }
+
+    void WinuiWindowController_DpiChanged(DisplayInformation sender, object args)
+    {
+
+    }
+
+    bool RemoveMainWindowEvent()
+    {
+        var content = _Window.Content;
+        if (content is not MicrosoftuiXaml.FrameworkElement frameworkElement)
+            return false;
+
+        frameworkElement.Loaded -= FrameworkElement_Loaded;
+        frameworkElement.Unloaded -= FrameworkElement_Unloaded;
+        frameworkElement.SizeChanged -= FrameworkElement_SizeChanged;
+        return true;
+    }
+
+    bool LoadTrigger()
+    {
+        AppTitleBarExProperty.BindiableObjectChangedEvent += BindiableObject_Changed;
+        return true;
+    }
+
+    bool UnLoadTrigger()
+    {
+        AppTitleBarExProperty.BindiableObjectChangedEvent -= BindiableObject_Changed;
+        return true;
+    }
+
+    bool MoveWindow(WindowPresenterKind presenter) => presenter switch
+    {
+        WindowPresenterKind.Default => MoveWindow(_Options.Location, _Options.Size),
+        WindowPresenterKind.Maximize => MoveWindowMaximize(),
+        WindowPresenterKind.Minimize => MoveWindowMinimize(),
+        WindowPresenterKind.FullScreen => ToggleFullScreen(true),
+        _ => false,
+    };
+
+    bool ToggleFullScreen(bool bFullScreen)
+    {
+        if (_AppWindow is null)
+            return false;
+
+        if (_Options.TitleBarKind is WindowTitleBarKind.ExtendsContentIntoTitleBar)
+            return true;
+
+        switch (_AppWindow.Presenter.Kind)
+        {
+            case MicrosoftuiWindowing.AppWindowPresenterKind.Default:
+                break;
+            case MicrosoftuiWindowing.AppWindowPresenterKind.CompactOverlay:
+                {
+                    var overlappedPresenter = _AppWindow.Presenter.As<MicrosoftuiWindowing.CompactOverlayPresenter>();
+                    if (overlappedPresenter is not null)
+                    {
+                        if (bFullScreen)
+                            overlappedPresenter.InitialSize = MicrosoftuiWindowing.CompactOverlaySize.Medium; //overlappedPresenter.IsModal = true;
+                        else
+                            overlappedPresenter.InitialSize = MicrosoftuiWindowing.CompactOverlaySize.Small;
+                    }
+                }
+                break;
+            case MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen:
+                {
+                    var overlappedPresenter = _AppWindow.Presenter.As<MicrosoftuiWindowing.FullScreenPresenter>();
+                    if (overlappedPresenter is not null)
+                    {
+                         
+                    }
+                }
+                break;
+            case MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped:
+                {
+                    var overlappedPresenter = _AppWindow.Presenter.As<MicrosoftuiWindowing.OverlappedPresenter>();
+                    if (overlappedPresenter is not null)
+                    {
+                        if (bFullScreen)
+                        {
+                            overlappedPresenter.SetBorderAndTitleBar(!overlappedPresenter.HasBorder, !overlappedPresenter.HasTitleBar);
+                            overlappedPresenter.IsResizable = false;
+                            overlappedPresenter.IsMaximizable = false;
+                            //overlappedPresenter.IsModal = true;
+                        }
+                        else
+                        {
+                            overlappedPresenter.SetBorderAndTitleBar(overlappedPresenter.HasBorder, overlappedPresenter.HasTitleBar);
+                            overlappedPresenter.IsResizable = true;
+                            overlappedPresenter.IsMaximizable = true;
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+        if (bFullScreen)
+        {
+            var customOverlappedPresenter = MicrosoftuiWindowing.OverlappedPresenter.CreateForContextMenu();
+            _AppWindow.SetPresenter(customOverlappedPresenter);
+        }
+        else
+        {
+            var customOverlappedPresenter = MicrosoftuiWindowing.OverlappedPresenter.Create();
+            _AppWindow.SetPresenter(customOverlappedPresenter);
+        }
+
+        if (bFullScreen)
+        {
+            if (_AppWindow.Presenter.Kind is not MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen)
+                _AppWindow.SetPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen);
+        }
+        else
+        {
+            if (_AppWindow.Presenter.Kind is MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen)
+                _AppWindow.SetPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.Default);
+        }
+
+        return true;
+    }
+
+    bool SetWindowPresenter(MicrosoftuiWindowing.AppWindowPresenterKind kind)
+    {
+        if (_AppWindow is null)
+            return false;
+
+        _AppWindow.SetPresenter(kind);
+
+        return true;
+    }
+
+    bool SetWindowModal()
+    {
+        SetWindowPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped);
+
+        if (_AppWindow is null)
+            return false;
+
+        if (_AppWindow.Presenter.Kind is MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped)
+        {
+            var overlappedPresenter = _AppWindow.Presenter.As<MicrosoftuiWindowing.OverlappedPresenter>();
+            if (overlappedPresenter is not null)
+                overlappedPresenter.IsModal = true;
+        }
+        return true;
+    }
+
+    bool MoveWindow(WindowAlignment location, Size size)
+    {
+        if (_Window is null)
+            return false;
+
+        if (_AppWindow is null)
+            return false;
+
+        //ToggleFullScreen(false);
+
+        var width = size.Width;
+        var height = size.Height;
+
+        if (width < 0)
+            width = 0;
+
+        if (height < 0)
+            height = 0;
+
+        int screenWidth = User32.GetSystemMetrics(SystemMetric.SM_CXSCREEN);
+        int screenHeight = User32.GetSystemMetrics(SystemMetric.SM_CYSCREEN);
+
+        double scalingFactor = _Window.GetDisplayDensity();
+        width = width * scalingFactor;
+        height = height * scalingFactor;
+
+        if (width > screenWidth)
+            width = screenWidth;
+
+        if (height > screenHeight)
+            height = screenHeight;
+
+        double startX = 0;
+        double startY = 0;
+
+        switch (location)
+        {
+            case WindowAlignment.LeftTop:
+                break;
+            case WindowAlignment.RightTop:
+                startX = (screenWidth - width);
+                break;
+            case WindowAlignment.Center:
+                startX = (screenWidth - width) / 2.0;
+                startY = (screenHeight - height) / 2.0;
+                break;
+            case WindowAlignment.LeftBottom:
+                startY = (screenHeight - height);
+                break;
+            case WindowAlignment.RightBottom:
+                startX = (screenWidth - width);
+                startY = (screenHeight - height);
+                break;
+            default:
+                break;
+        }
+
+        _AppWindow.MoveAndResize(new Windowsgraphics.RectInt32((int)startX, (int)startY, (int)width, (int)height));
+        return true;
+    }
+
+    bool MoveWindowMaximize()
+    {
+        if (_Window is null)
+            return false;
+
+        var windowHanlde = _Window.GetWindowHandle();
+        User32.PostMessage(windowHanlde, WindowMessage.WM_SYSCOMMAND, new IntPtr((int)SysCommands.SC_MAXIMIZE), IntPtr.Zero);
+        return true;
+    }
+
+    bool MoveWindowMinimize()
+    {
+        if (_Window is null)
+            return false;
+
+        var windowHanlde = _Window.GetWindowHandle();
+        User32.PostMessage(windowHanlde, WindowMessage.WM_SYSCOMMAND, new IntPtr((int)SysCommands.SC_MINIMIZE), IntPtr.Zero);
+        return true;
+    }
+
+    bool MoveWindowRestore()
+    {
+        if (_Window is null)
+            return false;
+
+        var windowHanlde = _Window.GetWindowHandle();
+        User32.PostMessage(windowHanlde, WindowMessage.WM_SYSCOMMAND, new IntPtr((int)SysCommands.SC_RESTORE), IntPtr.Zero);
+        return true;
+    }
+
+    bool ShownInSwitchers(bool isShownInSwitchers)
+    {
+        if (_AppWindow is null)
+            return false;
+
+        _AppWindow.IsShownInSwitchers = isShownInSwitchers;
+        return true;
+    }
+
+    void Application_RequestedThemeChanged(object? sender, AppThemeChangedEventArgs e)
+    {
+        LoadTitleBarCorlor(_AppWindow?.TitleBar);
+    }
+
+    void BindiableObject_Changed(object? sender, BindableObjectEvenArgs args)
+    {
+        var rects = LoadRects();
+        if (rects == null)
+            return;
+
+        SetDragRectangles(rects);
+    }
+
     bool TrySetDragRectangles()
     {
         var rects = LoadRects();
@@ -344,77 +652,6 @@ internal partial class WinuiWindowController : IController, IWindowsService
         }
 
         return rects;
-    }
-
-    bool LoadMainWindowEvent()
-    {
-        var content = _Window.Content;
-        if (content is not MicrosoftuiXaml.FrameworkElement frameworkElement)
-            return false;
-
-        frameworkElement.Loaded += FrameworkElement_Loaded;
-        frameworkElement.Unloaded += FrameworkElement_Unloaded;
-        frameworkElement.SizeChanged += FrameworkElement_SizeChanged;
-
-        return true;
-    }
-
-    private void FrameworkElement_SizeChanged(object sender, MicrosoftuiXaml.SizeChangedEventArgs e)
-    {
-        if (!_IsLoaded)
-            return;
-
-        var rects = LoadRects();
-        if (rects == null)
-            return;
-
-        SetDragRectangles(rects);
-    }
-
-    private void FrameworkElement_Loaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
-    {
-        if (Application.Current?.MainPage is Shell shell)
-        {
-            if (shell.FlyoutBehavior == FlyoutBehavior.Locked)
-                _Offset = shell.FlyoutWidth;
-        }
-
-        TrySetDragRectangles();
-    }
-
-    private void FrameworkElement_Unloaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
-    {
-
-    }
-
-
-    private void WinuiWindowController_DpiChanged(DisplayInformation sender, object args)
-    {
-
-    }
-
-    bool RemoveMainWindowEvent()
-    {
-        var content = _Window.Content;
-        if (content is not MicrosoftuiXaml.FrameworkElement frameworkElement)
-            return false;
-
-        frameworkElement.Loaded -= FrameworkElement_Loaded;
-        frameworkElement.Unloaded -= FrameworkElement_Unloaded;
-        frameworkElement.SizeChanged -= FrameworkElement_SizeChanged;
-        return true;
-    }
-
-    bool LoadTrigger()
-    {
-        AppTitleBarExProperty.BindiableObjectChangedEvent += BindiableObject_Changed;
-        return true;
-    }
-
-    bool UnLoadTrigger()
-    {
-        AppTitleBarExProperty.BindiableObjectChangedEvent -= BindiableObject_Changed;
-        return true;
     }
 
     bool SetDragRectangles(List<Rect> rects)
@@ -592,139 +829,6 @@ internal partial class WinuiWindowController : IController, IWindowsService
 
         return true;
     }
-
-    bool MoveWindow(WindowPresenterKind presenter) => presenter switch
-    {
-        WindowPresenterKind.Default => MoveWindow(_Options.Location, _Options.Size),
-        WindowPresenterKind.Maximize => MoveWindowMaximize(),
-        WindowPresenterKind.Minimize => MoveWindowMinimize(),
-        WindowPresenterKind.FullScreen => ToggleFullScreen(true),
-        _ => false,
-    };
-
-    bool ToggleFullScreen(bool bFullScreen)
-    {
-        if (_AppWindow is null)
-            return false;
-
-        if (bFullScreen)
-        {
-            if (_AppWindow.Presenter.Kind is not MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen)
-                _AppWindow.SetPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen);
-        }
-        else
-        {
-            if (_AppWindow.Presenter.Kind is MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen)
-                _AppWindow.SetPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.Default);
-        }
-
-        return true;
-    }
-
-    bool MoveWindow(WindowAlignment location, Size size)
-    {
-        if (_Window is null)
-            return false;
-
-        if (_AppWindow is null)
-            return false;
-
-        //ToggleFullScreen(false);
-
-        var width = size.Width;
-        var height = size.Height;
-
-        if (width < 0)
-            width = 0;
-
-        if (height < 0)
-            height = 0;
-
-        int screenWidth = User32.GetSystemMetrics(SystemMetric.SM_CXSCREEN);
-        int screenHeight = User32.GetSystemMetrics(SystemMetric.SM_CYSCREEN);
-
-        double scalingFactor = _Window.GetDisplayDensity();
-        width = width * scalingFactor;
-        height = height * scalingFactor;
-
-        if (width > screenWidth)
-            width = screenWidth;
-
-        if (height > screenHeight)
-            height = screenHeight;
-
-        double startX = 0;
-        double startY = 0;
-
-        switch (location)
-        {
-            case WindowAlignment.LeftTop:
-                break;
-            case WindowAlignment.RightTop:
-                startX = (screenWidth - width);
-                break;
-            case WindowAlignment.Center:
-                startX = (screenWidth - width) / 2.0;
-                startY = (screenHeight - height) / 2.0;
-                break;
-            case WindowAlignment.LeftBottom:
-                startY = (screenHeight - height);
-                break;
-            case WindowAlignment.RightBottom:
-                startX = (screenWidth - width);
-                startY = (screenHeight - height);
-                break;
-            default:
-                break;
-        }
-
-        _AppWindow.MoveAndResize(new Windowsgraphics.RectInt32((int)startX, (int)startY, (int)width, (int)height));
-        return true;
-    }
-
-    bool MoveWindowMaximize()
-    {
-        if (_Window is null)
-            return false;
-
-        var windowHanlde = _Window.GetWindowHandle();
-        User32.PostMessage(windowHanlde, WindowMessage.WM_SYSCOMMAND, new IntPtr((int)SysCommands.SC_MAXIMIZE), IntPtr.Zero);
-        return true;
-    }
-
-    bool MoveWindowMinimize()
-    {
-        if (_Window is null)
-            return false;
-
-        var windowHanlde = _Window.GetWindowHandle();
-        User32.PostMessage(windowHanlde, WindowMessage.WM_SYSCOMMAND, new IntPtr((int)SysCommands.SC_MINIMIZE), IntPtr.Zero);
-        return true;
-    }
-
-    bool MoveWindowRestore()
-    {
-        if (_Window is null)
-            return false;
-
-        var windowHanlde = _Window.GetWindowHandle();
-        User32.PostMessage(windowHanlde, WindowMessage.WM_SYSCOMMAND, new IntPtr((int)SysCommands.SC_RESTORE), IntPtr.Zero);
-        return true;
-    }
-
-    private void Application_RequestedThemeChanged(object? sender, AppThemeChangedEventArgs e)
-    {
-        LoadTitleBarCorlor(_AppWindow?.TitleBar);
-    }
-
-    private void BindiableObject_Changed(object? sender, BindableObjectEvenArgs args)
-    {
-        var rects = LoadRects();
-        if (rects == null)
-            return;
-
-        SetDragRectangles(rects);
-    }
 }
 
 
@@ -743,4 +847,6 @@ internal partial class WinuiWindowController
     bool IWindowsService.ResizeWindow(Size size) => MoveWindow(WindowAlignment.Center, size);
 
     bool IWindowsService.SwitchWindow(bool fullScreen) => ToggleFullScreen(fullScreen);
+
+    bool IWindowsService.ShowInTaskBar(bool isShow) => ShownInSwitchers(isShow);
 }

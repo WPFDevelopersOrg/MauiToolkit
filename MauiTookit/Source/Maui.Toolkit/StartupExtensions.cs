@@ -21,6 +21,7 @@ public static class StartupExtensions
             TitleBarKind = WindowTitleBarKind.ExtendsContentIntoTitleBar,
             PresenterKind = WindowPresenterKind.Maximize,
             Location = WindowAlignment.Center,
+            IsShowInTaskbar = true,
             Size = new Size(1000, 500),
         };
         configureDelegate?.Invoke(options);

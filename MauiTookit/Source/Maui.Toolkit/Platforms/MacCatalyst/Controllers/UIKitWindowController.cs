@@ -63,4 +63,9 @@ internal class UIKitWindowController : IController, IWindowsService
     {
         throw new NotImplementedException();
     }
+
+    bool IWindowsService.ShowInTaskBar(bool isShow)
+    {
+        throw new NotImplementedException();
+    }
 }

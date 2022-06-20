@@ -55,4 +55,9 @@ internal class WindowsServiceImp : IWindowsService
     {
         return true;
     }
+
+    bool IWindowsService.ShowInTaskBar(bool isShow)
+    {
+        return true;
+    }
 }
