@@ -65,7 +65,8 @@ internal partial class WinuiWindowController : IController, IWindowsService
             {
                 MoveWindow(WindowAlignment.Center, new Size(900, 450));
                 ShownInSwitchers(false);
-                SetWindowPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped);
+                //SetWindowPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped);
+                SetWindowModal();
             }
         }
 
@@ -475,12 +476,16 @@ internal partial class WinuiWindowController : IController, IWindowsService
         if (_AppWindow is null)
             return false;
 
-        if (_AppWindow.Presenter.Kind is MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped)
-        {
-            var overlappedPresenter = _AppWindow.Presenter.As<MicrosoftuiWindowing.OverlappedPresenter>();
-            if (overlappedPresenter is not null)
-                overlappedPresenter.IsModal = true;
-        }
+        //if (_AppWindow.Presenter.Kind is MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped)
+        //{
+        //    var overlappedPresenter = _AppWindow.Presenter.As<MicrosoftuiWindowing.OverlappedPresenter>();
+        //    if (overlappedPresenter is not null)
+        //        overlappedPresenter.IsModal = true;
+        //}
+
+        var customOverlappedPresenter = MicrosoftuiWindowing.OverlappedPresenter.CreateForDialog();
+        _AppWindow.SetPresenter(customOverlappedPresenter);
+
         return true;
     }
 
