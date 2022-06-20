@@ -103,7 +103,8 @@ internal class WinuiWindowRootViewController : INavigationViewBuilder, IControll
     bool LoadAppTitleBar(double height, double fontSize)
     {
         var propertyInfo = typeof(WindowRootView).GetProperty("AppTitleBar", BindingFlags.Instance | BindingFlags.NonPublic);
-        if (propertyInfo?.GetValue(_WindowRootView) is not MicrosoftuiXaml.FrameworkElement frameworkElement)
+        var titleBar = propertyInfo?.GetValue(_WindowRootView);
+        if (titleBar is not MicrosoftuiXaml.FrameworkElement frameworkElement)
             return false;
 
         if (height > 0)

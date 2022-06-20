@@ -18,7 +18,8 @@ public static class StartupExtensions
         ArgumentNullException.ThrowIfNull(builder, nameof(builder));
         var options = new StartupOptions()
         {
-            TitleBarKind = WindowTitleBarKind.ExtendsContentIntoTitleBar,
+            TitleBarKind = WindowTitleBarKind.CustomTitleBarAndExtension,
+            ConfigurationKind = WindowConfigurationKind.ShowAllButton,
             PresenterKind = WindowPresenterKind.Maximize,
             Location = WindowAlignment.Center,
             IsShowInTaskbar = true,

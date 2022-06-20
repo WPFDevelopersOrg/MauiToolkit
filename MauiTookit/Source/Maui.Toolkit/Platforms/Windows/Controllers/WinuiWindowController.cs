@@ -3,12 +3,11 @@ using Maui.Toolkit.Extensions;
 using Maui.Toolkit.ExtraDependents;
 using Maui.Toolkit.Options;
 using Maui.Toolkit.Platforms.Windows.Extensions;
+using Maui.Toolkit.Platforms.Windows.Runtimes.User32;
 using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
 using Microsoft.Maui.Platform;
 using PInvoke;
-using Windows.Graphics;
-using Windows.Graphics.Display;
 using WinRT;
 using static PInvoke.User32;
 using Microsoftui = Microsoft.UI;
@@ -31,43 +30,48 @@ internal partial class WinuiWindowController : IController, IWindowsService
         _Options = options;
         _AppWindow = _Window.GetAppWindow();
         _IsMainWindow = isMainWindow;
+
+        if (window.Content is WindowRootView windowRootView)
+            _WindowRootView = windowRootView;
     }
 
+    readonly StartupOptions _Options;
     readonly MicrosoftuiXaml.Application _Application;
     readonly MicrosoftuiXaml.Window _Window;
-    readonly StartupOptions _Options;
+    readonly WindowRootView? _WindowRootView;
     readonly MicrosoftuiWindowing.AppWindow? _AppWindow;
     readonly bool _IsMainWindow = false;
+
+    RootNavigationView? _RootNavigationView = default;
+    MicrosoftuiXaml.FrameworkElement? _TitleBar;
 
     double _Offset = 0;
     IBackdropController? _WinuiController;
     bool _IsLoaded = false;
 
-    bool _IsTitleBarIsSetExtension = false;
+    bool _IsTitleBarIsSet = false;
 
     bool IController.Run()
     {
-        //_Application.OnThisPlatform()
+        if (_WindowRootView is null)
+            return false;
 
-        lock (this)
+        _RootNavigationView = _WindowRootView.NavigationViewControl;
+
+        LoadBackgroundMaterial(_Options.BackdropsKind);
+
+        if (_IsMainWindow)
         {
-            LoadBackgroundMaterial(_Options.BackdropsKind);
-
-            if (_IsMainWindow)
-            {
-                ShownInSwitchers(_Options.IsShowInTaskbar);
-                RemoveTitleBar(_Options.TitleBarKind);
-                MoveWindow(_Options.PresenterKind);
-                LoadMainWindowEvent();
-                RegisterApplicationThemeChangedEvent();
-            }
-            else
-            {
-                MoveWindow(WindowAlignment.Center, new Size(900, 450));
-                ShownInSwitchers(false);
-                //SetWindowPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped);
-                SetWindowModal();
-            }
+            LoadMainWindowEvent();
+            ShownInSwitchers(_Options.IsShowInTaskbar);
+            MoveWindow(_Options.PresenterKind);
+            RegisterApplicationThemeChangedEvent();
+        }
+        else
+        {
+            MoveWindow(WindowAlignment.Center, new Size(900, 450));
+            ShownInSwitchers(false);
+            //SetWindowModal();
         }
 
         return true;
@@ -75,16 +79,13 @@ internal partial class WinuiWindowController : IController, IWindowsService
 
     bool IController.Stop()
     {
-        lock (this)
-        {
-            _WinuiController?.Stop();
+        _WinuiController?.Stop();
 
-            if (_IsMainWindow)
-            {
-                UnLoadTrigger();
-                RemoveMainWindowEvent();
-                UnregisterApplicationThemeChangedEvent();
-            }
+        if (_IsMainWindow)
+        {
+            UnLoadTrigger();
+            RemoveMainWindowEvent();
+            UnregisterApplicationThemeChangedEvent();
         }
 
         return true;
@@ -160,64 +161,71 @@ internal partial class WinuiWindowController : IController, IWindowsService
         if (_AppWindow is null)
             return false;
 
+        if (_IsTitleBarIsSet)
+            _AppWindow.TitleBar.ResetToDefault();
+
         switch (titleBar)
         {
             case WindowTitleBarKind.PlatformDefault:
-                _Window.ExtendsContentIntoTitleBar = false;
-                break;
-            case WindowTitleBarKind.ExtendsContentIntoTitleBar:
-                if (!MicrosoftuiWindowing.AppWindowTitleBar.IsCustomizationSupported())
+                if (_TitleBar is not null)
                 {
-                    var res = _Application.Resources;
-                    res["WindowCaptionBackground"] = Colors.Transparent.MauiColor2WinuiBrush();
-                    res["WindowCaptionBackgroundDisabled"] = Colors.Transparent.MauiColor2WinuiBrush();
-
-                    break;
+                    _Window.ExtendsContentIntoTitleBar = false;
+                    _TitleBar.Visibility = MicrosoftuiXaml.Visibility.Collapsed; 
                 }
+                break;
+            case WindowTitleBarKind.CustomTitleBarAndExtension:
+                if (!MicrosoftuiWindowing.AppWindowTitleBar.IsCustomizationSupported())
+                    break;
 
-                _Window.ExtendsContentIntoTitleBar = false;
                 _AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-                _AppWindow.TitleBar.IconShowOptions = MicrosoftuiWindowing.IconShowOptions.HideIconAndSystemMenu;
+                _AppWindow.TitleBar.PreferredHeightOption = MicrosoftuiWindowing.TitleBarHeightOption.Standard;
+                _Window.ExtendsContentIntoTitleBar = false;
                 LoadTitleBarCorlor(_AppWindow.TitleBar);
-
-                Volatile.Write(ref _IsTitleBarIsSetExtension, true);
+                _AppWindow.TitleBar.IconShowOptions = MicrosoftuiWindowing.IconShowOptions.HideIconAndSystemMenu;
                 break;
             default:
-                //WinuiViewManagement.ApplicationView.TryEnterFullScreenMode();
-                //var applicationView = WinuiViewManagement.ApplicationView.GetForCurrentView();
-                //if (applicationView is not null)
-                //{
-                //    applicationView.TitleBar.BackgroundColor = Colors.Red.MauiColor2WinuiColor();
-                //}
-
-                //var view = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
-                //view.TitleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
-                // view.TitleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
-
                 {
-                    var isTitleBarIsSetExtension = Volatile.Read(ref _IsTitleBarIsSetExtension);
-                    if (isTitleBarIsSetExtension)
-                    {
-                        _AppWindow.TitleBar.ExtendsContentIntoTitleBar = false;
-                        _AppWindow.TitleBar.ResetToDefault();
-                    }
-
-                    var res = _Application.Resources;
-                    if (_Options.TitleBarBackgroundColor != null)
-                        res["WindowCaptionBackground"] = _Options.TitleBarBackgroundColor.MauiColor2WinuiBrush();
-
-                    if (_Options.TitleBarBackgroundInactiveColor != null)
-                        res["WindowCaptionBackgroundDisabled"] = _Options.TitleBarBackgroundInactiveColor.MauiColor2WinuiBrush();
-
-                    if (_Options.TitleBarForegroundColor != null)
-                        res["WindowCaptionForeground"] = _Options.TitleBarForegroundColor.MauiColor2WinuiBrush();
-
-                    if (_Options.TitleBarForegroundInactiveColor != null)
-                        res["WindowCaptionForegroundDisabled"] = _Options.TitleBarForegroundInactiveColor.MauiColor2WinuiBrush();
-
+                    _Window.ExtendsContentIntoTitleBar = true;
+                    if (_TitleBar is not null)
+                        _TitleBar.Visibility = MicrosoftuiXaml.Visibility.Visible;
                 }
 
                 break;
+        }
+
+        var res = _Application.Resources;
+        if (_Options.TitleBarBackgroundColor != null)
+            res["WindowCaptionBackground"] = _Options.TitleBarBackgroundColor.MauiColor2WinuiBrush();
+
+        if (_Options.TitleBarBackgroundInactiveColor != null)
+            res["WindowCaptionBackgroundDisabled"] = _Options.TitleBarBackgroundInactiveColor.MauiColor2WinuiBrush();
+
+        if (_Options.TitleBarForegroundColor != null)
+            res["WindowCaptionForeground"] = _Options.TitleBarForegroundColor.MauiColor2WinuiBrush();
+
+        if (_Options.TitleBarForegroundInactiveColor != null)
+            res["WindowCaptionForegroundDisabled"] = _Options.TitleBarForegroundInactiveColor.MauiColor2WinuiBrush();
+
+        TriggertTitleBarRepaint();
+
+        _IsTitleBarIsSet = true;
+
+        return true;
+    }
+
+    bool TriggertTitleBarRepaint()
+    {
+        var windowHanlde = _Window.GetWindowHandle();
+        var activeWindow = User32.GetActiveWindow();
+        if (windowHanlde == activeWindow)
+        {
+            User32.PostMessage(windowHanlde, WindowMessage.WM_ACTIVATE, new IntPtr((int)User32Constants.WA_INACTIVE), IntPtr.Zero);
+            User32.PostMessage(windowHanlde, WindowMessage.WM_ACTIVATE, new IntPtr((int)User32Constants.WA_ACTIVE), IntPtr.Zero);
+        }
+        else
+        {
+            User32.PostMessage(windowHanlde, WindowMessage.WM_ACTIVATE, new IntPtr((int)User32Constants.WA_ACTIVE), IntPtr.Zero);
+            User32.PostMessage(windowHanlde, WindowMessage.WM_ACTIVATE, new IntPtr((int)User32Constants.WA_INACTIVE), IntPtr.Zero);
         }
 
         return true;
@@ -226,9 +234,6 @@ internal partial class WinuiWindowController : IController, IWindowsService
     bool LoadTitleBarCorlor(MicrosoftuiWindowing.AppWindowTitleBar? titleBar)
     {
         if (titleBar is null)
-            return false;
-
-        if (_Options.TitleBarKind is not WindowTitleBarKind.ExtendsContentIntoTitleBar)
             return false;
 
         var application = Application.Current;
@@ -254,7 +259,7 @@ internal partial class WinuiWindowController : IController, IWindowsService
             case AppTheme.Dark:
                 // Set active window colors
                 titleBar.ForegroundColor = Microsoftui.Colors.White;
-                titleBar.BackgroundColor = null;
+                titleBar.BackgroundColor = Microsoftui.Colors.Red;
                 titleBar.ButtonForegroundColor = Microsoftui.Colors.White;
                 titleBar.ButtonBackgroundColor = Microsoftui.Colors.Transparent;
 
@@ -299,18 +304,28 @@ internal partial class WinuiWindowController : IController, IWindowsService
 
     bool LoadMainWindowEvent()
     {
-        var content = _Window.Content;
-        if (content is not MicrosoftuiXaml.FrameworkElement frameworkElement)
+        if (_RootNavigationView is null)
             return false;
 
-        frameworkElement.Loaded += FrameworkElement_Loaded;
-        frameworkElement.Unloaded += FrameworkElement_Unloaded;
-        frameworkElement.SizeChanged += FrameworkElement_SizeChanged;
+        _RootNavigationView.Loaded += WindowRootView_Loaded;
+        _RootNavigationView.Unloaded += WindowRootView_Unloaded;
+        _RootNavigationView.SizeChanged += WindowRootView_SizeChanged;
 
         return true;
     }
 
-    void FrameworkElement_SizeChanged(object sender, MicrosoftuiXaml.SizeChangedEventArgs e)
+    bool RemoveMainWindowEvent()
+    {
+        if (_RootNavigationView is null)
+            return false;
+
+        _RootNavigationView.Loaded -= WindowRootView_Loaded;
+        _RootNavigationView.Unloaded -= WindowRootView_Unloaded;
+        _RootNavigationView.SizeChanged -= WindowRootView_SizeChanged;
+        return true;
+    }
+
+    void WindowRootView_SizeChanged(object sender, MicrosoftuiXaml.SizeChangedEventArgs e)
     {
         if (!_IsLoaded)
             return;
@@ -322,8 +337,17 @@ internal partial class WinuiWindowController : IController, IWindowsService
         SetDragRectangles(rects);
     }
 
-    void FrameworkElement_Loaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
+    void WindowRootView_Loaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
     {
+        var propertyInfo = typeof(WindowRootView).GetProperty("AppTitleBar", BindingFlags.Instance | BindingFlags.NonPublic);
+        var titleBar = propertyInfo?.GetValue(_WindowRootView);
+        if (titleBar is MicrosoftuiXaml.FrameworkElement frameworkElement)
+            _TitleBar = frameworkElement;
+
+        RemoveTitleBar(_Options.TitleBarKind);
+        if (_Options.TitleBarKind is not WindowTitleBarKind.Default)
+            SetWindowConfigrations(_Options.ConfigurationKind);
+
         if (Application.Current?.MainPage is Shell shell)
         {
             if (shell.FlyoutBehavior == FlyoutBehavior.Locked)
@@ -333,26 +357,9 @@ internal partial class WinuiWindowController : IController, IWindowsService
         TrySetDragRectangles();
     }
 
-    void FrameworkElement_Unloaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
+    void WindowRootView_Unloaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
     {
 
-    }
-
-    void WinuiWindowController_DpiChanged(DisplayInformation sender, object args)
-    {
-
-    }
-
-    bool RemoveMainWindowEvent()
-    {
-        var content = _Window.Content;
-        if (content is not MicrosoftuiXaml.FrameworkElement frameworkElement)
-            return false;
-
-        frameworkElement.Loaded -= FrameworkElement_Loaded;
-        frameworkElement.Unloaded -= FrameworkElement_Unloaded;
-        frameworkElement.SizeChanged -= FrameworkElement_SizeChanged;
-        return true;
     }
 
     bool LoadTrigger()
@@ -364,6 +371,61 @@ internal partial class WinuiWindowController : IController, IWindowsService
     bool UnLoadTrigger()
     {
         AppTitleBarExProperty.BindiableObjectChangedEvent -= BindiableObject_Changed;
+        return true;
+    }
+
+    bool SetWindowConfigrations(WindowConfigurationKind kind)
+    {
+        if (_AppWindow is null)
+            return false;
+
+        switch (kind)
+        {
+            case WindowConfigurationKind.HideAllButton:
+                var customOverlappedPresenter = MicrosoftuiWindowing.OverlappedPresenter.CreateForContextMenu();
+                _AppWindow.SetPresenter(customOverlappedPresenter);
+                break;
+            case WindowConfigurationKind.ShowAllButton:
+                var mainOverlappedPresenter = MicrosoftuiWindowing.OverlappedPresenter.Create();
+                _AppWindow.SetPresenter(mainOverlappedPresenter);
+                break;
+            default:
+                {
+                    if (_AppWindow.Presenter.Kind is not MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped)
+                        _AppWindow.SetPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped);
+
+                    var overlappedPresenter = _AppWindow.Presenter.As<MicrosoftuiWindowing.OverlappedPresenter>();
+                    if (overlappedPresenter is not null)
+                    {
+                        overlappedPresenter.IsMinimizable = !kind.HasFlag(WindowConfigurationKind.DisableMinizable);
+                        overlappedPresenter.IsMaximizable = !kind.HasFlag(WindowConfigurationKind.DisableMaximizable);
+                        overlappedPresenter.IsResizable = !kind.HasFlag(WindowConfigurationKind.DisableResizable);
+                    }
+                }
+                break;
+        }
+
+        return true;
+    }
+    
+    bool RestorConfigrations()
+    {
+        if (_AppWindow is null)
+            return false;
+
+        var overlappedPresenter = _AppWindow.Presenter.As<MicrosoftuiWindowing.OverlappedPresenter>();
+        if (overlappedPresenter is not null)
+        {
+            overlappedPresenter.IsMinimizable = true;
+            overlappedPresenter.IsMaximizable = true;
+            overlappedPresenter.IsResizable = true;
+        }
+        else
+        {
+            var mainOverlappedPresenter = MicrosoftuiWindowing.OverlappedPresenter.Create();
+            _AppWindow.SetPresenter(mainOverlappedPresenter);
+        }
+
         return true;
     }
 
@@ -380,56 +442,6 @@ internal partial class WinuiWindowController : IController, IWindowsService
     {
         if (_AppWindow is null)
             return false;
-
-        switch (_AppWindow.Presenter.Kind)
-        {
-            case MicrosoftuiWindowing.AppWindowPresenterKind.Default:
-                break;
-            case MicrosoftuiWindowing.AppWindowPresenterKind.CompactOverlay:
-                {
-                    var overlappedPresenter = _AppWindow.Presenter.As<MicrosoftuiWindowing.CompactOverlayPresenter>();
-                    if (overlappedPresenter is not null)
-                    {
-                        if (bFullScreen)
-                            overlappedPresenter.InitialSize = MicrosoftuiWindowing.CompactOverlaySize.Medium; //overlappedPresenter.IsModal = true;
-                        else
-                            overlappedPresenter.InitialSize = MicrosoftuiWindowing.CompactOverlaySize.Small;
-                    }
-                }
-                break;
-            case MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen:
-                {
-                    var overlappedPresenter = _AppWindow.Presenter.As<MicrosoftuiWindowing.FullScreenPresenter>();
-                    if (overlappedPresenter is not null)
-                    {
-                         
-                    }
-                }
-                break;
-            case MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped:
-                {
-                    var overlappedPresenter = _AppWindow.Presenter.As<MicrosoftuiWindowing.OverlappedPresenter>();
-                    if (overlappedPresenter is not null)
-                    {
-                        if (bFullScreen)
-                        {
-                            overlappedPresenter.SetBorderAndTitleBar(!overlappedPresenter.HasBorder, !overlappedPresenter.HasTitleBar);
-                            overlappedPresenter.IsResizable = false;
-                            overlappedPresenter.IsMaximizable = false;
-                            //overlappedPresenter.IsModal = true;
-                        }
-                        else
-                        {
-                            overlappedPresenter.SetBorderAndTitleBar(overlappedPresenter.HasBorder, overlappedPresenter.HasTitleBar);
-                            overlappedPresenter.IsResizable = true;
-                            overlappedPresenter.IsMaximizable = true;
-                        }
-                    }
-                }
-                break;
-            default:
-                break;
-        }
 
         if (bFullScreen)
         {
@@ -499,8 +511,6 @@ internal partial class WinuiWindowController : IController, IWindowsService
 
         if (_AppWindow is null)
             return false;
-
-        //ToggleFullScreen(false);
 
         var width = size.Width;
         var height = size.Height;
@@ -673,7 +683,7 @@ internal partial class WinuiWindowController : IController, IWindowsService
         if (_AppWindow is null)
             return false;
 
-        if (_Options.TitleBarKind is not WindowTitleBarKind.ExtendsContentIntoTitleBar)
+        if (_Options.TitleBarKind is not WindowTitleBarKind.CustomTitleBarAndExtension)
             return false;
 
         if (_Options.PresenterKind is WindowPresenterKind.FullScreen)
@@ -783,7 +793,7 @@ internal partial class WinuiWindowController : IController, IWindowsService
         }
 
 
-        List<RectInt32> rectInt32s = new();
+        List<Windowsgraphics.RectInt32> rectInt32s = new();
         var scaleFactorPercent = _Window.GetScaleAdjustment();
 
         for (int i = 0; i < newRects.Count; i++)
@@ -805,7 +815,7 @@ internal partial class WinuiWindowController : IController, IWindowsService
             if (endX - startX <= 0)
                 continue;
 
-            var rectInt32 = new RectInt32(startX, 0, endX - startX, (int)titleHeight);
+            var rectInt32 = new Windowsgraphics.RectInt32(startX, 0, endX - startX, (int)titleHeight);
             rectInt32s.Add(rectInt32);
         }
 
@@ -822,16 +832,13 @@ internal partial class WinuiWindowController : IController, IWindowsService
 
             if (endX - startX > 0)
             {
-                var rectInt32 = new RectInt32(startX, 0, endX - startX, (int)titleHeight);
+                var rectInt32 = new Windowsgraphics.RectInt32(startX, 0, endX - startX, (int)titleHeight);
                 rectInt32s.Add(rectInt32);
             }
         }
 
-        if (_IsLoaded)
-        {
-            titleBar.ResetToDefault();
-            RemoveTitleBar(_Options.TitleBarKind);
-        }
+        //RemoveTitleBar(_Options.TitleBarKind);
+
 
         titleBar.SetDragRectangles(rectInt32s.ToArray());
 
@@ -844,7 +851,16 @@ internal partial class WinuiWindowController
 {
     bool IWindowsService.SetBackdrop(BackdropsKind kind) => LoadBackgroundMaterial(kind);
 
-    bool IWindowsService.SetTitleBar(WindowTitleBarKind kind) => RemoveTitleBar(kind);
+    bool IWindowsService.SetTitleBar(WindowTitleBarKind kind) 
+    { 
+        RemoveTitleBar(kind);
+        if (kind is not WindowTitleBarKind.Default)
+            SetWindowConfigrations(_Options.ConfigurationKind);
+        else
+            RestorConfigrations();
+
+        return true;
+    }
 
     bool IWindowsService.SetWindowMaximize() => MoveWindowMaximize();
 

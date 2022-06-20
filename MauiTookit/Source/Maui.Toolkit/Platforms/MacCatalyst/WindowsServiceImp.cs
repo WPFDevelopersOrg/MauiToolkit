@@ -99,7 +99,7 @@ internal class WindowsServiceImp : NSObject, IWindowsService
                 break;
             case WindowTitleBarKind.PlatformDefault:
                 break;
-            case WindowTitleBarKind.ExtendsContentIntoTitleBar:
+            case WindowTitleBarKind.CustomTitleBarAndExtension:
                 var vTitleBar = _MainWindow.WindowScene?.Titlebar;
                 if (vTitleBar is null)
                     return false;

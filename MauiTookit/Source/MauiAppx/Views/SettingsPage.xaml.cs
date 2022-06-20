@@ -30,7 +30,21 @@ public partial class SettingsPage : ContentPage
     private void ChangeTitleBarClick(object sender, EventArgs e)
     {
         //_WindowsService?.SetTitleBar(WindowTitleBarKind.ExtendsContentIntoTitleBar);
+        _WindowsService?.SetTitleBar(WindowTitleBarKind.PlatformDefault);
+        //_WindowsService?.SetTitleBar(WindowTitleBarKind.PlatformDefault);
+    }
+
+    private void ChangeTitleBarClick1(object sender, EventArgs e)
+    {
+        //_WindowsService?.SetTitleBar(WindowTitleBarKind.ExtendsContentIntoTitleBar);
         _WindowsService?.SetTitleBar(WindowTitleBarKind.Default);
+        //_WindowsService?.SetTitleBar(WindowTitleBarKind.PlatformDefault);
+    }
+
+    private void ChangeTitleBarClick2(object sender, EventArgs e)
+    {
+        //_WindowsService?.SetTitleBar(WindowTitleBarKind.ExtendsContentIntoTitleBar);
+        _WindowsService?.SetTitleBar(WindowTitleBarKind.CustomTitleBarAndExtension);
         //_WindowsService?.SetTitleBar(WindowTitleBarKind.PlatformDefault);
     }
 

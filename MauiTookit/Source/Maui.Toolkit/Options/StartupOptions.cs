@@ -20,6 +20,9 @@ public class StartupOptions
     /// </summary>
     public WindowTitleBarKind TitleBarKind { get; set; }
 
+    
+    public WindowConfigurationKind ConfigurationKind { get; set; }
+
     /// <summary>
     /// Only TitleBarKind is default can take effect
     /// </summary>

@@ -14,5 +14,5 @@ public enum WindowTitleBarKind
     /// <summary>
     /// remove titlebar
     /// </summary>
-    ExtendsContentIntoTitleBar,
+    CustomTitleBarAndExtension,
 }
