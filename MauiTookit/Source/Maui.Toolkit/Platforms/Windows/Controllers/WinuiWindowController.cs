@@ -381,9 +381,6 @@ internal partial class WinuiWindowController : IController, IWindowsService
         if (_AppWindow is null)
             return false;
 
-        if (_Options.TitleBarKind is WindowTitleBarKind.ExtendsContentIntoTitleBar)
-            return true;
-
         switch (_AppWindow.Presenter.Kind)
         {
             case MicrosoftuiWindowing.AppWindowPresenterKind.Default:
@@ -447,11 +444,17 @@ internal partial class WinuiWindowController : IController, IWindowsService
 
         if (bFullScreen)
         {
+            if (_Options.TitleBarKind is WindowTitleBarKind.Default)
+                _Window.ExtendsContentIntoTitleBar = false;
+
             if (_AppWindow.Presenter.Kind is not MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen)
                 _AppWindow.SetPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen);
         }
         else
         {
+            if (_Options.TitleBarKind is WindowTitleBarKind.Default)
+                _Window.ExtendsContentIntoTitleBar = true;
+
             if (_AppWindow.Presenter.Kind is MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen)
                 _AppWindow.SetPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.Default);
         }
