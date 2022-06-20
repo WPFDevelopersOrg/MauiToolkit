@@ -10,7 +10,7 @@
         <SearchHandler ShowsResults="True" DisplayMemberName="Name" Placeholder="let me try" />
     </Shell.SearchHandler>
 
-    <TabBar>
+    <!--<TabBar>
         <ShellContent
         Title="Home"
         Icon="im_home.png"
@@ -27,9 +27,24 @@
         Title="Settings"
         Icon="im_search.png"
         ContentTemplate="{DataTemplate views:SettingsPage}"/>
-    </TabBar>
+    </TabBar>-->
 
-        
- 
+    <ShellContent
+        Title="Home"
+        Icon="im_home.png"
+        ContentTemplate="{DataTemplate views:HomePage}"/>
+    <ShellContent
+        Title="Apply"
+        Icon="im_apply.png"
+        ContentTemplate="{DataTemplate views:ApplyPage}" />
+    <ShellContent
+        Title="Result"
+        Icon="im_result.png"
+        ContentTemplate="{DataTemplate views:ResultPage}"/>
+    <ShellContent
+        Title="Settings"
+        Icon="im_search.png"
+        ContentTemplate="{DataTemplate views:SettingsPage}"/>
+
 
 </Shell>
