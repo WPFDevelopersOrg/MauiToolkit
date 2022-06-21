@@ -138,7 +138,6 @@ internal class WinuiWindowRootViewController : INavigationViewBuilder, IControll
             //image.Visibility = MicrosoftuiXaml.Visibility.Visible;
         }
 
-
         return true;
     }
 

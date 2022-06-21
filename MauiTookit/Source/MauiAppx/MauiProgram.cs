@@ -44,6 +44,8 @@ public static class MauiProgram
             })
             .UseShellViewSettings(options => 
             {
+                options.TitleBarHeight = 48;
+                options.IsPaneToggleButtonVisible = true;
 #if WINDOWS
 
                 options.Icon = PlatformShared.CreatePathBuilder()

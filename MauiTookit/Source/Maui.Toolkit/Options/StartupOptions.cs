@@ -1,7 +1,7 @@
 ﻿using Maui.Toolkit.Shared;
 
 namespace Maui.Toolkit.Options;
-public class StartupOptions
+public record StartupOptions
 {
     /// <summary>
     /// showintaskbar
