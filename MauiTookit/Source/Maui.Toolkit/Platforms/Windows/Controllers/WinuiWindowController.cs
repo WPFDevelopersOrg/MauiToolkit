@@ -178,21 +178,22 @@ internal partial class WinuiWindowController : IController, IWindowsService
                     _TitleBar.Visibility = MicrosoftuiXaml.Visibility.Collapsed;
                 break;
             case WindowTitleBarKind.CustomTitleBarAndExtension:
-                if (!MicrosoftuiWindowing.AppWindowTitleBar.IsCustomizationSupported())
-                    break;
 
                 _Window.ExtendsContentIntoTitleBar = false;
                 if (_TitleBar is not null)
                     _TitleBar.Visibility = MicrosoftuiXaml.Visibility.Collapsed;
-
-                _AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-                _AppWindow.TitleBar.PreferredHeightOption = MicrosoftuiWindowing.TitleBarHeightOption.Standard;
                 LoadTitleBarCorlor(_AppWindow.TitleBar);
-                _AppWindow.TitleBar.IconShowOptions = MicrosoftuiWindowing.IconShowOptions.HideIconAndSystemMenu;
 
                 var thicknessProperty = typeof(MauiNavigationView).GetProperty("NavigationViewContentMargin", BindingFlags.Instance | BindingFlags.NonPublic);
                 if (thicknessProperty?.GetValue(_RootNavigationView) is MicrosoftuiXaml.Thickness thickness)
                     thicknessProperty.SetValue(_RootNavigationView, new MicrosoftuiXaml.Thickness(0));
+
+                if (!MicrosoftuiWindowing.AppWindowTitleBar.IsCustomizationSupported())
+                    break;
+
+                _AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+                _AppWindow.TitleBar.PreferredHeightOption = MicrosoftuiWindowing.TitleBarHeightOption.Standard;               
+                _AppWindow.TitleBar.IconShowOptions = MicrosoftuiWindowing.IconShowOptions.HideIconAndSystemMenu;
 
                 break;
             default:
@@ -416,6 +417,10 @@ internal partial class WinuiWindowController : IController, IWindowsService
             }
 
         }
+        //Winui.WindowManagement.AppWindowTitleBar
+        //var coreApplication = _Application;
+        //var coreApplication = _Application.As<ICoreApplication>();
+        //var titleBar1 = CoreApplication.GetCurrentView()?.TitleBar;
 
         TrySetDragRectangles();
     }
