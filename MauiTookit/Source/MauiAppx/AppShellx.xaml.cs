@@ -34,7 +34,9 @@ public partial class AppShellx : Shell
 
         //titleBarView.Background = Colors.Red;
 
-        await GoToAsync("LoginRouter");
+        //FlyoutIcon = 
+
+        await GoToAsync("LoginRouter", true);
     }
 
     protected override void OnNavigatedFrom(NavigatedFromEventArgs args)

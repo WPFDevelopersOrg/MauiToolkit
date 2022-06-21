@@ -9,7 +9,7 @@ public partial class HomePage : ContentPage
 
     private async void Button_Clicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("LoginRouter");  
+        await Shell.Current.GoToAsync("LoginRouter", true);  
     }
 
     private void SearchBar_Loaded(object sender, EventArgs e)

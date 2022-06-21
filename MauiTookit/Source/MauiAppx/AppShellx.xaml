@@ -11,6 +11,7 @@
     BackgroundColor="Transparent"
     FlyoutBackgroundColor="Transparent"
     Loaded="Shell_Loaded"
+    FlyoutIcon="im_hospital.png"
     FlyoutWidth="180" >
 
     <Shell.Resources>
