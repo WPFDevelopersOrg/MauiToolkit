@@ -1,14 +1,8 @@
 ﻿<Project>
-
-	<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('windows'))">
-		<BaseIntermediateOutputPath>$(MSBuildThisFileDirectory).vs\$(SolutionName)\Intermediate\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
-	</PropertyGroup>
-
-	<PropertyGroup  Condition="$([MSBuild]::IsOSPlatform('maccatalyst'))">
-		<IntermediateOutputPath>$(MSBuildThisFileDirectory).vs\$(SolutionName)\Intermediate\$(MSBuildProjectName)\</IntermediateOutputPath>
-	</PropertyGroup>
-	
 	<PropertyGroup>
+		<BaseIntermediateOutputPath Condition="$([MSBuild]::IsOSPlatform('windows'))">$(MSBuildThisFileDirectory).vs\$(SolutionName)\Intermediate\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+		<IntermediateOutputPath Condition="$([MSBuild]::IsOSPlatform('OSX'))">$(MSBuildThisFileDirectory).vs\$(SolutionName)\Intermediate\$(MSBuildProjectName)\</IntermediateOutputPath>
+		
 		<OutputPath>$(MSBuildThisFileDirectory)Binary\</OutputPath>
 		<LangVersion>latest</LangVersion>
 		
