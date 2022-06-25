@@ -43,7 +43,7 @@ internal class WindowsServiceImp : IWindowsService
                 var controller = _mapWindows.GetOrAdd(window, win =>
                 {
                     return new WinuiWindowController(_Application, win, _StartupOptions, isMainWindow);
-                })；
+                });
                 controller?.Run();
 
             }).OnVisibilityChanged((window, arg) =>

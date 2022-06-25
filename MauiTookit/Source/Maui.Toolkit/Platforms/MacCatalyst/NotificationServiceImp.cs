@@ -2,6 +2,7 @@
 using Maui.Toolkit.Options;
 using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
+using ObjCRuntime;
 using UIKit;
 using UserNotifications;
 
@@ -14,6 +15,7 @@ internal class NotificationServiceImp : INotificationService
 
     }
 
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     public bool RegisterApplicationEvent(ILifecycleBuilder lifecycleBuilder)
     {
         lifecycleBuilder.AddMac(windowsLeftCycle =>
@@ -41,7 +43,7 @@ internal class NotificationServiceImp : INotificationService
 
                 //application badge;
                 //app.ApplicationIconBadgeNumber = 23;
-
+               
                 return true;
             }).FinishedLaunching((app, options) =>
             {

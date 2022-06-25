@@ -1,13 +1,10 @@
-﻿using CoreGraphics;
-using Foundation;
+﻿using Foundation;
 using Maui.Toolkit.Options;
 using Maui.Toolkit.Platforms.MacCatalyst.Controllers;
 using Maui.Toolkit.Platforms.MacCatalyst.Extensions;
-using Maui.Toolkit.Platforms.MacCatalyst.Helpers;
 using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
 using System.Collections.Concurrent;
-using System.Diagnostics.CodeAnalysis;
 using UIKit;
 
 namespace Maui.Toolkit.Platforms;
@@ -55,6 +52,7 @@ internal class WindowsServiceImp : NSObject, IWindowsService
 
                 //var nsAppNotifications = UIWindowExtension.GetNsApplicationNotifications();
 
+                UIApplication.Notifications.ObserveDidBecomeActive(ApplicationDidBecomeActive);
                 UIWindow.Notifications.ObserveDidBecomeVisible(WindowDidBecomeVisible);
                 UIWindow.Notifications.ObserveDidBecomeHidden(WindowDidBecomeHidden);
                 UIWindow.Notifications.ObserveDidBecomeKey(WindowDidBecomeKey);
@@ -207,7 +205,12 @@ internal class WindowsServiceImp : NSObject, IWindowsService
         return service.ShowInTaskBar(isShow);
     }
 
-    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+    void ApplicationDidBecomeActive(object? sender, NSNotificationEventArgs args)
+    {
+
+    }
+
+    //[SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     void WindowDidBecomeVisible(object? sender, NSNotificationEventArgs args)
     {
         if (args.Notification.Object is not UIWindow uiWindow)
@@ -228,7 +231,7 @@ internal class WindowsServiceImp : NSObject, IWindowsService
 
         var controller = _mapWindows.GetOrAdd(uiWindow, window =>
         {
-            return new UIKitWindowController(_NsApplication,_Application, window, _StartupOptions, isMainWidnow);
+            return new UIKitWindowController(_NsApplication, _Application, window, _StartupOptions, isMainWidnow);
         });
         controller?.Run();
     }

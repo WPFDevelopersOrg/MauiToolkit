@@ -168,7 +168,7 @@ internal partial class WinuiWindowController : IController, IWindowsService
             return false;
 
         if (_IsTitleBarIsSet)
-            _AppWindow.TitleBar.ResetToDefault();
+            _AppWindow.TitleBar?.ResetToDefault();
 
         switch (titleBar)
         {
@@ -189,6 +189,9 @@ internal partial class WinuiWindowController : IController, IWindowsService
                     thicknessProperty.SetValue(_RootNavigationView, new MicrosoftuiXaml.Thickness(0));
 
                 if (!MicrosoftuiWindowing.AppWindowTitleBar.IsCustomizationSupported())
+                    break;
+
+                if (_AppWindow.TitleBar is null)
                     break;
 
                 _AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;

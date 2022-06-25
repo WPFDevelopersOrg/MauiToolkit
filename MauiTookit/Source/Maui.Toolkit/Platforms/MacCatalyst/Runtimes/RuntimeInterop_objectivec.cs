@@ -10,7 +10,7 @@ namespace Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
 
 public static partial class RuntimeInterop
 {
-    private const string _ObjectiveCLibrary = "/usr/lib/libobjc.dylib";
+    private const string _ObjectiveCLibrary = Constants.ObjectiveCLibrary;
 
     /// <summary>
     /// 

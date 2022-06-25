@@ -6,11 +6,6 @@ using Maui.Toolkit.Platforms.MacCatalyst.Extensions;
 using Maui.Toolkit.Platforms.MacCatalyst.Helpers;
 using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UIKit;
 
 namespace Maui.Toolkit.Platforms.MacCatalyst.Controllers;
@@ -96,11 +91,12 @@ internal partial class UIKitWindowController
         //_NsWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", true);
 
         _NsWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", true);
-        _NsWindow.SetValueForNsobject<int>("setTitleVisibility:", 1);
+        _NsWindow.SetValueForNsobject<int>("setTitleVisibility:", 0);
         var value = _NsWindow.GetValueFromNsobject<int>("styleMask");
         var newValue = value | 32768;
         _NsWindow.SetValueForNsobject<int>("setStyleMask:", newValue);
 
+        //NSNotification
         //_NsWindow.SetValueForNsobject<bool>("setMovableByWindowBackground:", true);
         return true;
     }
