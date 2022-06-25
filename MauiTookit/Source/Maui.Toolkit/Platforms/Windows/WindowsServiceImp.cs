@@ -30,6 +30,9 @@ internal class WindowsServiceImp : IWindowsService
         {
             windowsLeftCycle.OnWindowCreated(window =>
             {
+                if (_Application is null)
+                    return;
+
                 bool isMainWindow = false;
                 if (_MainWindow is null)
                 {
@@ -37,12 +40,11 @@ internal class WindowsServiceImp : IWindowsService
                     isMainWindow = true;
                 }
 
-                if (_Application is null)
-                    return;
-
-                Core.IController controller = new WinuiWindowController(_Application, window, _StartupOptions, isMainWindow);
-                controller.Run();
-                _mapWindows.GetOrAdd(window, controller);
+                var controller = _mapWindows.GetOrAdd(window, win =>
+                {
+                    return new WinuiWindowController(_Application, win, _StartupOptions, isMainWindow);
+                })；
+                controller?.Run();
 
             }).OnVisibilityChanged((window, arg) =>
             {

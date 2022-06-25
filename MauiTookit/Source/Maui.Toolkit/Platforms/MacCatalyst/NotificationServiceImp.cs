@@ -1,6 +1,8 @@
-﻿using Maui.Toolkit.Options;
+﻿using Foundation;
+using Maui.Toolkit.Options;
 using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
+using UIKit;
 using UserNotifications;
 
 namespace Maui.Toolkit.Platforms;
@@ -33,6 +35,13 @@ internal class NotificationServiceImp : INotificationService
 
             }).WillFinishLaunching((app, options) =>
             {
+                //when you want to use application badge you must add settings for application this method add after ios8
+                var settings = UIUserNotificationSettings.GetSettingsForTypes(UIUserNotificationType.Badge | UIUserNotificationType.Alert | UIUserNotificationType.Sound, new NSSet());
+                app.RegisterUserNotificationSettings(settings);
+
+                //application badge;
+                //app.ApplicationIconBadgeNumber = 23;
+
                 return true;
             }).FinishedLaunching((app, options) =>
             {

@@ -21,6 +21,19 @@ public static class UIWindowExtension
         return sharedApplication;
     }
 
+    public static NSObject? GetNsApplicationNotifications()
+    {
+        var nsApplication = Runtime.GetNSObject(Class.GetHandle("NSApplication"));
+        if (nsApplication is null)
+            return default;
+
+        var appNitification = nsApplication.PerformSelector(new Selector("Notifications"));
+        if (appNitification is null)
+            return default;
+
+        return appNitification;
+    }
+
     public static NSObject? GetHostWidnowForUiWindow(this UIWindow window)
     {
         if (window is null)

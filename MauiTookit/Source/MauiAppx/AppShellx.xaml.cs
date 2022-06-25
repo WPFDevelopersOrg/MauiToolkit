@@ -11,6 +11,9 @@ public partial class AppShellx : Shell
 
         Routing.RegisterRoute("LoginRouter", typeof(LoginPage));
 
+
+        //if (Resources.TryGetValue("FlyoutHeaderKey", out var value))
+        //    FlyoutHeader = value;
 #if WINDOWS
 
         if (Resources.TryGetValue("FlyoutHeaderKey", out var value))
@@ -18,9 +21,9 @@ public partial class AppShellx : Shell
 
 #elif MACCATALYST
         
-        if (Resources.TryGetValue("ShellItemTemplateKey", out var value))
+        if (Resources.TryGetValue("ShellItemTemplateKey", out var value1))
         {
-            if (value is DataTemplate dataTemplate)
+            if (value1 is DataTemplate dataTemplate)
                 ItemTemplate = dataTemplate;
         }
 
