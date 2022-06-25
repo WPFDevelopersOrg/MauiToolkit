@@ -57,6 +57,7 @@ internal class WindowsServiceImp : NSObject, IWindowsService
                 UIWindow.Notifications.ObserveDidBecomeHidden(WindowDidBecomeHidden);
                 UIWindow.Notifications.ObserveDidBecomeKey(WindowDidBecomeKey);
 
+                UIScene.Notifications.ObserveDidActivate(UIScreenDidActivate);
 
                 //var views = NSBundle.MainBundle.LoadNib("Window", default, default);
                 //    NSArray* viewArray = [[NSBundle mainBundle] loadNibNamed: @"Window" owner: nil options:nil];
@@ -242,6 +243,11 @@ internal class WindowsServiceImp : NSObject, IWindowsService
     }
 
     void WindowDidBecomeKey(object? sender, NSNotificationEventArgs args)
+    {
+
+    }
+
+    void UIScreenDidActivate(object? sender, NSNotificationEventArgs args)
     {
 
     }
