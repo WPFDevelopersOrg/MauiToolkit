@@ -23,6 +23,8 @@ internal class WindowsServiceImp : NSObject, IWindowsService
     UIWindow? _MainWindow;
     NSObject? _NsApplication;
 
+    UIWindow? _LastWindow;
+
     volatile ConcurrentDictionary<UIWindow, Core.IController> _mapWindows = new();
 
     //[SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
@@ -220,17 +222,36 @@ internal class WindowsServiceImp : NSObject, IWindowsService
         if (_NsApplication is null || _Application is null)
             return;
 
+        UIWindow? activeWindow = default;
         if (uiWindow.GetHostWidnowForUiWindow() is null)
-            return;
+        {
+            if (uiWindow.RootViewController is not null)
+                _LastWindow = uiWindow;
 
+            if (_LastWindow is not null)
+            {
+                if (_LastWindow.GetHostWidnowForUiWindow() is null)
+                    return;
+
+                activeWindow = _LastWindow;
+                _LastWindow = default;
+            }
+
+        }
+        else
+            activeWindow = uiWindow;
+
+        if (activeWindow is null)
+            return;
+       
         bool isMainWidnow = false;
         if (_MainWindow is null)
         {
-            _MainWindow = uiWindow;
+            _MainWindow = activeWindow;
             isMainWidnow = true;
         }
 
-        var controller = _mapWindows.GetOrAdd(uiWindow, window =>
+        var controller = _mapWindows.GetOrAdd(activeWindow, window =>
         {
             return new UIKitWindowController(_NsApplication, _Application, window, _StartupOptions, isMainWidnow);
         });

@@ -107,6 +107,12 @@ public static class RuntimeHelper
             if (value is TValue longValue)
                 return longValue;
         }
+        else if (typeof(TValue) == typeof(ulong))
+        {
+            ulong value = (ulong)RuntimeInterop.long_objc_msgSend(nsObject.Handle, propertySelector.Handle);
+            if (value is TValue longValue)
+                return longValue;
+        }
         else if(typeof(TValue) == typeof(IntPtr))
         {
             IntPtr value = RuntimeInterop.IntPtr_objc_msgSend(nsObject.Handle, propertySelector.Handle);
@@ -134,6 +140,8 @@ public static class RuntimeHelper
             RuntimeInterop.void_objc_msgSend_int(nsObject.Handle, propertySelector.Handle, intValue);
         else if (value is long longValue)
             RuntimeInterop.void_objc_msgSend_long(nsObject.Handle, propertySelector.Handle, longValue);
+        else if (value is ulong ulongValue)
+            RuntimeInterop.void_objc_msgSend_long(nsObject.Handle, propertySelector.Handle, (long)ulongValue);
         else if (value is CGSize cgSizeValue)
             RuntimeInterop.void_objc_msgSend_CGSize(nsObject.Handle, propertySelector.Handle, cgSizeValue);
         else if (value is string stringValue)
