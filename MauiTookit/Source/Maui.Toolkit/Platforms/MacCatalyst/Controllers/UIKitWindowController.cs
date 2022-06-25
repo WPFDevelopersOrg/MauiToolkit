@@ -92,13 +92,11 @@ internal partial class UIKitWindowController
 
         _NsWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", true);
 
-         
-
         //_NsWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", true);
-        //_NsWindow.SetValueForNsobject<int>("setTitleVisibility:", 0);
+        _NsWindow.SetValueForNsobject<long>("setTitleVisibility:", (long)TitlebarTitleVisibility.Visible);
         //var value = _NsWindow.GetValueFromNsobject<ulong>("styleMask");
-        //ar newValue = (ulong)NSWindowStyle.Titled  ;
-        //_NsWindow.SetValueForNsobject<ulong>("setStyleMask:", newValue);
+        var newValue = (ulong)(NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable | NSWindowStyle.FullSizeContentView );
+        _NsWindow.SetValueForNsobject<ulong>("setStyleMask:", newValue);
 
         //NSNotification
         //_NsWindow.SetValueForNsobject<bool>("setMovableByWindowBackground:", true);

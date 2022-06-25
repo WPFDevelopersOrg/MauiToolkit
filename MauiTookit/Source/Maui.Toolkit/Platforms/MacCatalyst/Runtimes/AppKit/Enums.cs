@@ -2,6 +2,14 @@
 
 namespace Maui.Toolkit.Platforms.MacCatalyst.Runtimes.AppKit;
 
+[Native]
+public enum TitlebarTitleVisibility : long
+{
+    Visible,
+    Hidden,
+}
+
+
 [Flags]
 [Native("NSWindowStyleMask")]
 public enum NSWindowStyle : ulong
