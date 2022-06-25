@@ -58,7 +58,7 @@ internal class WindowsServiceImp : NSObject, IWindowsService
                 UIWindow.Notifications.ObserveDidBecomeKey(WindowDidBecomeKey);
 
                 UIScene.Notifications.ObserveDidActivate(UIScreenDidActivate);
-
+                UIScene.Notifications.ObserveWillConnect(UIScreenWillConnect);
                 //var views = NSBundle.MainBundle.LoadNib("Window", default, default);
                 //    NSArray* viewArray = [[NSBundle mainBundle] loadNibNamed: @"Window" owner: nil options:nil];
                 //app.window = viewArray.firstObject;
@@ -252,4 +252,8 @@ internal class WindowsServiceImp : NSObject, IWindowsService
 
     }
 
+    void UIScreenWillConnect(object? sender, NSNotificationEventArgs args)
+    {
+
+    }
 }
