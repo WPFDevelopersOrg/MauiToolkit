@@ -1,4 +1,6 @@
 ﻿using Foundation;
+using Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
+using ObjCRuntime;
 
 namespace Maui.Toolkit.Platforms.MacCatalyst.Notifications;
 

@@ -25,11 +25,4 @@
 		<PackageReference Include="PInvoke.User32" Version="0.7.104" /> 
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Compile Remove="Platforms\MacCatalyst\Notifications\NsAppNotifications.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="Platforms\MacCatalyst\Notifications\NsAppNotifications.cs" />
-	</ItemGroup>
 </Project>
