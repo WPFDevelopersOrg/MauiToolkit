@@ -1,4 +1,5 @@
-﻿using CoreGraphics;
+﻿using AppKit;
+using CoreGraphics;
 using Foundation;
 using Maui.Toolkit.Concurrency;
 using Maui.Toolkit.Options;
@@ -145,12 +146,16 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         if (_ImagePath == image)
             return default;
 
-        var statusBarImage = RuntimeHelper.Alloc("NSImage");
-        if (statusBarImage is null)
-            return default;
+        NSImage statusBarImage = new NSImage(image);
 
-        var nsImageObject = statusBarImage.GetNSObjectFromWithArgument<string>("initWithContentsOfFile:", image);
-        return nsImageObject;
+        //var statusBarImage = RuntimeHelper.Alloc("NSImage");
+        //if (statusBarImage is null)
+        //return default;
+
+        //var nsImageObject = statusBarImage.GetNSObjectFromWithArgument<string>("initWithContentsOfFile:", image);
+        //return nsImageObject;
+
+        return statusBarImage;
     }
 
     bool SetImage(NSObject? nsImage)

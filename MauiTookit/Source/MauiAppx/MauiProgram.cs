@@ -12,7 +12,7 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .UseWindowStartup(options => 
             {
-                options.TitleBarKind = WindowTitleBarKind.CustomTitleBarAndExtension;
+                options.TitleBarKind = WindowTitleBarKind.DefaultWithExtension;
                 options.ConfigurationKind =  WindowConfigurationKind.HideAllButton;
                 options.PresenterKind = WindowPresenterKind.Default;
                 options.TitleBarBackgroundColor = Colors.Transparent;
@@ -45,7 +45,7 @@ public static class MauiProgram
             .UseShellViewSettings(options => 
             {
                 options.TitleBarHeight = 48;
-                options.IsPaneToggleButtonVisible = true;
+                options.IsPaneToggleButtonVisible = false;
 #if WINDOWS
 
                 options.Icon = PlatformShared.CreatePathBuilder()
