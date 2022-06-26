@@ -23,6 +23,7 @@ internal partial class UIKitWindowController : NSObject, IController, IWindowsSe
         _Application = application;
         _Window = uiWindow;
         _Options = options;
+        _ChangeOptions = options with { };
         _IsMainWindow = isMainWinodw;
         _NsWindow = uiWindow.GetHostWidnowForUiWindow();
     }
@@ -31,6 +32,7 @@ internal partial class UIKitWindowController : NSObject, IController, IWindowsSe
     readonly UIApplication _Application;
     readonly UIWindow _Window;
     readonly StartupOptions _Options;
+    readonly StartupOptions _ChangeOptions;
     readonly bool _IsMainWindow;
 
     readonly NSObject? _NsWindow;
@@ -53,11 +55,13 @@ internal partial class UIKitWindowController : NSObject, IController, IWindowsSe
 
     bool IWindowsService.SetBackdrop(BackdropsKind kind)
     {
+        _ChangeOptions.BackdropsKind = kind;
         return true;
     }
 
     bool IWindowsService.SetTitleBar(WindowTitleBarKind kind)
     {
+        _ChangeOptions.TitleBarKind = kind;
         RemoveTitleBar(kind);
         return LoadButton(_Options.ConfigurationKind);
     }
@@ -296,8 +300,10 @@ internal partial class UIKitWindowController
         if (_NsWindow is null)
             return false;
 
-        _NsWindow.SetValueForNsobject<IntPtr>("miniaturize:", this.Handle);
-        //_NsApplication.SetValueForNsobject<IntPtr>("hide:", _NsWindow.Handle);
+        if (_ChangeOptions.TitleBarKind is WindowTitleBarKind.CustomTitleBarAndExtension)
+            _NsApplication.SetValueForNsobject<IntPtr>("hide:", _NsWindow.Handle);
+        else
+            _NsWindow.SetValueForNsobject<IntPtr>("miniaturize:", this.Handle);
 
         return true;
     }
@@ -326,4 +332,3 @@ internal partial class UIKitWindowController
         return true;
     }
 }
-
