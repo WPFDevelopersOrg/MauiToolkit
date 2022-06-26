@@ -29,7 +29,7 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
     NSObject? _StatusBarItem;
     NSObject? _StatusBarButton;
     //NSObject? _StatusBarImage;
-    NSObject? _NsImage;
+    NSImage? _NsImage;
 
     NSObject? _NsApplication;
     UIApplication? _Application;
@@ -138,7 +138,7 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         return true;
     }
 
-    NSObject? LoadImage(string? image)
+    NSImage? LoadImage(string? image)
     {
         if (string.IsNullOrEmpty(image))
             return default;
@@ -158,7 +158,7 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
         return statusBarImage;
     }
 
-    bool SetImage(NSObject? nsImage)
+    bool SetImage(NSImage? nsImage)
     {
         if (_StatusBarButton is null)
             return false;
@@ -169,8 +169,10 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
 
         if (nsImage is not null)
         {
-            nsImage.SetValueForNsobject<CGSize>("setSize:", new CGSize(18, 18));
-            nsImage.SetValueForNsobject<bool>("setTemplate:", true);
+            nsImage.Size = new CGSize(18, 18);
+            nsImage.Template = true;
+            //nsImage.SetValueForNsobject<CGSize>("setSize:", new CGSize(18, 18));
+            //nsImage.SetValueForNsobject<bool>("setTemplate:", true);
         }
 
         return true;
@@ -180,16 +182,16 @@ internal class StatusBarServiceImp : NSObject, IStatusBarService
     {
         var nsImagePtr = LoadImage(iconPath);
 
-        if (nsImagePtr is not null)
-        {
-            if (_NsImage is not null)
-                _NsImage.Dealloc();
-        }
+        //if (nsImagePtr is not null)
+        //{
+        //    if (_NsImage is not null)
+        //        _NsImage.Dealloc();
+        //}
 
         _NsImage = nsImagePtr;
         _ImagePath = iconPath;
 
-        return SetImage(_NsImage);
+        return SetImage(nsImagePtr);
     }
 
     bool IStatusBarService.Hide() => SetImage(default);
