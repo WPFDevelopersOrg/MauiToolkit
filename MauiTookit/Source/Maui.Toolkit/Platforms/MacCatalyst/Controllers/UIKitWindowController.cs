@@ -300,7 +300,7 @@ internal partial class UIKitWindowController
         if (_NsWindow is null)
             return false;
 
-        if (_ChangeOptions.TitleBarKind is WindowTitleBarKind.CustomTitleBarAndExtension)
+        if (_ChangeOptions.ConfigurationKind is  WindowConfigurationKind.HideAllButton)
             _NsApplication.SetValueForNsobject<IntPtr>("hide:", _NsWindow.Handle);
         else
             _NsWindow.SetValueForNsobject<IntPtr>("miniaturize:", this.Handle);
