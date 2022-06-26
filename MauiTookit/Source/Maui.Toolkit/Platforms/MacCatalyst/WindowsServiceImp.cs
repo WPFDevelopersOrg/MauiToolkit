@@ -2,6 +2,7 @@
 using Maui.Toolkit.Options;
 using Maui.Toolkit.Platforms.MacCatalyst.Controllers;
 using Maui.Toolkit.Platforms.MacCatalyst.Extensions;
+using Maui.Toolkit.Platforms.MacCatalyst.Notifications;
 using Maui.Toolkit.Services;
 using Maui.Toolkit.Shared;
 using System.Collections.Concurrent;
@@ -51,6 +52,8 @@ internal class WindowsServiceImp : NSObject, IWindowsService
 
                 _Application = app;
                 _NsApplication = UIWindowExtension.GetSharedNsApplication();
+
+                NsApplication_Notifications.ObserveWillBecomeActive(NsApplicationDidBecomeActive);
 
                 //var nsAppNotifications = UIWindowExtension.GetNsApplicationNotifications();
 
@@ -274,6 +277,11 @@ internal class WindowsServiceImp : NSObject, IWindowsService
     }
 
     void UIScreenWillConnect(object? sender, NSNotificationEventArgs args)
+    {
+
+    }
+
+    void NsApplicationDidBecomeActive(object? sender, NSNotificationEventArgs args)
     {
 
     }

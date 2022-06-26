@@ -6,7 +6,7 @@ namespace Maui.Toolkit.Platforms.MacCatalyst.Notifications;
 
 public static class NsApplication_Notifications
 {
-    public static NSObject ObserveWillBecomeActive(NSObject objectToObserve, EventHandler<NSNotificationEventArgs> handler)
+    public static NSObject ObserveWillBecomeActive(EventHandler<NSNotificationEventArgs> handler)
     {
         
         EventHandler<NSNotificationEventArgs> handler2 = handler;
