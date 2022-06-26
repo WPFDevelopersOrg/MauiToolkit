@@ -54,6 +54,7 @@ internal class WindowsServiceImp : NSObject, IWindowsService
                 _NsApplication = UIWindowExtension.GetSharedNsApplication();
 
                 NsApplication_Notifications.ObserveWillBecomeActive(NsApplicationDidBecomeActive);
+                NsApplication_Notifications.ObserveWindowCreated(NsApplicationWindowCreated);
 
                 //var nsAppNotifications = UIWindowExtension.GetNsApplicationNotifications();
 
@@ -282,6 +283,11 @@ internal class WindowsServiceImp : NSObject, IWindowsService
     }
 
     void NsApplicationDidBecomeActive(object? sender, NSNotificationEventArgs args)
+    {
+
+    }
+
+    void NsApplicationWindowCreated(object? sender, NSNotificationEventArgs args)
     {
 
     }
