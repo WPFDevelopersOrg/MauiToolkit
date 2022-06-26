@@ -320,15 +320,18 @@ internal partial class UIKitWindowController
         if (_NsWindow is null)
             return false;
 
+        var presentOptions = (NSApplicationPresentationOptions)_NsApplication.GetValueFromNsobject<ulong>("currentSystemPresentationOptions");
+        var isFullScreen = presentOptions.HasFlag(NSApplicationPresentationOptions.FullScreen);
+
         _NsWindow.SetValueForNsobject<IntPtr>("toggleFullScreen:", this.Handle);
         var styleMask = (NSWindowStyle)_NsWindow.GetValueFromNsobject<ulong>("styleMask");
-        if (styleMask.HasFlag(NSWindowStyle.FullScreenWindow))
+
+        if (isFullScreen)
         {
-
+            RemoveTitleBar(_ChangeOptions.TitleBarKind);
+            LoadButton(_ChangeOptions.ConfigurationKind);
         }
-
-
-
+       
         return true;
     }
 }
