@@ -8,4 +8,5 @@ public enum WindowConfigurationKind
     DisableMaximizable = 0x02,
     DisableMinizable = 0x04,
     DisableResizable = 0x08,
+    DisableClosable = 0x10,
 }

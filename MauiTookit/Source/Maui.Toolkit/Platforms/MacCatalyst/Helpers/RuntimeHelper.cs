@@ -146,6 +146,8 @@ public static class RuntimeHelper
             RuntimeInterop.void_objc_msgSend_CGSize(nsObject.Handle, propertySelector.Handle, cgSizeValue);
         else if (value is string stringValue)
             RuntimeInterop.void_objc_msgSend_string(nsObject.Handle, propertySelector.Handle, stringValue);
+        else if(value is NFloat nFloat)
+            RuntimeInterop.void_objc_msgSend_nFloat(nsObject.Handle, propertySelector.Handle, nFloat);
         else
             return false;
 

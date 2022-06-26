@@ -94,6 +94,16 @@ public static partial class RuntimeInterop
     /// <param name="receiver"></param>
     /// <param name="selector"></param>
     /// <param name="value"></param>
+    [DllImport(_ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
+    public extern static void void_objc_msgSend_nFloat(IntPtr receiver, IntPtr selector, NFloat value);
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="receiver"></param>
+    /// <param name="selector"></param>
+    /// <param name="value"></param>
 	[DllImport(_ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
     public extern static void void_objc_msgSend_ref_IntPtr(IntPtr receiver, IntPtr selector, ref IntPtr value);
 

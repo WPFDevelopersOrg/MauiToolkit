@@ -41,8 +41,8 @@ internal partial class UIKitWindowController : NSObject, IController, IWindowsSe
     {
         LoadBackgroundMaterial(_Options.BackdropsKind);
         MoveWindow(_Options.PresenterKind);
-        //RemoveTitleBarEx(_StartupOptions.TitleBarKind);
         RemoveTitleBar(_Options.TitleBarKind);
+        LoadButton(_Options.ConfigurationKind);
         return true;
     }
 
@@ -58,7 +58,8 @@ internal partial class UIKitWindowController : NSObject, IController, IWindowsSe
 
     bool IWindowsService.SetTitleBar(WindowTitleBarKind kind)
     {
-        return true;
+        RemoveTitleBar(kind);
+        return LoadButton(_Options.ConfigurationKind);
     }
 
     bool IWindowsService.ResizeWindow(Size size) => MoveWindow(_Options.Location, size);
@@ -81,6 +82,10 @@ internal partial class UIKitWindowController
 {
     bool LoadBackgroundMaterial(BackdropsKind kind)
     {
+        if (_NsWindow is null)
+            return false;
+
+        _NsWindow.SetValueForNsobject<NFloat>("setAlphaValue:", new NFloat(1));
 
         return true;
     }
@@ -90,22 +95,74 @@ internal partial class UIKitWindowController
         if (_NsWindow is null)
             return false;
 
-        _NsWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", true);
+        NSWindowStyle styleMask = NSWindowStyle.Borderless;
         _NsWindow.SetValueForNsobject<long>("setTitleVisibility:", (long)TitlebarTitleVisibility.Visible);
-        //var value = _NsWindow.GetValueFromNsobject<ulong>("styleMask");
-        //has titlebar but no buttons
-        //var newValue = (ulong)(NSWindowStyle.Titled);
-        //null tilebar
-        //var newValue = (ulong)(NSWindowStyle.Titled & NSWindowStyle.Closable & NSWindowStyle.Miniaturizable & NSWindowStyle.Resizable & NSWindowStyle.FullSizeContentView );
-        //the default titlebar
-        //var newValue = (ulong)(NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable | NSWindowStyle.FullSizeContentView );
-        // has titlebar and default style but rootview is full
-        //var newValue = (ulong)(NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable);
-        var newValue = (ulong)(NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable);
-        _NsWindow.SetValueForNsobject<ulong>("setStyleMask:", newValue);
-
-        //NSNotification
         _NsWindow.SetValueForNsobject<bool>("setMovableByWindowBackground:", true);
+
+        switch (titleBar)
+        {
+            case WindowTitleBarKind.Default:
+                {
+                    styleMask = NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable | NSWindowStyle.FullSizeContentView;
+                    _NsWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", true);
+                }
+                break;
+            case WindowTitleBarKind.DefaultWithExtension:
+                {
+                    styleMask = NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable;
+                    _NsWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", true);
+                }
+                break;
+            case WindowTitleBarKind.CustomTitleBarAndExtension:
+                {
+                    styleMask = NSWindowStyle.Titled & NSWindowStyle.Closable & NSWindowStyle.Miniaturizable & NSWindowStyle.Resizable & NSWindowStyle.FullSizeContentView;
+                }
+                break;
+            default:
+                {
+                    styleMask = NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable | NSWindowStyle.FullSizeContentView;
+                    _NsWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", false);
+                }
+                break;
+        }
+        _NsWindow.SetValueForNsobject<ulong>("setStyleMask:", (ulong)styleMask);
+        return true;
+    }
+
+    bool LoadButton(WindowConfigurationKind kind)
+    {
+        if (_NsWindow is null)
+            return false;
+
+        var styleMask = (NSWindowStyle)_NsWindow.GetValueFromNsobject<ulong>("styleMask");
+        switch (kind)
+        {
+            case WindowConfigurationKind.ShowAllButton:
+                styleMask = styleMask | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable;
+                break;
+            case WindowConfigurationKind.HideAllButton:
+                styleMask = styleMask & NSWindowStyle.Closable & NSWindowStyle.Miniaturizable & NSWindowStyle.Resizable;
+                break;
+            default:
+                {
+                    styleMask = styleMask | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable;
+
+                    var isDislbaleMin = kind.HasFlag(WindowConfigurationKind.DisableMinizable);
+                    if (isDislbaleMin)
+                        styleMask = styleMask & NSWindowStyle.Miniaturizable;
+
+                    var isDisableResie = kind.HasFlag(WindowConfigurationKind.DisableResizable);
+                    if (isDisableResie)
+                        styleMask = styleMask & NSWindowStyle.Resizable;
+
+                    var isDisableClose = kind.HasFlag(WindowConfigurationKind.DisableClosable);
+                    if (isDisableClose)
+                        styleMask = styleMask & NSWindowStyle.Closable;
+                }
+                break;
+        }
+
+        _NsWindow.SetValueForNsobject<ulong>("setStyleMask:", (ulong)styleMask);
         return true;
     }
 
@@ -206,6 +263,7 @@ internal partial class UIKitWindowController
         var cgRect = new CGRect(startX, startY, realWidth, realHeight);
 
         _NsWindow.SetValueForNsobject<CGRect, bool>("setFrame:display:", cgRect, true);
+        _NsWindow.ExecuteMethod("center");
 
         return true;
     }
@@ -223,6 +281,11 @@ internal partial class UIKitWindowController
 
         var cgRect = new CGRect(0, 0, width, height);
         _NsWindow.SetValueForNsobject<CGRect, bool>("setFrame:display:", cgRect, true);
+        _NsWindow.ExecuteMethod("center");
+
+        var rootView = _Window.RootViewController;
+        if (rootView is not null)
+            rootView.WantsFullScreenLayout = true;
 
         return true;
     }
@@ -232,10 +295,7 @@ internal partial class UIKitWindowController
         if (_NsWindow is null)
             return false;
 
-        _NsWindow.SetValueForNsobject<CGRect, bool>("setFrame:display:", new CGRect(0, 0, _Options.Size.Width, _Options.Size.Height), true);
-        _NsWindow.ExecuteMethod("center");
         _NsWindow.SetValueForNsobject<IntPtr>("miniaturize:", this.Handle);
-
         //_NsApplication.SetValueForNsobject<IntPtr>("hide:", _NsWindow.Handle);
 
         return true;
@@ -250,7 +310,18 @@ internal partial class UIKitWindowController
 
     bool ToggleFullScreen(bool bFullScreen)
     {
-        _NsWindow?.SetValueForNsobject<IntPtr>("toggleFullScreen:", this.Handle);
+        if (_NsWindow is null)
+            return false;
+
+        _NsWindow.SetValueForNsobject<IntPtr>("toggleFullScreen:", this.Handle);
+        var styleMask = (NSWindowStyle)_NsWindow.GetValueFromNsobject<ulong>("styleMask");
+        if (styleMask.HasFlag(NSWindowStyle.FullScreenWindow))
+        {
+
+        }
+
+
+
         return true;
     }
 }

@@ -12,8 +12,8 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .UseWindowStartup(options => 
             {
-                options.TitleBarKind = WindowTitleBarKind.Default;
-                options.ConfigurationKind =  WindowConfigurationKind.HideAllButton;
+                options.TitleBarKind = WindowTitleBarKind.DefaultWithExtension;
+                options.ConfigurationKind =  WindowConfigurationKind.ShowAllButton;
                 options.PresenterKind = WindowPresenterKind.Default;
                 options.TitleBarBackgroundColor = Colors.Transparent;
                 options.TitleBarBackgroundInactiveColor = Colors.Transparent;
