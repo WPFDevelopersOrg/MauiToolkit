@@ -91,15 +91,21 @@ internal partial class UIKitWindowController
             return false;
 
         _NsWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", true);
-
-        //_NsWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", true);
         _NsWindow.SetValueForNsobject<long>("setTitleVisibility:", (long)TitlebarTitleVisibility.Visible);
         //var value = _NsWindow.GetValueFromNsobject<ulong>("styleMask");
-        var newValue = (ulong)(NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable | NSWindowStyle.FullSizeContentView );
+        //has titlebar but no buttons
+        //var newValue = (ulong)(NSWindowStyle.Titled);
+        //null tilebar
+        //var newValue = (ulong)(NSWindowStyle.Titled & NSWindowStyle.Closable & NSWindowStyle.Miniaturizable & NSWindowStyle.Resizable & NSWindowStyle.FullSizeContentView );
+        //the default titlebar
+        //var newValue = (ulong)(NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable | NSWindowStyle.FullSizeContentView );
+        // has titlebar and default style but rootview is full
+        //var newValue = (ulong)(NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable);
+        var newValue = (ulong)(NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable);
         _NsWindow.SetValueForNsobject<ulong>("setStyleMask:", newValue);
 
         //NSNotification
-        //_NsWindow.SetValueForNsobject<bool>("setMovableByWindowBackground:", true);
+        _NsWindow.SetValueForNsobject<bool>("setMovableByWindowBackground:", true);
         return true;
     }
 
