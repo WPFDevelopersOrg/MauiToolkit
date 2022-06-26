@@ -529,8 +529,10 @@ internal partial class WinuiWindowController : IController, IWindowsService
 
             if (_AppWindow.Presenter.Kind is MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen)
             {
-                var customOverlappedPresenter = MicrosoftuiWindowing.OverlappedPresenter.Create();
+                var customOverlappedPresenter = MicrosoftuiWindowing.OverlappedPresenter.CreateForContextMenu();
                 _AppWindow.SetPresenter(customOverlappedPresenter);
+
+                SetWindowConfigrations(_OptionsChange.ConfigurationKind);
             }
         }
 
@@ -954,7 +956,7 @@ internal partial class WinuiWindowController
     {
         _OptionsChange.TitleBarKind = kind;
         RemoveTitleBar(kind);
-        if (kind is not WindowTitleBarKind.Default)
+        if (kind is not WindowTitleBarKind.Default or WindowTitleBarKind.DefaultWithExtension)
             SetWindowConfigrations(_Options.ConfigurationKind);
         else
             RestorConfigrations();
