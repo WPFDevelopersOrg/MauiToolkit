@@ -268,6 +268,7 @@ internal partial class UIKitWindowController
         return true;
     }
 
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     bool MoveWindowMaximize()
     {
         if (_NsWindow is null)
