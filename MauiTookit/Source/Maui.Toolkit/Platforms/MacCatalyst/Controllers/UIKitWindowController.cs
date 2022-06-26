@@ -94,12 +94,13 @@ internal partial class UIKitWindowController
         return true;
     }
 
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     bool RemoveTitleBar(WindowTitleBarKind titleBar)
     {
         if (_NsWindow is null)
             return false;
 
-        NSWindowStyle styleMask = NSWindowStyle.Borderless;
+        var styleMask = NSWindowStyle.Borderless;
         _NsWindow.SetValueForNsobject<long>("setTitleVisibility:", (long)TitlebarTitleVisibility.Visible);
         _NsWindow.SetValueForNsobject<bool>("setMovableByWindowBackground:", true);
 
@@ -107,24 +108,31 @@ internal partial class UIKitWindowController
         {
             case WindowTitleBarKind.Default:
                 {
-                    styleMask = NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable | NSWindowStyle.FullSizeContentView;
+                    styleMask = NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable;
                     _NsWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", true);
                 }
                 break;
             case WindowTitleBarKind.DefaultWithExtension:
                 {
+                    _NsWindow.SetValueForNsobject<long>("setTitleVisibility:", (long)TitlebarTitleVisibility.Hidden);
+                    //styleMask = NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable | NSWindowStyle.FullSizeContentView;
                     styleMask = NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable;
                     _NsWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", true);
+
+                    var rootView = _Window.RootViewController;
+                    if (rootView is not null)
+                        rootView.WantsFullScreenLayout = true;
                 }
                 break;
             case WindowTitleBarKind.CustomTitleBarAndExtension:
                 {
-                    styleMask = NSWindowStyle.Titled & NSWindowStyle.Closable & NSWindowStyle.Miniaturizable & NSWindowStyle.Resizable & NSWindowStyle.FullSizeContentView;
+                    _NsWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", true);
+                    //styleMask = NSWindowStyle.Titled & ~NSWindowStyle.Closable & ~NSWindowStyle.Miniaturizable & ~NSWindowStyle.Resizable & ~NSWindowStyle.FullSizeContentView;
                 }
                 break;
             default:
                 {
-                    styleMask = NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable | NSWindowStyle.FullSizeContentView;
+                    styleMask = NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable;
                     _NsWindow.SetValueForNsobject<bool>("setTitlebarAppearsTransparent:", false);
                 }
                 break;
@@ -145,7 +153,7 @@ internal partial class UIKitWindowController
                 styleMask = styleMask | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable;
                 break;
             case WindowConfigurationKind.HideAllButton:
-                styleMask = styleMask & NSWindowStyle.Closable & NSWindowStyle.Miniaturizable & NSWindowStyle.Resizable;
+                styleMask = styleMask & ~NSWindowStyle.Closable & ~NSWindowStyle.Miniaturizable & ~NSWindowStyle.Resizable;
                 break;
             default:
                 {
@@ -153,15 +161,15 @@ internal partial class UIKitWindowController
 
                     var isDislbaleMin = kind.HasFlag(WindowConfigurationKind.DisableMinizable);
                     if (isDislbaleMin)
-                        styleMask = styleMask & NSWindowStyle.Miniaturizable;
+                        styleMask = styleMask & ~NSWindowStyle.Miniaturizable;
 
                     var isDisableResie = kind.HasFlag(WindowConfigurationKind.DisableResizable);
                     if (isDisableResie)
-                        styleMask = styleMask & NSWindowStyle.Resizable;
+                        styleMask = styleMask & ~NSWindowStyle.Resizable;
 
                     var isDisableClose = kind.HasFlag(WindowConfigurationKind.DisableClosable);
                     if (isDisableClose)
-                        styleMask = styleMask & NSWindowStyle.Closable;
+                        styleMask = styleMask & ~NSWindowStyle.Closable;
                 }
                 break;
         }

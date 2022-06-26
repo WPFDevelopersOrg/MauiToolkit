@@ -41,6 +41,11 @@ public partial class SettingsPage : ContentPage
         //_WindowsService?.SetTitleBar(WindowTitleBarKind.PlatformDefault);
     }
 
+    void ChangeTitleBarClick3(System.Object sender, System.EventArgs e)
+    {
+        _WindowsService?.SetTitleBar(WindowTitleBarKind.DefaultWithExtension);
+    }
+
     private void ChangeTitleBarClick2(object sender, EventArgs e)
     {
         //_WindowsService?.SetTitleBar(WindowTitleBarKind.ExtendsContentIntoTitleBar);
@@ -103,5 +108,6 @@ public partial class SettingsPage : ContentPage
         _StatusBarService?.SetDescription("10");
     }
 
+    
 
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiAppx.Views.SettingsPage"
@@ -29,13 +29,14 @@
         <Button Grid.Column="0" Grid.Row="0" WidthRequest="200" HeightRequest="40" Text="ShowDialog" Clicked="ShowDialogClick"/>
         <Button Grid.Column="1" Grid.Row="0" WidthRequest="200" HeightRequest="40" Text="PlatformDefaultTitleBar" Clicked="ChangeTitleBarClick"/>
         <Button Grid.Column="1" Grid.Row="1" WidthRequest="200" HeightRequest="40" Text="DefaultChangeTitleBar" Clicked="ChangeTitleBarClick1"/>
-        <Button Grid.Column="1" Grid.Row="2" WidthRequest="200" HeightRequest="40" Text="CustomChangeTitleBar" Clicked="ChangeTitleBarClick2"/>
-        <Button Grid.Column="1" Grid.Row="3" WidthRequest="200" HeightRequest="40" Text="ChangeWindowSize" Clicked="ChangeWindowSizeClick"/>
-        <Button Grid.Column="1" Grid.Row="4" WidthRequest="200" HeightRequest="40" Text="MaxWindow" Clicked="MaxWindowClick"/>
-        <Button Grid.Column="1" Grid.Row="5" WidthRequest="200" HeightRequest="40" Text="MinWindow" Clicked="MinWindowClick"/>
-        <Button Grid.Column="1" Grid.Row="6" WidthRequest="200" HeightRequest="40" Text="FullScreen" Clicked="FullScreenClick"/>
-        <Button Grid.Column="1" Grid.Row="7" WidthRequest="200" HeightRequest="40" Text="DefaultScreen" Clicked="DefaultScreenClick"/>
-        <Button Grid.Column="1" Grid.Row="8" WidthRequest="200" HeightRequest="40" Text="Backdrop" Clicked="BackdropClick"/>
+        <Button Grid.Column="1" Grid.Row="2" WidthRequest="200" HeightRequest="40" Text="DefaultExtensionChangeTitleBar" Clicked="ChangeTitleBarClick3"/>
+        <Button Grid.Column="1" Grid.Row="3" WidthRequest="200" HeightRequest="40" Text="CustomChangeTitleBar" Clicked="ChangeTitleBarClick2"/>
+        <Button Grid.Column="1" Grid.Row="4" WidthRequest="200" HeightRequest="40" Text="ChangeWindowSize" Clicked="ChangeWindowSizeClick"/>
+        <Button Grid.Column="1" Grid.Row="5" WidthRequest="200" HeightRequest="40" Text="MaxWindow" Clicked="MaxWindowClick"/>
+        <Button Grid.Column="1" Grid.Row="6" WidthRequest="200" HeightRequest="40" Text="MinWindow" Clicked="MinWindowClick"/>
+        <Button Grid.Column="1" Grid.Row="7" WidthRequest="200" HeightRequest="40" Text="FullScreen" Clicked="FullScreenClick"/>
+        <Button Grid.Column="1" Grid.Row="8" WidthRequest="200" HeightRequest="40" Text="DefaultScreen" Clicked="DefaultScreenClick"/>
+        <Button Grid.Column="1" Grid.Row="9" WidthRequest="200" HeightRequest="40" Text="Backdrop" Clicked="BackdropClick"/>
         <Button Grid.Column="2" Grid.Row="0" WidthRequest="200" HeightRequest="40" Text="TrayBlink" Clicked="TrayBlinkClick"/>
         <Button Grid.Column="2" Grid.Row="1" WidthRequest="200" HeightRequest="40" Text="TrayStopBlink" Clicked="TrayStopBlinkClick"/>
         <Button Grid.Column="2" Grid.Row="2" WidthRequest="200" HeightRequest="40" Text="TrayShow" Clicked="TrayShowClick"/>
