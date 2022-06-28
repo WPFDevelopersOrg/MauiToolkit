@@ -13,12 +13,12 @@ public partial class WindowChrome
         if (bindable is not Window)
             return;
 
-        if (newValue is WindowChrome)
+        if (newValue is WindowChrome windowChrome)
         {
             var windowChromeWorker = WindowChromeWorker.GetWindowChromeWorker(bindable);
             if (windowChromeWorker is null)
             {
-                windowChromeWorker = new WindowChromeWorker();
+                windowChromeWorker = new WindowChromeWorker(windowChrome);
                 WindowChromeWorker.SetWindowChromeWorker(bindable, windowChromeWorker);
             }
 

@@ -1,10 +1,8 @@
-﻿using Maui.Toolkitx.Services;
-
-namespace Maui.Toolkitx.Helpers;
+﻿namespace Maui.Toolkitx.Helpers;
 
 public class PlatformHelper
 {
-    public static IWindowService? GetPlatformWindowSevice(Window window)
+    public static IWindowService? GetPlatformWindowSevice(Window window, WindowChrome windowChrome)
     {
         if (window is null)
             return default;
@@ -13,7 +11,7 @@ public class PlatformHelper
             return default;
 
 #if WINDOWS || MACCATALYST || IOS || ANDROID
-        return new WindowService(window);
+        return new WindowService(window, windowChrome);
 #else
         return default;
 #endif

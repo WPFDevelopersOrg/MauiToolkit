@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
@@ -6,6 +6,7 @@
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net6.0-tizen</TargetFrameworks> -->
 		<UseMaui>true</UseMaui>
+		<RootNamespace>Maui.Toolkitx</RootNamespace>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 
@@ -16,5 +17,11 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
+
+	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+		<!-- Required - WinUI does not yet have buildTransitive for everything -->
+		<PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
+		<PackageReference Include="PInvoke.User32" Version="0.7.104" />
+	</ItemGroup>
 
 </Project>

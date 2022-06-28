@@ -1,4 +1,6 @@
-﻿namespace Maui.Toolkitx;
+﻿using Maui.Toolkitx.Options;
+
+namespace Maui.Toolkitx;
 
 public partial class WindowChrome : BindableObject
 {
@@ -7,22 +9,28 @@ public partial class WindowChrome : BindableObject
                                                    returnType:typeof(double),
                                                    declaringType:typeof(WindowChrome),
                                                    defaultValue:default,
-                                                   propertyChanged: OnCaptionHeightChanged);
+                                                   propertyChanged: OnProperyChanged);
 
-
-    public static readonly BindableProperty FullScreenProperty =
-                           BindableProperty.Create(propertyName: nameof(FullScreen),
-                                                   returnType: typeof(bool),
+    public static readonly BindableProperty WindowPresenterKindProperty =
+                           BindableProperty.Create(propertyName: nameof(WindowPresenterKind),
+                                                   returnType: typeof(WindowPresenterKind),
                                                    declaringType: typeof(WindowChrome),
                                                    defaultValue: default,
-                                                   propertyChanged: OnFullScreenChanged);
+                                                   propertyChanged: OnProperyChanged);
 
-    public static readonly BindableProperty RemoveNavigationTitlebarProperty =
-                           BindableProperty.Create(propertyName: nameof(RemoveNavigationTitlebar),
-                                                   returnType: typeof(bool),
+    public static readonly BindableProperty WindowTitleBarKindProperty =
+                           BindableProperty.Create(propertyName: nameof(WindowTitleBarKind),
+                                                   returnType: typeof(WindowTitleBarKind),
                                                    declaringType: typeof(WindowChrome),
                                                    defaultValue: default,
-                                                   propertyChanged: OnRemoveNavigationTitlebarChanged);
+                                                   propertyChanged: OnProperyChanged);
+
+    public static readonly BindableProperty BackdropsKindProperty =
+                           BindableProperty.Create(propertyName: nameof(BackdropsKind),
+                                                   returnType: typeof(BackdropsKind),
+                                                   declaringType: typeof(WindowChrome),
+                                                   defaultValue: default,
+                                                   propertyChanged: OnProperyChanged);
 
 
 
@@ -32,31 +40,33 @@ public partial class WindowChrome : BindableObject
         set => SetValue(CaptionHeightProperty, value);
     }
 
-    public bool FullScreen
+    public WindowPresenterKind WindowPresenterKind
     {
-        get => (bool)GetValue(FullScreenProperty);
-        set => SetValue(FullScreenProperty, value);
+        get => (WindowPresenterKind)GetValue(WindowPresenterKindProperty);
+        set => SetValue(WindowPresenterKindProperty, value);
     }
 
-    public bool RemoveNavigationTitlebar
+    public WindowTitleBarKind WindowTitleBarKind
     {
-        get => (bool)GetValue(RemoveNavigationTitlebarProperty);
-        set => SetValue(RemoveNavigationTitlebarProperty, value);
+        get => (WindowTitleBarKind)GetValue(WindowTitleBarKindProperty);
+        set => SetValue(WindowTitleBarKindProperty, value);
     }
 
-    private static void OnCaptionHeightChanged(BindableObject bindable, object oldValue, object newValue)
+    public BackdropsKind BackdropsKind
+    {
+        get => (BackdropsKind)GetValue(BackdropsKindProperty);
+        set => SetValue(BackdropsKindProperty, value);
+    }
+
+    private bool SetProperty()
+    {
+        return true;
+    }
+
+
+    private static void OnProperyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         //var windowChromeWorker = WindowChromeWorker.GetWindowChromeWorker(bindable);
-
-    }
-
-    private static void OnFullScreenChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-         
-    }
-
-    private static void OnRemoveNavigationTitlebarChanged(BindableObject bindable, object oldValue, object newValue)
-    {
         
     }
 }

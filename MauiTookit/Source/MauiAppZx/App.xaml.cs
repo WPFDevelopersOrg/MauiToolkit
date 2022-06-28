@@ -16,7 +16,7 @@ public partial class App : Application
         var window = base.CreateWindow(activationState);
         window.UseWindowChrome(options => 
         {
-
+            options.BackdropsKind = Maui.Toolkitx.Options.BackdropsKind.Mica;
         });
 
         return window;
