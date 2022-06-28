@@ -1,6 +1,4 @@
-﻿using MauiAppx.Views;
-
-namespace MauiAppx;
+﻿namespace MauiAppx;
 
 public partial class App : Application
 {
