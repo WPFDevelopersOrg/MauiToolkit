@@ -1,15 +1,7 @@
 ﻿using Microsoft.Maui.Platform;
-using PInvoke;
-using WinRT;
 using static PInvoke.User32;
-using Microsoftui = Microsoft.UI;
 using MicrosoftuiWindowing = Microsoft.UI.Windowing;
 using MicrosoftuiXaml = Microsoft.UI.Xaml;
-using MicrosoftuixamlControls = Microsoft.UI.Xaml.Controls;
-using Windowsgraphics = Windows.Graphics;
-using MicrosoftuixamlData = Microsoft.UI.Xaml.Data;
-using Winui = Windows.UI;
-using System.Reflection;
 
 namespace Maui.Toolkitx.Platforms.Windows.Controllers;
 
@@ -33,44 +25,66 @@ internal partial class WinuiWindowController : IService
     readonly MicrosoftuiXaml.Window? _WinUIWindow;
     readonly MicrosoftuiWindowing.AppWindow? _AppWindow;
 
-    RootNavigationView? _RootNavigationView = default;
-    MicrosoftuiXaml.FrameworkElement? _TitleBar;
-
     bool IService.Run()
     {
         if (_WindowRootView is null)
             return false;
 
-        _RootNavigationView = _WindowRootView.NavigationViewControl;
-        LoadWindowRootViewEvent();
+        ShownInSwitchers(_WindowChrome.ShowInSwitcher);
+        ShowInTopMost(_WindowChrome.TopMost);
+        MoveWindow(_WindowChrome.WindowAlignment, new Size(_WindowChrome.Width, _WindowChrome.Height));
+        ShowPresenter(_WindowChrome.WindowPresenterKind);
 
         return true;
     }
 
     bool IService.Stop()
     {
-
-
         return true;
     }
 
-    bool LoadWindowRootViewEvent()
+
+
+}
+
+internal partial class WinuiWindowController
+{
+    bool ShownInSwitchers(bool isShownInSwitchers)
     {
-        if (_WindowRootView is null)
+        if (_AppWindow is null)
             return false;
 
-        var titlBarEventHandle = typeof(WindowRootView).GetEvent("OnAppTitleBarChanged", BindingFlags.Instance | BindingFlags.NonPublic);
-        if (titlBarEventHandle is not null)
-        {
-            var addMethod = titlBarEventHandle.AddMethod;
-            addMethod?.Invoke(_WindowRootView, new object[] { new EventHandler(OnAppTitleBarChanged) });
-        }
+        _AppWindow.IsShownInSwitchers = isShownInSwitchers;
+        return true;
+    }
 
-        var contentEventHandle = typeof(WindowRootView).GetEvent("ContentChanged", BindingFlags.Instance | BindingFlags.NonPublic);
-        if (contentEventHandle is not null)
+    bool ShowInTopMost(bool isTopMost)
+    {
+        if (_AppWindow is null)
+            return false;
+
+        _AppWindow.MoveInZOrderAtTop();
+        //_AppWindow.ShowOnceWithRequestedStartupState();
+        return true;
+    }
+
+    bool ShowPresenter(WindowPresenterKind kind)
+    {
+        switch (kind)
         {
-            var addMethod = contentEventHandle.AddMethod;
-            addMethod?.Invoke(_WindowRootView, new object[] { new EventHandler(OnContentChanged) });
+            case WindowPresenterKind.Maximize:
+                MaximizeWidnow();
+                break;
+            case WindowPresenterKind.Minimize:
+                MiniaturizeWindow();
+                break;
+            case WindowPresenterKind.FullScreen:
+                ToggleFullScreen(true);
+                break;
+            default:
+                ToggleFullScreen(false);
+                MoveWindow(_WindowChrome.WindowAlignment, new Size(_WindowChrome.Width, _WindowChrome.Height));
+                break;
         }
 
         return true;
@@ -80,16 +94,106 @@ internal partial class WinuiWindowController : IService
 
 internal partial class WinuiWindowController
 {
-    void OnAppTitleBarChanged(object? sender, EventArgs e)
+    bool MoveWindow(WindowAlignment alignment, Size size)
     {
+        if (_WinUIWindow is null)
+            return false;
 
+        if (_AppWindow is null)
+            return false;
+
+        var displyArea = MicrosoftuiWindowing.DisplayArea.Primary;
+        double scalingFactor = _WinUIWindow.GetDisplayDensity();
+
+        var width = size.Width * scalingFactor;
+        var height = size.Height * scalingFactor;
+
+        if (width > displyArea.WorkArea.Width)
+            width = displyArea.WorkArea.Width;
+
+        if (height > displyArea.WorkArea.Height)
+            height = displyArea.WorkArea.Height;
+
+        double startX = 0;
+        double startY = 0;
+
+        switch (alignment)
+        {
+            case WindowAlignment.LeftTop:
+                break;
+            case WindowAlignment.RightTop:
+                startX = (displyArea.WorkArea.Width - width);
+                break;
+            case WindowAlignment.Center:
+                startX = (displyArea.WorkArea.Width - width) / 2.0;
+                startY = (displyArea.WorkArea.Height - height) / 2.0;
+                break;
+            case WindowAlignment.LeftBottom:
+                startY = (displyArea.WorkArea.Height - height);
+                break;
+            case WindowAlignment.RightBottom:
+                startX = (displyArea.WorkArea.Width - width);
+                startY = (displyArea.WorkArea.Height - height);
+                break;
+            default:
+                break;
+        }
+
+        _AppWindow.MoveAndResize(new((int)startX, (int)startY, (int)width, (int)height), displyArea);
+        return true;
     }
 
-    void OnContentChanged(object? sender, EventArgs e)
+    bool MiniaturizeWindow()
     {
+        if (_WinUIWindow is null)
+            return false;
 
+        var windowHanlde = _WinUIWindow.GetWindowHandle();
+        PostMessage(windowHanlde, WindowMessage.WM_SYSCOMMAND, new IntPtr((int)SysCommands.SC_MINIMIZE), IntPtr.Zero);
+
+        return true;
     }
 
+    bool MaximizeWidnow()
+    {
+        if (_WinUIWindow is null)
+            return false;
+
+        var windowHanlde = _WinUIWindow.GetWindowHandle();
+        PostMessage(windowHanlde, WindowMessage.WM_SYSCOMMAND, new IntPtr((int)SysCommands.SC_MAXIMIZE), IntPtr.Zero);
+
+        return true;
+    }
+
+    bool ToggleFullScreen(bool bFullScreen)
+    {
+        if (_WinUIWindow is null)
+            return false;
+
+        if (_AppWindow is null)
+            return false;
+
+        if (bFullScreen)
+        {
+            if (_WindowChrome.WindowTitleBarKind is WindowTitleBarKind.Default or WindowTitleBarKind.DefaultWithExtension)
+                _WinUIWindow.ExtendsContentIntoTitleBar = false;
+
+            if (_AppWindow.Presenter.Kind is not MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen)
+                _AppWindow.SetPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen);
+        }
+        else
+        {
+            if (_WindowChrome.WindowTitleBarKind is WindowTitleBarKind.Default or WindowTitleBarKind.DefaultWithExtension)
+                _WinUIWindow.ExtendsContentIntoTitleBar = true;
+
+            if (_AppWindow.Presenter.Kind is MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen)
+            {
+                var customOverlappedPresenter = MicrosoftuiWindowing.OverlappedPresenter.CreateForContextMenu();
+                _AppWindow.SetPresenter(customOverlappedPresenter);
+            }
+        }
+
+        return true;
+    }
 }
-
 

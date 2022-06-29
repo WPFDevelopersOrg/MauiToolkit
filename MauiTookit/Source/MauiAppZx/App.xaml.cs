@@ -1,5 +1,6 @@
 ﻿using Maui.Toolkitx;
 
+
 namespace MauiAppZx;
 
 public partial class App : Application
@@ -17,6 +18,12 @@ public partial class App : Application
         window.UseWindowChrome(options => 
         {
             options.BackdropsKind = Maui.Toolkitx.Options.BackdropsKind.Mica;
+            options.ShowInSwitcher = true;
+            options.TopMost = true;
+            options.WindowAlignment = Maui.Toolkitx.Options.WindowAlignment.Center;
+            options.Width = 1920d;
+            options.Height = 1080d;
+            options.WindowPresenterKind = Maui.Toolkitx.Options.WindowPresenterKind.Default;
         });
 
         return window;

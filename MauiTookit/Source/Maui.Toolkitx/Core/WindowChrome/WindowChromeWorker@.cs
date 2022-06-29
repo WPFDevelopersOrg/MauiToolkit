@@ -25,7 +25,9 @@ internal partial class WindowChromeWorker : IAttachedObject
         _AssociatedObject = window;
 
         _WindowChrome.PropertyChanged += WindowChrome_PropertyChanged;
+
         window.HandlerChanged += Window_HandlerChanged;
+        window.Created += Window_Created;
         window.Destroying += Window_Destroying;
         window.Stopped += Window_Stopped;
         _IsAttached = true;
@@ -33,31 +35,21 @@ internal partial class WindowChromeWorker : IAttachedObject
 
     public void Detach()
     {
+        _WindowChrome.PropertyChanged -= WindowChrome_PropertyChanged;
+
         if (_AssociatedObject is Window window)
         {
             window.HandlerChanged -= Window_HandlerChanged;
+            window.Created -= Window_Created;
             window.Destroying -= Window_Destroying;
             window.Stopped -= Window_Stopped;
         }
 
-        _WindowChrome.PropertyChanged -= WindowChrome_PropertyChanged;
 
         _IsAttached = false;
         _Service?.Stop();
         _Service = default;
         _AssociatedObject = default;
-    }
-
-    private void Window_HandlerChanged(object? sender, EventArgs e)
-    {
-        if (_Service is not null)
-            return;
-
-        if (sender is not Window window)
-            return;
-
-        _Service = PlatformHelper.GetPlatformWindowSevice(window, _WindowChrome);
-        _Service?.Run();
     }
 
     private void WindowChrome_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -75,6 +67,23 @@ internal partial class WindowChromeWorker : IAttachedObject
             default:
                 break;
         }
+    }
+
+    private void Window_Created(object? sender, EventArgs e)
+    {
+        
+    }
+
+    private void Window_HandlerChanged(object? sender, EventArgs e)
+    {
+        if (_Service is not null)
+            return;
+
+        if (sender is not Window window)
+            return;
+
+        _Service = PlatformHelper.GetPlatformWindowSevice(window, _WindowChrome);
+        _Service?.Run();
     }
 
     private void Window_Destroying(object? sender, EventArgs e)
