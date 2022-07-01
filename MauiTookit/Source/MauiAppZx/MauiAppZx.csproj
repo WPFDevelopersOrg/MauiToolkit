@@ -106,8 +106,4 @@
 	  <ProjectReference Include="..\Maui.Toolkitx\Maui.Toolkitx.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Platforms\Mac\" />
-	</ItemGroup>
-
 </Project>

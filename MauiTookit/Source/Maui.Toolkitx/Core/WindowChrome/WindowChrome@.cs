@@ -67,6 +67,13 @@ public partial class WindowChrome : BindableObject
                                                    defaultValue: default,
                                                    propertyChanged: OnProperyChanged);
 
+    public static readonly BindableProperty TitleBarBackgroundColorProperty =
+                           BindableProperty.Create(propertyName: nameof(TitleBarBackgroundColor),
+                                                   returnType: typeof(Color),
+                                                   declaringType: typeof(WindowChrome),
+                                                   defaultValue: default,
+                                                   propertyChanged: OnProperyChanged);
+
 
     public double CaptionHeight
     {
@@ -120,6 +127,12 @@ public partial class WindowChrome : BindableObject
     {
         get => (bool)GetValue(TopMostProperty);
         set => SetValue(TopMostProperty, value);
+    }
+
+    public Color TitleBarBackgroundColor
+    {
+        get => (Color)GetValue(TitleBarBackgroundColorProperty);
+        set => SetValue(TitleBarBackgroundColorProperty, value);
     }
 
     private bool SetProperty()

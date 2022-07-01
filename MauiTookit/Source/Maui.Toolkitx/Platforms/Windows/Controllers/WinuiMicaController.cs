@@ -1,7 +1,8 @@
 ﻿using Maui.Toolkitx.Platforms.Windows.Permanents;
 using WinRT;
 using MicrosoftBackdrops = Microsoft.UI.Composition.SystemBackdrops;
-using Microsoftui = Microsoft.UI.Xaml;
+using MicrosoftuiXaml = Microsoft.UI.Xaml;
+using Microsoftui = Microsoft.UI;
 using MicrosoftuiComposition = Microsoft.UI.Composition;
 
 namespace Maui.Toolkitx.Platforms.Windows.Controllers;
@@ -10,12 +11,12 @@ internal class WinuiMicaController : IService
 {
     public WinuiMicaController(Window window)
     {
-        _Window = window.Handler.PlatformView as Microsoftui.Window;
+        _Window = window.Handler.PlatformView as MicrosoftuiXaml.Window;
         SystemDispatcherQueue.Instance.EnsureWindowsSystemDispatcherQueueController();
     }
 
     bool _IsStart = false;
-    Microsoftui.Window? _Window;
+    MicrosoftuiXaml.Window? _Window;
 
     MicrosoftBackdrops.MicaController? _MicaController;
     MicrosoftBackdrops.SystemBackdropConfiguration? _SystemBackdropConfiguration;
@@ -31,14 +32,23 @@ internal class WinuiMicaController : IService
         if (_Window is null)
             return false;
 
-        _SystemBackdropConfiguration = new();
+        _SystemBackdropConfiguration = new()
+        {
+            IsInputActive = true,
+            IsHighContrast = false,
+            HighContrastBackgroundColor = Microsoftui.Colors.DarkSlateGray,
+        };
         _Window.Activated += Window_Activated;
-        if (_Window.Content is Microsoftui.FrameworkElement frameworkElement)
+        if (_Window.Content is MicrosoftuiXaml.FrameworkElement frameworkElement)
             frameworkElement.ActualThemeChanged += FrameworkElement_ActualThemeChanged;
 
-        _SystemBackdropConfiguration.IsInputActive = true;
-        _MicaController = new();
-
+        _MicaController = new()
+        {
+            Kind = MicrosoftBackdrops.MicaKind.BaseAlt,
+            LuminosityOpacity = 0.5f,
+            TintOpacity = 0.3f,
+            TintColor = Microsoftui.Colors.BlueViolet,
+        };
         LoadTheme();
 
         var iCompositionSupportsSystemBackdrop = _Window.As<MicrosoftuiComposition.ICompositionSupportsSystemBackdrop>();
@@ -59,7 +69,7 @@ internal class WinuiMicaController : IService
             if (_Window is not null)
             {
                 _Window.Activated -= Window_Activated;
-                if (_Window.Content is Microsoftui.FrameworkElement frameworkElement)
+                if (_Window.Content is MicrosoftuiXaml.FrameworkElement frameworkElement)
                     frameworkElement.ActualThemeChanged -= FrameworkElement_ActualThemeChanged;
             }
         }
@@ -76,19 +86,19 @@ internal class WinuiMicaController : IService
         if (_SystemBackdropConfiguration is null)
             return false;
 
-        if (_Window?.Content is not Microsoftui.FrameworkElement frameworkElement)
+        if (_Window?.Content is not MicrosoftuiXaml.FrameworkElement frameworkElement)
             return false;
 
         var theme = frameworkElement.ActualTheme;
         switch (theme)
         {
-            case Microsoftui.ElementTheme.Default:
+            case MicrosoftuiXaml.ElementTheme.Default:
                 _SystemBackdropConfiguration.Theme = MicrosoftBackdrops.SystemBackdropTheme.Default;
                 break;
-            case Microsoftui.ElementTheme.Light:
+            case MicrosoftuiXaml.ElementTheme.Light:
                 _SystemBackdropConfiguration.Theme = MicrosoftBackdrops.SystemBackdropTheme.Light;
                 break;
-            case Microsoftui.ElementTheme.Dark:
+            case MicrosoftuiXaml.ElementTheme.Dark:
                 _SystemBackdropConfiguration.Theme = MicrosoftBackdrops.SystemBackdropTheme.Dark;
                 break;
             default:
@@ -98,14 +108,14 @@ internal class WinuiMicaController : IService
         return true;
     }
 
-    private void Window_Activated(object sender, Microsoftui.WindowActivatedEventArgs args)
+    private void Window_Activated(object sender, MicrosoftuiXaml.WindowActivatedEventArgs args)
     {
         if (_SystemBackdropConfiguration is null)
             return;
 
-        _SystemBackdropConfiguration.IsInputActive = args.WindowActivationState != Microsoftui.WindowActivationState.Deactivated;
+        _SystemBackdropConfiguration.IsInputActive = args.WindowActivationState != MicrosoftuiXaml.WindowActivationState.Deactivated;
     }
 
-    private void FrameworkElement_ActualThemeChanged(Microsoftui.FrameworkElement sender, object args) => LoadTheme();
+    private void FrameworkElement_ActualThemeChanged(MicrosoftuiXaml.FrameworkElement sender, object args) => LoadTheme();
 
 }

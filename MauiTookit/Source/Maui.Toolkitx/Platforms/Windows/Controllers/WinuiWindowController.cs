@@ -13,38 +13,30 @@ internal partial class WinuiWindowController : IService
         _WindowChrome = windowChrome;
         _WinUIWindow = _Window.Handler.PlatformView as MicrosoftuiXaml.Window;
         _AppWindow = _WinUIWindow?.GetAppWindow();
-
-        if (_WinUIWindow?.Content is WindowRootView windowRootView)
-            _WindowRootView = windowRootView;
     }
 
     readonly Window _Window;
     readonly WindowChrome _WindowChrome;
 
-    readonly WindowRootView? _WindowRootView;
     readonly MicrosoftuiXaml.Window? _WinUIWindow;
     readonly MicrosoftuiWindowing.AppWindow? _AppWindow;
 
     bool IService.Run()
     {
-        if (_WindowRootView is null)
-            return false;
-
+        LoadAppWindowEvent();
         ShownInSwitchers(_WindowChrome.ShowInSwitcher);
-        ShowInTopMost(_WindowChrome.TopMost);
         MoveWindow(_WindowChrome.WindowAlignment, new Size(_WindowChrome.Width, _WindowChrome.Height));
         ShowPresenter(_WindowChrome.WindowPresenterKind);
+        ShowInTopMost(_WindowChrome.TopMost);
 
         return true;
     }
 
     bool IService.Stop()
     {
+        UnloadAppWindowEvent();
         return true;
     }
-
-
-
 }
 
 internal partial class WinuiWindowController
@@ -194,6 +186,31 @@ internal partial class WinuiWindowController
         }
 
         return true;
+    }
+ 
+}
+
+internal partial class WinuiWindowController
+{
+    bool LoadAppWindowEvent()
+    {
+        if (_AppWindow is not null)
+            _AppWindow.Changed += AppWindow_Changed;
+
+        return true;
+    }
+
+    bool UnloadAppWindowEvent()
+    {
+        if (_AppWindow is not null)
+            _AppWindow.Changed -= AppWindow_Changed;
+
+        return true;
+    }
+
+    void AppWindow_Changed(MicrosoftuiWindowing.AppWindow sender, MicrosoftuiWindowing.AppWindowChangedEventArgs args)
+    {
+
     }
 }
 

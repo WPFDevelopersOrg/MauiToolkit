@@ -2,6 +2,8 @@
 
 public static class WindowChromeExtensions
 {
+    public static Window UseWindowChrome(this Window window) => UseWindowChrome(window, default);
+
     public static Window UseWindowChrome(this Window window, Action<WindowChrome>? configureDelegate)
     {
         var windowChrome = new WindowChrome();
