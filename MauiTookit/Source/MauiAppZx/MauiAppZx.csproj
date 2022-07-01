@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
 
 	<PropertyGroup>
 		<TargetFrameworks>net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
@@ -104,6 +104,10 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Maui.Toolkitx\Maui.Toolkitx.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Platforms\Mac\" />
 	</ItemGroup>
 
 </Project>
