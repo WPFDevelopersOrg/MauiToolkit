@@ -15,6 +15,7 @@ public partial class App : Application
     protected override Window CreateWindow(IActivationState? activationState)
     {
         var window = base.CreateWindow(activationState);
+        
         window.UseWindowChrome(options => 
         {
             options.BackdropsKind = Maui.Toolkitx.Options.BackdropsKind.Acrylic;
