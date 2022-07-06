@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Maui.Toolkitx.Config;
+using System.Runtime.CompilerServices;
 
 namespace Maui.Toolkitx;
 public partial class WindowStartup : BindableObject
@@ -6,35 +7,35 @@ public partial class WindowStartup : BindableObject
     public static readonly BindableProperty WidthProperty =
                           BindableProperty.Create(propertyName: nameof(Width),
                                                   returnType: typeof(double),
-                                                  declaringType: typeof(WindowChrome),
+                                                  declaringType: typeof(WindowStartup),
                                                   defaultValue: 800d,
                                                   propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty HeightProperty =
                            BindableProperty.Create(propertyName: nameof(Height),
                                                    returnType: typeof(double),
-                                                   declaringType: typeof(WindowChrome),
+                                                   declaringType: typeof(WindowStartup),
                                                    defaultValue: 500d,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty WindowPresenterKindProperty =
                            BindableProperty.Create(propertyName: nameof(WindowPresenterKind),
                                                    returnType: typeof(WindowPresenterKind),
-                                                   declaringType: typeof(WindowChrome),
+                                                   declaringType: typeof(WindowStartup),
                                                    defaultValue: default,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty TopMostProperty =
                            BindableProperty.Create(propertyName: nameof(TopMost),
                                                    returnType: typeof(bool),
-                                                   declaringType: typeof(WindowChrome),
+                                                   declaringType: typeof(WindowStartup),
                                                    defaultValue: default,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty ShowInSwitcherProperty =
                            BindableProperty.Create(propertyName: nameof(ShowInSwitcher),
                                                    returnType: typeof(bool),
-                                                   declaringType: typeof(WindowChrome),
+                                                   declaringType: typeof(WindowStartup),
                                                    defaultValue: true,
                                                    propertyChanged: OnProperyChanged);
 
@@ -42,17 +43,23 @@ public partial class WindowStartup : BindableObject
     public static readonly BindableProperty WindowAlignmentProperty =
                            BindableProperty.Create(propertyName: nameof(WindowAlignment),
                                                    returnType: typeof(WindowAlignment),
-                                                   declaringType: typeof(WindowChrome),
+                                                   declaringType: typeof(WindowStartup),
                                                    defaultValue: default,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty BackdropsKindProperty =
                            BindableProperty.Create(propertyName: nameof(BackdropsKind),
                                                    returnType: typeof(BackdropsKind),
-                                                   declaringType: typeof(WindowChrome),
+                                                   declaringType: typeof(WindowStartup),
                                                    defaultValue: default,
                                                    propertyChanged: OnProperyChanged);
 
+    public static readonly BindableProperty BackdropConfigurationsProperty =
+                           BindableProperty.Create(propertyName: nameof(BackdropConfigurations),
+                                                   returnType: typeof(BackdropConfigurations),
+                                                   declaringType: typeof(WindowStartup),
+                                                   defaultValue: new BackdropConfigurations(),
+                                                   propertyChanged: OnProperyChanged);
 
     public double Width
     {
@@ -94,6 +101,12 @@ public partial class WindowStartup : BindableObject
     {
         get => (BackdropsKind)GetValue(BackdropsKindProperty);
         set => SetValue(BackdropsKindProperty, value);
+    }
+
+    public BackdropConfigurations BackdropConfigurations
+    {
+        get => (BackdropConfigurations)GetValue(BackdropConfigurationsProperty);
+        set => SetValue(BackdropConfigurationsProperty, value);
     }
 
 

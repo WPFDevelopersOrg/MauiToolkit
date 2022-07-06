@@ -2,7 +2,5 @@
 
 public interface IWindowChromeService : IService
 {
-    bool SetBackdropsKind(BackdropsKind kind);
-
 
 }

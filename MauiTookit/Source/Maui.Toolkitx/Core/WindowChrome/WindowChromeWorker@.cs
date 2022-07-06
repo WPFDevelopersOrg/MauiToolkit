@@ -22,10 +22,16 @@ internal partial class WindowChromeWorker : IAttachedObject
 
         if (bindableObject is not Window window)
             return;
+
         _AssociatedObject = window;
 
-        _WindowChrome.PropertyChanged += WindowChrome_PropertyChanged;
+        if (window.Handler.PlatformView is not null)
+        {
+            _Service = PlatformHelper.GetPlatformWindowChromeSevice(window, _WindowChrome);
+            _Service?.Run();
+        }
 
+        _WindowChrome.PropertyChanged += WindowChrome_PropertyChanged;
         window.HandlerChanged += Window_HandlerChanged;
         window.Created += Window_Created;
         window.Destroying += Window_Destroying;
@@ -44,7 +50,6 @@ internal partial class WindowChromeWorker : IAttachedObject
             window.Destroying -= Window_Destroying;
             window.Stopped -= Window_Stopped;
         }
-
 
         _IsAttached = false;
         _Service?.Stop();
@@ -78,7 +83,7 @@ internal partial class WindowChromeWorker : IAttachedObject
         if (sender is not Window window)
             return;
 
-        _Service = PlatformHelper.GetPlatformWindowSevice(window, _WindowChrome);
+        _Service = PlatformHelper.GetPlatformWindowChromeSevice(window, _WindowChrome);
         _Service?.Run();
     }
 

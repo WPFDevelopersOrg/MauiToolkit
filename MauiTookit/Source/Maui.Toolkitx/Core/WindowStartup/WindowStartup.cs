@@ -27,7 +27,7 @@ public partial class WindowStartup
             var windowStartupWorker = WindowStartupWorker.GetWindowStartupWorker(window);
             windowStartupWorker?.Detach();
 
-            windowStartupWorker = new WindowStartupWorker();
+            windowStartupWorker = new WindowStartupWorker(windowStartup);
             WindowStartupWorker.SetWindowStartupWorker(window, windowStartupWorker);
 
             windowStartupWorker.Attach(window);

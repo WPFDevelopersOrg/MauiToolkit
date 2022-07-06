@@ -11,50 +11,21 @@ internal class WindowChromeService : IWindowChromeService
         ArgumentNullException.ThrowIfNull(windowChrome);
         _Window = window;
         _WindowChrome = windowChrome;
-        _WindowController = new(window, windowChrome);
-        _TitleBarController = new WinuiTitleBarController(window, windowChrome);
     }
 
     readonly Window _Window;
-    readonly WindowChrome _WindowChrome;
-    readonly WindowChromeController _WindowController;
-    readonly WinuiTitleBarController _TitleBarController;
-    IService? _BackdropService;
+    readonly WindowChrome _WindowChrome; 
 
     bool IService.Run()
     {
-        ((IService)_WindowController).Run();
-        ((IService)_TitleBarController).Run();
-        _BackdropService?.Stop();
-        switch (_WindowChrome.BackdropsKind)
-        {
-            case BackdropsKind.Default:
-                break;
-            case BackdropsKind.Mica:
-                _BackdropService = new WinuiMicaController(_Window);
-                break;
-            case BackdropsKind.Acrylic:
-                _BackdropService = new WinuiAcrylicController(_Window);
-                break;
-            case BackdropsKind.BlurEffect:
-                break;
-            default:
-                break;
-        }
-        _BackdropService?.Run();
+ 
         return true;
     }
 
     bool IService.Stop()
     {
-        _BackdropService?.Stop();
-        ((IService)_WindowController).Stop();
-        ((IService)_TitleBarController).Stop();
+ 
         return true;
     }
 
-    bool IWindowChromeService.SetBackdropsKind(BackdropsKind kind)
-    {
-        return true;
-    }
 }

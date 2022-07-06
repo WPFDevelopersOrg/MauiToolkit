@@ -1,8 +1,8 @@
 ﻿namespace Maui.Toolkitx;
 // All the code in this file is only included on Tizen.
-internal class WindowService : IWindowService
+internal class WindowChromeService : IWindowChromeService
 {
-    public WindowService(Window window, WindowChrome windowChrome)
+    public WindowChromeService(Window window, WindowChrome windowChrome)
     {
         _Window = window;
     }
@@ -19,8 +19,4 @@ internal class WindowService : IWindowService
         return true;
     }
 
-    bool IWindowService.SetBackdropsKind(BackdropsKind kind)
-    {
-        return true;
-    }
 }

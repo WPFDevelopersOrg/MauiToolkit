@@ -5,11 +5,11 @@ namespace Maui.Toolkitx;
 public partial class WindowTitleBar : BindableObject
 {
     public static readonly BindableProperty TitleBarBackgroundColorProperty =
-                       BindableProperty.Create(propertyName: nameof(TitleBarBackgroundColor),
-                                               returnType: typeof(Color),
-                                               declaringType: typeof(WindowChrome),
-                                               defaultValue: default,
-                                               propertyChanged: OnProperyChanged);
+                           BindableProperty.Create(propertyName: nameof(TitleBarBackgroundColor),
+                                                   returnType: typeof(Color),
+                                                   declaringType: typeof(WindowTitleBar),
+                                                   defaultValue: default,
+                                                   propertyChanged: OnProperyChanged);
 
     public Color TitleBarBackgroundColor
     {
@@ -20,7 +20,7 @@ public partial class WindowTitleBar : BindableObject
 
     private static void OnProperyChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        //var windowChromeWorker = WindowChromeWorker.GetWindowChromeWorker(bindable);
+        //var WindowTitleBarWorker = WindowTitleBarWorker.GetWindowTitleBarWorker(bindable);
 
     }
 

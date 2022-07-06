@@ -1,9 +1,9 @@
 ﻿namespace Maui.Toolkitx;
 
 // All the code in this file is only included on Mac Catalyst.
-internal class WindowService : IWindowChromeService
+internal class WindowChromeService : IWindowChromeService
 {
-    public WindowService(Window window, WindowChrome windowChrome)
+    public WindowChromeService(Window window, WindowChrome windowChrome)
     {
         _Window = window;
     }
@@ -19,9 +19,5 @@ internal class WindowService : IWindowChromeService
     {
         return true;
     }
-
-    bool IWindowChromeService.SetBackdropsKind(BackdropsKind kind)
-    {
-        return true;
-    }
+ 
 }

@@ -4,19 +4,26 @@ using MicrosoftBackdrops = Microsoft.UI.Composition.SystemBackdrops;
 using MicrosoftuiXaml = Microsoft.UI.Xaml;
 using MicrosoftuiComposition = Microsoft.UI.Composition;
 using Microsoftui = Microsoft.UI;
+using Maui.Toolkitx.Config;
+using Maui.Toolkitx.Platforms.Windows.Extensions;
 
 namespace Maui.Toolkitx.Platforms.Windows.Controllers;
 
 internal class WinuiAcrylicController : IService
 {
-    public WinuiAcrylicController(Window window)
+    public WinuiAcrylicController(Window window, BackdropConfigurations config)
     {
         _Window = window.Handler.PlatformView as MicrosoftuiXaml.Window;
         SystemDispatcherQueue.Instance.EnsureWindowsSystemDispatcherQueueController();
+
+        _BackdropConfigurations = config;
     }
+
+    readonly BackdropConfigurations _BackdropConfigurations;
 
     bool _IsStart = false;
     MicrosoftuiXaml.Window? _Window;
+
     MicrosoftBackdrops.DesktopAcrylicController? _AcrylicController;
     MicrosoftBackdrops.SystemBackdropConfiguration? _SystemBackdropConfiguration;
 
@@ -34,19 +41,20 @@ internal class WinuiAcrylicController : IService
         _SystemBackdropConfiguration = new()
         {
             IsInputActive = true,
-            IsHighContrast = false,
-            HighContrastBackgroundColor = Microsoftui.Colors.DarkSlateGray,
+            IsHighContrast = _BackdropConfigurations.IsHighContrast,
+            HighContrastBackgroundColor = _BackdropConfigurations.HighContrastBackgroundColor.ToPlatformColor(),
         };
 
         _Window.Activated += Window_Activated;
+        _BackdropConfigurations.PropertyChanged += BackdropConfigurations_PropertyChanged;
         if (_Window.Content is MicrosoftuiXaml.FrameworkElement frameworkElement)
             frameworkElement.ActualThemeChanged += FrameworkElement_ActualThemeChanged;
 
         _AcrylicController = new()
         {
-            LuminosityOpacity =0.1f,
-            TintOpacity = 0.2f,
-            TintColor = Microsoftui.Colors.BlueViolet,
+            LuminosityOpacity = _BackdropConfigurations.LuminosityOpacity,
+            TintOpacity = _BackdropConfigurations.TintOpacity,
+            TintColor = _BackdropConfigurations.TintColor.ToPlatformColor(),
         };
 
         LoadTheme();
@@ -58,6 +66,7 @@ internal class WinuiAcrylicController : IService
         _IsStart = true;
         return true;
     }
+
 
     bool IService.Stop()
     {
@@ -116,4 +125,21 @@ internal class WinuiAcrylicController : IService
     }
 
     private void FrameworkElement_ActualThemeChanged(MicrosoftuiXaml.FrameworkElement sender, object args) => LoadTheme();
+
+    private void BackdropConfigurations_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (_SystemBackdropConfiguration is null)
+            return;
+
+        if (_AcrylicController is null)
+            return;
+
+        _SystemBackdropConfiguration.IsHighContrast = _BackdropConfigurations.IsHighContrast;
+        _SystemBackdropConfiguration.HighContrastBackgroundColor = _BackdropConfigurations.HighContrastBackgroundColor.ToPlatformColor();
+
+        _AcrylicController.LuminosityOpacity = _BackdropConfigurations.LuminosityOpacity;
+        _AcrylicController.TintOpacity = _BackdropConfigurations.TintOpacity;
+        _AcrylicController.TintColor = _BackdropConfigurations.TintColor.ToPlatformColor();
+    }
+
 }
