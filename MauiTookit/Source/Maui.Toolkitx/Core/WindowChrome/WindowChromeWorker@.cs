@@ -10,7 +10,7 @@ internal partial class WindowChromeWorker : IAttachedObject
     readonly WindowChrome _WindowChrome;
 
     bool _IsAttached = false;
-    IWindowService? _Service;
+    IWindowChromeService? _Service;
 
     Window? _AssociatedObject;
     BindableObject? IAttachedObject.AssociatedObject => _AssociatedObject;
@@ -57,10 +57,6 @@ internal partial class WindowChromeWorker : IAttachedObject
         switch (e.PropertyName)
         {
             case nameof(WindowChrome.CaptionHeight):
-                break;
-            case nameof(WindowChrome.BackdropsKind):
-                break;
-            case nameof(WindowChrome.WindowPresenterKind):
                 break;
             case nameof(WindowChrome.WindowTitleBarKind):
                 break;

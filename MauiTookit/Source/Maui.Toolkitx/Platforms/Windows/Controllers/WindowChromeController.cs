@@ -5,9 +5,9 @@ using MicrosoftuiXaml = Microsoft.UI.Xaml;
 
 namespace Maui.Toolkitx.Platforms.Windows.Controllers;
 
-internal partial class WinuiWindowController : IService
+internal partial class WindowChromeController : IService
 {
-    public WinuiWindowController(Window window, WindowChrome windowChrome)
+    public WindowChromeController(Window window, WindowChrome windowChrome)
     {
         _Window = window;
         _WindowChrome = windowChrome;
@@ -24,10 +24,10 @@ internal partial class WinuiWindowController : IService
     bool IService.Run()
     {
         LoadAppWindowEvent();
-        ShownInSwitchers(_WindowChrome.ShowInSwitcher);
-        MoveWindow(_WindowChrome.WindowAlignment, new Size(_WindowChrome.Width, _WindowChrome.Height));
-        ShowPresenter(_WindowChrome.WindowPresenterKind);
-        ShowInTopMost(_WindowChrome.TopMost);
+        //ShownInSwitchers(_WindowChrome.ShowInSwitcher);
+        //MoveWindow(_WindowChrome.WindowAlignment, new Size(_WindowChrome.Width, _WindowChrome.Height));
+        //ShowPresenter(_WindowChrome.WindowPresenterKind);
+        //ShowInTopMost(_WindowChrome.TopMost);
 
         return true;
     }
@@ -39,7 +39,7 @@ internal partial class WinuiWindowController : IService
     }
 }
 
-internal partial class WinuiWindowController
+internal partial class WindowChromeController
 {
     bool ShownInSwitchers(bool isShownInSwitchers)
     {
@@ -75,7 +75,7 @@ internal partial class WinuiWindowController
                 break;
             default:
                 ToggleFullScreen(false);
-                MoveWindow(_WindowChrome.WindowAlignment, new Size(_WindowChrome.Width, _WindowChrome.Height));
+                //MoveWindow(_WindowChrome.WindowAlignment, new Size(_WindowChrome.Width, _WindowChrome.Height));
                 break;
         }
 
@@ -84,7 +84,7 @@ internal partial class WinuiWindowController
 
 }
 
-internal partial class WinuiWindowController
+internal partial class WindowChromeController
 {
     bool MoveWindow(WindowAlignment alignment, Size size)
     {
@@ -190,7 +190,7 @@ internal partial class WinuiWindowController
  
 }
 
-internal partial class WinuiWindowController
+internal partial class WindowChromeController
 {
     bool LoadAppWindowEvent()
     {

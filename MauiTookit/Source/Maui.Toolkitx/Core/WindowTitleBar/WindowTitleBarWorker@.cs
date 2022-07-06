@@ -1,14 +1,15 @@
 ﻿namespace Maui.Toolkitx;
-internal partial class WindowStartupWorker : IAttachedObject
+
+internal partial class WindowTitleBarWorker : IAttachedObject
 {
     BindableObject? IAttachedObject.AssociatedObject => throw new NotImplementedException();
 
-    public void Attach(BindableObject bindableObject)
+    void IAttachedObject.Attach(BindableObject bindableObject)
     {
         //throw new NotImplementedException();
     }
 
-    public void Detach()
+    void IAttachedObject.Detach()
     {
         //throw new NotImplementedException();
     }

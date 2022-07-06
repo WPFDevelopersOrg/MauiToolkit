@@ -1,7 +1,7 @@
 ﻿namespace Maui.Toolkitx;
 
 // All the code in this file is only included on Android.
-internal class WindowService : IWindowService
+internal class WindowService : IWindowChromeService
 {
     public WindowService(Window window, WindowChrome windowChrome)
     {
@@ -20,7 +20,7 @@ internal class WindowService : IWindowService
         return true;
     }
 
-    bool IWindowService.SetBackdropsKind(BackdropsKind kind)
+    bool IWindowChromeService.SetBackdropsKind(BackdropsKind kind)
     {
         return true;
     }

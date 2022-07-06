@@ -2,7 +2,7 @@
 
 public class PlatformHelper
 {
-    public static IWindowService? GetPlatformWindowSevice(Window window, WindowChrome windowChrome)
+    public static IWindowChromeService? GetPlatformWindowSevice(Window window, WindowChrome windowChrome)
     {
         if (window is null)
             return default;

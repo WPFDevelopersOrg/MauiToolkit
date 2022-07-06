@@ -3,9 +3,9 @@
 namespace Maui.Toolkitx;
 
 // All the code in this file is only included on Windows.
-internal class WindowService : IWindowService
+internal class WindowChromeService : IWindowChromeService
 {
-    public WindowService(Window window, WindowChrome windowChrome)
+    public WindowChromeService(Window window, WindowChrome windowChrome)
     {
         ArgumentNullException.ThrowIfNull(window);
         ArgumentNullException.ThrowIfNull(windowChrome);
@@ -17,7 +17,7 @@ internal class WindowService : IWindowService
 
     readonly Window _Window;
     readonly WindowChrome _WindowChrome;
-    readonly WinuiWindowController _WindowController;
+    readonly WindowChromeController _WindowController;
     readonly WinuiTitleBarController _TitleBarController;
     IService? _BackdropService;
 
@@ -53,7 +53,7 @@ internal class WindowService : IWindowService
         return true;
     }
 
-    bool IWindowService.SetBackdropsKind(BackdropsKind kind)
+    bool IWindowChromeService.SetBackdropsKind(BackdropsKind kind)
     {
         return true;
     }

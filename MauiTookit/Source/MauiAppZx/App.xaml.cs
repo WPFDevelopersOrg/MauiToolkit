@@ -1,5 +1,5 @@
 ﻿using Maui.Toolkitx;
-
+using Maui.Toolkitx.Controls;
 
 namespace MauiAppZx;
 
@@ -14,17 +14,11 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        var window = base.CreateWindow(activationState);
-        
+        //var window = base.CreateWindow(activationState);
+        var window = new ClassicalWindow();
+        window.Page = MainPage;
         window.UseWindowChrome(options => 
         {
-            options.BackdropsKind = Maui.Toolkitx.Options.BackdropsKind.Acrylic;
-            options.ShowInSwitcher = true;
-            options.TopMost = true;
-            options.WindowAlignment = Maui.Toolkitx.Options.WindowAlignment.Center;
-            options.Width = 1920d;
-            options.Height = 1080d;
-            options.WindowPresenterKind = Maui.Toolkitx.Options.WindowPresenterKind.Default;
             options.WindowTitleBarKind = Maui.Toolkitx.Options.WindowTitleBarKind.CustomTitleBarAndExtension;
         });
 
