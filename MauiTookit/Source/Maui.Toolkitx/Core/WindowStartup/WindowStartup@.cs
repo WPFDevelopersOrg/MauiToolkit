@@ -58,7 +58,7 @@ public partial class WindowStartup : BindableObject
                            BindableProperty.Create(propertyName: nameof(BackdropConfigurations),
                                                    returnType: typeof(BackdropConfigurations),
                                                    declaringType: typeof(WindowStartup),
-                                                   defaultValue: new BackdropConfigurations(),
+                                                   defaultValue: new BackdropConfigurations() { IsHighContrast = false,  IsUseBaseKind = true, LuminosityOpacity = 1f, TintOpacity = 0.5f },
                                                    propertyChanged: OnProperyChanged);
 
     public double Width

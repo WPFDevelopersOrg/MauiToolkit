@@ -43,14 +43,14 @@ public class ClassicalWindow : Window
                            BindableProperty.Create(propertyName: nameof(WindowPresenterKind),
                                                    returnType: typeof(WindowPresenterKind),
                                                    declaringType: typeof(ClassicalWindow),
-                                                   defaultValue: default,
+                                                   defaultValue: WindowPresenterKind.Maximize,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty TopMostProperty =
                            BindableProperty.Create(propertyName: nameof(TopMost),
                                                    returnType: typeof(bool),
                                                    declaringType: typeof(ClassicalWindow),
-                                                   defaultValue: default,
+                                                   defaultValue: true,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty ShowInSwitcherProperty =
@@ -64,14 +64,14 @@ public class ClassicalWindow : Window
                            BindableProperty.Create(propertyName: nameof(WindowAlignment),
                                                    returnType: typeof(WindowAlignment),
                                                    declaringType: typeof(ClassicalWindow),
-                                                   defaultValue: default,
+                                                   defaultValue: WindowAlignment.Center,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty BackdropsKindProperty =
                            BindableProperty.Create(propertyName: nameof(BackdropsKind),
                                                    returnType: typeof(BackdropsKind),
                                                    declaringType: typeof(ClassicalWindow),
-                                                   defaultValue: default,
+                                                   defaultValue: BackdropsKind.Mica,
                                                    propertyChanged: OnProperyChanged);
 
 
@@ -79,7 +79,12 @@ public class ClassicalWindow : Window
                            BindableProperty.Create(propertyName: nameof(BackdropConfigurations),
                                                    returnType: typeof(BackdropConfigurations),
                                                    declaringType: typeof(ClassicalWindow),
-                                                   defaultValue: default,
+                                                   defaultValue: new BackdropConfigurations
+                                                                {
+                                                                    LuminosityOpacity = 0.5f, 
+                                                                    TintColor = Colors.Gray, 
+                                                                    TintOpacity = 0.3f
+                                                                },
                                                    propertyChanged: OnProperyChanged);
 
 

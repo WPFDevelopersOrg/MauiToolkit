@@ -42,7 +42,7 @@ internal class WinuiMicaController : IService
         {
             IsInputActive = true,
             IsHighContrast = _BackdropConfigurations.IsHighContrast,
-            HighContrastBackgroundColor = _BackdropConfigurations.HighContrastBackgroundColor.ToPlatformColor(),
+            HighContrastBackgroundColor = _BackdropConfigurations.HighContrastBackgroundColor?.ToPlatformColor(),
         };
         _Window.Activated += Window_Activated;
         _BackdropConfigurations.PropertyChanged += BackdropConfigurations_PropertyChanged;
@@ -135,7 +135,7 @@ internal class WinuiMicaController : IService
             return;
 
         _SystemBackdropConfiguration.IsHighContrast = _BackdropConfigurations.IsHighContrast;
-        _SystemBackdropConfiguration.HighContrastBackgroundColor = _BackdropConfigurations.HighContrastBackgroundColor.ToPlatformColor();
+        _SystemBackdropConfiguration.HighContrastBackgroundColor = _BackdropConfigurations.HighContrastBackgroundColor?.ToPlatformColor();
 
         _MicaController.Kind = _BackdropConfigurations.IsUseBaseKind ? MicrosoftBackdrops.MicaKind.Base : MicrosoftBackdrops.MicaKind.BaseAlt;
         _MicaController.LuminosityOpacity = _BackdropConfigurations.LuminosityOpacity;

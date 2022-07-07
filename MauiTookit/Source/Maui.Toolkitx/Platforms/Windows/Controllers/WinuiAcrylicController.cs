@@ -34,7 +34,7 @@ internal class WinuiAcrylicController : IService
 
         if (!MicrosoftBackdrops.DesktopAcrylicController.IsSupported())
             return false;
-
+         
         if (_Window is null)
             return false;
 
@@ -42,7 +42,7 @@ internal class WinuiAcrylicController : IService
         {
             IsInputActive = true,
             IsHighContrast = _BackdropConfigurations.IsHighContrast,
-            HighContrastBackgroundColor = _BackdropConfigurations.HighContrastBackgroundColor.ToPlatformColor(),
+            HighContrastBackgroundColor = _BackdropConfigurations.HighContrastBackgroundColor?.ToPlatformColor(),
         };
 
         _Window.Activated += Window_Activated;
@@ -135,7 +135,7 @@ internal class WinuiAcrylicController : IService
             return;
 
         _SystemBackdropConfiguration.IsHighContrast = _BackdropConfigurations.IsHighContrast;
-        _SystemBackdropConfiguration.HighContrastBackgroundColor = _BackdropConfigurations.HighContrastBackgroundColor.ToPlatformColor();
+        _SystemBackdropConfiguration.HighContrastBackgroundColor = _BackdropConfigurations.HighContrastBackgroundColor?.ToPlatformColor();
 
         _AcrylicController.LuminosityOpacity = _BackdropConfigurations.LuminosityOpacity;
         _AcrylicController.TintOpacity = _BackdropConfigurations.TintOpacity;

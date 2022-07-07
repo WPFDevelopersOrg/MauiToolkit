@@ -11,7 +11,7 @@ public class BackdropConfigurations : BindableObject
                            BindableProperty.Create(propertyName: nameof(HighContrastBackgroundColor),
                                                    returnType: typeof(Color),
                                                    declaringType: typeof(BackdropConfigurations),
-                                                   defaultValue: Colors.Transparent);
+                                                   defaultValue: default);
 
     public static readonly BindableProperty IsUseBaseKindProperty =
                            BindableProperty.Create(propertyName: nameof(IsUseBaseKind),
@@ -44,9 +44,9 @@ public class BackdropConfigurations : BindableObject
         set => SetValue(IsHighContrastProperty, value);
     }
 
-    public Color HighContrastBackgroundColor
+    public Color? HighContrastBackgroundColor
     {
-        get => (Color)GetValue(HighContrastBackgroundColorProperty);
+        get => (Color?)GetValue(HighContrastBackgroundColorProperty);
         set => SetValue(HighContrastBackgroundColorProperty, value);
     }
 

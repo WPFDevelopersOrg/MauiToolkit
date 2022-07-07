@@ -25,17 +25,70 @@ internal partial class WindowStartupWorker : IAttachedObject
 
         _AssociatedObject = window;
 
-        if (window.Handler.PlatformView is not null)
+        if (window.Handler?.PlatformView is not null)
         {
             _Service = PlatformHelper.GetPlatformWindowStartupSevice(window, _WindowStartup);
             _Service?.Run();
         }
 
-
+        _WindowStartup.PropertyChanged += WindowStartup_PropertyChanged;
+        window.HandlerChanged += Window_HandlerChanged;
+        window.Created += Window_Created;
+        window.Destroying += Window_Destroying;
+        window.Stopped += Window_Stopped;
+        _IsAttached = true;
     }
 
     public void Detach()
     {
-        //throw new NotImplementedException();
+        _WindowStartup.PropertyChanged -= WindowStartup_PropertyChanged;
+
+        if (_AssociatedObject is Window window)
+        {
+            window.HandlerChanged -= Window_HandlerChanged;
+            window.Created -= Window_Created;
+            window.Destroying -= Window_Destroying;
+            window.Stopped -= Window_Stopped;
+        }
+
+        _IsAttached = false;
+        _Service?.Stop();
+        _Service = default;
+        _AssociatedObject = default;
     }
+
+    private void WindowStartup_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        
+    }
+
+    private void Window_Created(object? sender, EventArgs e)
+    {
+
+    }
+
+    private void Window_HandlerChanged(object? sender, EventArgs e)
+    {
+        if (_Service is not null)
+            return;
+
+        if (sender is not Window window)
+            return;
+
+        _Service = PlatformHelper.GetPlatformWindowStartupSevice(window, _WindowStartup);
+        _Service?.Run();
+    }
+
+    private void Window_Destroying(object? sender, EventArgs e)
+    {
+        Detach();
+    }
+
+
+    private void Window_Stopped(object? sender, EventArgs e)
+    {
+
+    }
+
+
 }

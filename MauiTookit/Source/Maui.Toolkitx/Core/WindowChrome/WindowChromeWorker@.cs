@@ -25,7 +25,7 @@ internal partial class WindowChromeWorker : IAttachedObject
 
         _AssociatedObject = window;
 
-        if (window.Handler.PlatformView is not null)
+        if (window.Handler?.PlatformView is not null)
         {
             _Service = PlatformHelper.GetPlatformWindowChromeSevice(window, _WindowChrome);
             _Service?.Run();
@@ -92,11 +92,8 @@ internal partial class WindowChromeWorker : IAttachedObject
         Detach();
     }
 
-
     private void Window_Stopped(object? sender, EventArgs e)
     {
 
     }
-
-
 }
