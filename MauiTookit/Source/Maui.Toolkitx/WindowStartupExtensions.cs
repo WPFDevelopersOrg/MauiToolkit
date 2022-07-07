@@ -1,4 +1,6 @@
-﻿namespace Maui.Toolkitx;
+﻿using Maui.Toolkitx.Providers;
+
+namespace Maui.Toolkitx;
 
 internal static class WindowStartupExtensions
 {
@@ -10,5 +12,17 @@ internal static class WindowStartupExtensions
         configureDelegate?.Invoke(windowStartup);
         WindowStartup.SetWindowStartup(window, windowStartup);
         return window;
+    }
+
+    public static IWindowStartupService? GetWindowStartupService(this Window window)
+    {
+        if (window == null)
+            return default;
+
+        var worker = WindowStartupWorker.GetWindowStartupWorker(window);
+        if (worker is not IProvider<IWindowStartupService> provider)
+            return default;
+
+        return provider.GetService();
     }
 }

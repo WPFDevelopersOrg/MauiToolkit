@@ -2,7 +2,7 @@
 
 public class PlatformHelper
 {
-    public static IWindowChromeService? GetPlatformWindowChromeSevice(Window window, WindowChrome windowChrome)
+    internal static IWindowChromeService? GetPlatformWindowChromeSevice(Window window, WindowChrome windowChrome)
     {
         if (window is null)
             return default;
@@ -17,8 +17,14 @@ public class PlatformHelper
 #endif
     }
 
-    public static IWindowStartupService? GetPlatformWindowStartupSevice(Window window, WindowStartup windowStartup)
+    internal static IWindowStartupService? GetPlatformWindowStartupSevice(Window window, WindowStartup windowStartup)
     {
+        if (window is null)
+            return default;
+
+        if (window.Handler is null)
+            return default;
+
 #if WINDOWS || MACCATALYST || IOS || ANDROID
         return new WindowStartupService(window, windowStartup);
 #else

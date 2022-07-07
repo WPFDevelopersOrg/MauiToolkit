@@ -38,7 +38,6 @@ internal partial class WindowStartupService : IWindowStartupService
     bool IService.Stop()
     {
         _BackdropService?.Stop();
-
         return true;
     }
 

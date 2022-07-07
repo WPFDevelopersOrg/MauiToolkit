@@ -14,6 +14,7 @@ internal partial class WindowStartupWorker : IAttachedObject
 
     Window? _AssociatedObject;
     BindableObject? IAttachedObject.AssociatedObject => _AssociatedObject;
+    bool IAttachedObject.IsAttached => _IsAttached;
 
     public void Attach(BindableObject bindableObject)
     {
@@ -31,7 +32,6 @@ internal partial class WindowStartupWorker : IAttachedObject
             _Service?.Run();
         }
 
-        _WindowStartup.PropertyChanged += WindowStartup_PropertyChanged;
         window.HandlerChanged += Window_HandlerChanged;
         window.Created += Window_Created;
         window.Destroying += Window_Destroying;
@@ -41,7 +41,8 @@ internal partial class WindowStartupWorker : IAttachedObject
 
     public void Detach()
     {
-        _WindowStartup.PropertyChanged -= WindowStartup_PropertyChanged;
+        if (!_IsAttached)
+            return;
 
         if (_AssociatedObject is Window window)
         {
@@ -55,11 +56,6 @@ internal partial class WindowStartupWorker : IAttachedObject
         _Service?.Stop();
         _Service = default;
         _AssociatedObject = default;
-    }
-
-    private void WindowStartup_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        
     }
 
     private void Window_Created(object? sender, EventArgs e)

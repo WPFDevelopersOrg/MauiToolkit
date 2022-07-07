@@ -14,6 +14,7 @@ internal partial class WindowChromeWorker : IAttachedObject
 
     Window? _AssociatedObject;
     BindableObject? IAttachedObject.AssociatedObject => _AssociatedObject;
+    bool IAttachedObject.IsAttached => _IsAttached;
 
     public void Attach(BindableObject bindableObject)
     {
@@ -31,7 +32,6 @@ internal partial class WindowChromeWorker : IAttachedObject
             _Service?.Run();
         }
 
-        _WindowChrome.PropertyChanged += WindowChrome_PropertyChanged;
         window.HandlerChanged += Window_HandlerChanged;
         window.Created += Window_Created;
         window.Destroying += Window_Destroying;
@@ -41,7 +41,8 @@ internal partial class WindowChromeWorker : IAttachedObject
 
     public void Detach()
     {
-        _WindowChrome.PropertyChanged -= WindowChrome_PropertyChanged;
+        if (!_IsAttached)
+            return;
 
         if (_AssociatedObject is Window window)
         {
@@ -55,19 +56,6 @@ internal partial class WindowChromeWorker : IAttachedObject
         _Service?.Stop();
         _Service = default;
         _AssociatedObject = default;
-    }
-
-    private void WindowChrome_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        switch (e.PropertyName)
-        {
-            case nameof(WindowChrome.CaptionHeight):
-                break;
-            case nameof(WindowChrome.WindowTitleBarKind):
-                break;
-            default:
-                break;
-        }
     }
 
     private void Window_Created(object? sender, EventArgs e)

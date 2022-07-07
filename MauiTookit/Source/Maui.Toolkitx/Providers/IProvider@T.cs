@@ -2,5 +2,5 @@
 
 public interface IProvider<T> : IProvider
 {
-    T GetService();
+    T? GetService();
 }

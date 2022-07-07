@@ -7,57 +7,38 @@ using Winui = Windows.UI;
 using MicrosoftuixamlControls = Microsoft.UI.Xaml.Controls;
 using Windowsgraphics = Windows.Graphics;
 using MicrosoftuixamlData = Microsoft.UI.Xaml.Data;
+using MicrosoftuixamlmediaImaging = Microsoft.UI.Xaml.Media.Imaging;
+using Maui.Toolkitx.Platforms.Windows.Extensions;
+using PInvoke;
+using static PInvoke.User32;
+using Maui.Toolkitx.Platforms.Windows.Runtimes.User32;
 
-namespace Maui.Toolkitx.Platforms.Windows.Controllers;
+namespace Maui.Toolkitx;
 
-internal partial class WinuiTitleBarController : IService
+// All the code in this file is only included on Windows.
+internal partial class WindowChromeService  
 {
-    public WinuiTitleBarController(Window window, WindowChrome windowChrome)
+    private MicrosoftuiXaml.Thickness _NavigationViewContentMargin;
+    public MicrosoftuiXaml.Thickness NavigationViewContentMargin
     {
-        _Window = window;
-        _WindowChrome = windowChrome;
-        _WinUIWindow = _Window.Handler.PlatformView as MicrosoftuiXaml.Window;
-        _AppWindow = _WinUIWindow?.GetAppWindow();
+        get => _NavigationViewContentMargin;
+        set
+        {
+            _NavigationViewContentMargin = value;
+            if (_WindowChrome.WindowTitleBarKind is WindowTitleBarKind.CustomTitleBarAndExtension)
+            {
+                var thicknessProperty = typeof(MauiNavigationView).GetProperty("NavigationViewContentMargin", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (thicknessProperty?.GetValue(_RootNavigationView) is MicrosoftuiXaml.Thickness thickness)
+                {
+                    if (thickness == new MicrosoftuiXaml.Thickness(0))
+                        return;
 
-        if (_WinUIWindow?.Content is WindowRootView windowRootView)
-            _WindowRootView = windowRootView;
+                    thicknessProperty.SetValue(_RootNavigationView, new MicrosoftuiXaml.Thickness(0));
+                }
+            }
+        }
     }
 
-    readonly Window _Window;
-    readonly WindowChrome _WindowChrome;
-
-    readonly WindowRootView? _WindowRootView;
-    readonly MicrosoftuiXaml.Window? _WinUIWindow;
-    readonly MicrosoftuiWindowing.AppWindow? _AppWindow;
-
-    RootNavigationView? _RootNavigationView = default;
-    MicrosoftuiXaml.FrameworkElement? _TitleBar;
-    bool _IsTitleBarIsSet = false;
-
-    bool IService.Run()
-    {
-        if (_WindowRootView is null)
-            return false;
-
-        _RootNavigationView = _WindowRootView.NavigationViewControl;
-        LoadWindowRootViewEvent();
-        LoadWindowEvent();
-        RegisterApplicationThemeChangedEvent();
-
-        return true;
-    }
-
-    bool IService.Stop()
-    {
-        UnloadWindowRootViewEvent();
-        UnloadWindowEvent();
-        UnregisterApplicationThemeChangedEvent();
-        return true;
-    }
-}
-
-internal partial class WinuiTitleBarController
-{
     bool SwitchTitleBar(WindowTitleBarKind titleBar)
     {
         if (_WinUIWindow is null)
@@ -180,29 +161,65 @@ internal partial class WinuiTitleBarController
         return true;
     }
 
-}
-
-internal partial class WinuiTitleBarController
-{
-    private MicrosoftuiXaml.Thickness _NavigationViewContentMargin;
-    public MicrosoftuiXaml.Thickness NavigationViewContentMargin
+    bool LoadTitleBarColor(Color? background, Color? inactiveBackground, Color? foreground, Color? inactiveForeground)
     {
-        get => _NavigationViewContentMargin;
-        set
-        {
-            _NavigationViewContentMargin = value;
-            if (_WindowChrome.WindowTitleBarKind is WindowTitleBarKind.CustomTitleBarAndExtension)
-            {
-                var thicknessProperty = typeof(MauiNavigationView).GetProperty("NavigationViewContentMargin", BindingFlags.Instance | BindingFlags.NonPublic);
-                if (thicknessProperty?.GetValue(_RootNavigationView) is MicrosoftuiXaml.Thickness thickness)
-                {
-                    if (thickness == new MicrosoftuiXaml.Thickness(0))
-                        return;
+        var resource = _Application.Resources;
+        if (background != null)
+            resource["WindowCaptionBackground"] = background.ToPlatform();
 
-                    thicknessProperty.SetValue(_RootNavigationView, new MicrosoftuiXaml.Thickness(0));
-                }
-            }
+        if (inactiveBackground != null)
+            resource["WindowCaptionBackgroundDisabled"] = inactiveBackground.ToPlatform();
+
+        if (foreground != null)
+            resource["WindowCaptionForeground"] = foreground.ToPlatform();
+
+        if (inactiveForeground != null)
+            resource["WindowCaptionForegroundDisabled"] = inactiveForeground.ToPlatform();
+
+        //resource["TitleBarHeight"] = 50;
+        
+
+        TriggertTitleBarRepaint();
+
+        return true;
+    }
+
+    bool LoadAppTitleBar(double height, double fontSize)
+    {
+        var propertyInfo = typeof(WindowRootView).GetProperty("AppTitleBar", BindingFlags.Instance | BindingFlags.NonPublic);
+        var titleBar = propertyInfo?.GetValue(_WindowRootView);
+        if (titleBar is not MicrosoftuiXaml.FrameworkElement frameworkElement)
+            return false;
+
+        if (height > 0)
+            frameworkElement.Height = height;
+
+        if (fontSize > 0)
+        {
+            var textBlock = frameworkElement.GetFirstDescendant<MicrosoftuixamlControls.TextBlock>();
+            if (textBlock is not null)
+                textBlock.FontSize = fontSize;
         }
+
+        return true;
+    }
+
+    bool LoadAppIcon(string? icon)
+    {
+        if (string.IsNullOrWhiteSpace(icon))
+            return false;
+
+        var propertyInfo1 = typeof(WindowRootView).GetProperty("AppFontIcon", BindingFlags.Instance | BindingFlags.NonPublic);
+        if (propertyInfo1?.GetValue(_WindowRootView) is MicrosoftuixamlControls.Image image)
+        {
+            Uri imageUri = new(icon, UriKind.RelativeOrAbsolute);
+            MicrosoftuixamlmediaImaging.BitmapImage imageBitmap = new(imageUri);
+            image.Source = imageBitmap;
+            image.Width = 25;
+            image.Height = 25;
+        }
+
+        return true;
     }
 
     bool LoadWindowRootViewEvent()
@@ -292,6 +309,61 @@ internal partial class WinuiTitleBarController
         return true;
     }
 
+    bool TriggertTitleBarRepaint()
+    {
+        if (_WinUIWindow is null)
+            return false;
+
+        var windowHanlde = _WinUIWindow.GetWindowHandle();
+        var activeWindow = User32.GetActiveWindow();
+        if (windowHanlde == activeWindow)
+        {
+            User32.PostMessage(windowHanlde, WindowMessage.WM_ACTIVATE, new IntPtr((int)User32Constants.WA_INACTIVE), IntPtr.Zero);
+            User32.PostMessage(windowHanlde, WindowMessage.WM_ACTIVATE, new IntPtr((int)User32Constants.WA_ACTIVE), IntPtr.Zero);
+        }
+        else
+        {
+            User32.PostMessage(windowHanlde, WindowMessage.WM_ACTIVATE, new IntPtr((int)User32Constants.WA_ACTIVE), IntPtr.Zero);
+            User32.PostMessage(windowHanlde, WindowMessage.WM_ACTIVATE, new IntPtr((int)User32Constants.WA_INACTIVE), IntPtr.Zero);
+        }
+
+        return true;
+    }
+
+    void WindowRootView_Loaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
+    {
+        var propertyInfo = typeof(WindowRootView).GetProperty("AppTitleBar", BindingFlags.Instance | BindingFlags.NonPublic);
+        var titleBar = propertyInfo?.GetValue(_WindowRootView);
+        if (titleBar is MicrosoftuiXaml.FrameworkElement frameworkElement)
+            _TitleBar = frameworkElement;
+
+        LoadAppTitleBar(_WindowChrome.CaptionHeight, _WindowChrome.TitleFontSize);
+        LoadAppIcon(_WindowChrome.Icon);
+        SwitchTitleBar(_WindowChrome.WindowTitleBarKind);
+        //if (_WindowChrome.WindowTitleBarKind  is not WindowTitleBarKind.Default)
+        //SetWindowConfigrations(_WindowChrome.ConfigurationKind);
+
+        var contentProperty = typeof(MauiNavigationView).GetProperty("ContentGrid", BindingFlags.Instance | BindingFlags.NonPublic);
+        if (contentProperty is not null)
+        {
+            var contentGrid = contentProperty.GetValue(_RootNavigationView);
+            if (contentGrid is MicrosoftuixamlControls.Grid grid)
+            {
+                MicrosoftuixamlData.Binding marginBinding = new();
+                marginBinding.Source = this;
+                marginBinding.Path = new MicrosoftuiXaml.PropertyPath("NavigationViewContentMargin");
+                marginBinding.Mode = MicrosoftuixamlData.BindingMode.TwoWay;
+                marginBinding.UpdateSourceTrigger = MicrosoftuixamlData.UpdateSourceTrigger.PropertyChanged;
+                MicrosoftuixamlData.BindingOperations.SetBinding(grid, MicrosoftuixamlControls.Grid.MarginProperty, marginBinding);
+            }
+        }
+    }
+
+    void WindowRootView_Unloaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
+    {
+
+    }
+
     void OnAppTitleBarChanged(object? sender, EventArgs e)
     {
 
@@ -307,43 +379,10 @@ internal partial class WinuiTitleBarController
 
     }
 
-    void WindowRootView_Loaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
-    {
-        var propertyInfo = typeof(WindowRootView).GetProperty("AppTitleBar", BindingFlags.Instance | BindingFlags.NonPublic);
-        var titleBar = propertyInfo?.GetValue(_WindowRootView);
-        if (titleBar is MicrosoftuiXaml.FrameworkElement frameworkElement)
-            _TitleBar = frameworkElement;
-
-        SwitchTitleBar(_WindowChrome.WindowTitleBarKind);
-        //if (_WindowChrome.WindowTitleBarKind  is not WindowTitleBarKind.Default)
-            //SetWindowConfigrations(_WindowChrome.ConfigurationKind);
-
-        var contentProperty = typeof(MauiNavigationView).GetProperty("ContentGrid", BindingFlags.Instance | BindingFlags.NonPublic);
-        if (contentProperty is not null)
-        {
-            var contentGrid = contentProperty.GetValue(_RootNavigationView);
-            if (contentGrid is MicrosoftuixamlControls.Grid grid)
-            {
-                MicrosoftuixamlData.Binding marginBinding = new();
-                marginBinding.Source = this;
-                marginBinding.Path = new MicrosoftuiXaml.PropertyPath("NavigationViewContentMargin");
-                marginBinding.Mode = MicrosoftuixamlData.BindingMode.TwoWay;
-                marginBinding.UpdateSourceTrigger = MicrosoftuixamlData.UpdateSourceTrigger.PropertyChanged;
-                MicrosoftuixamlData.BindingOperations.SetBinding(grid, MicrosoftuixamlControls.Grid.MarginProperty, marginBinding);
-
-            }
-
-        }
-    }
-
-    void WindowRootView_Unloaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
-    {
-
-    }
-
     void Application_RequestedThemeChanged(object? sender, AppThemeChangedEventArgs e)
     {
         LoadTitleBarCorlor(_AppWindow?.TitleBar);
     }
+
 
 }
