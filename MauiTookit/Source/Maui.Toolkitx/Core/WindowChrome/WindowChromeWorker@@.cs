@@ -1,6 +1,6 @@
 ﻿using Maui.Toolkitx.Providers;
 
-namespace Maui.Toolkitx;
+namespace Maui.Toolkitx.Core;
 
 internal partial class WindowChromeWorker : IProvider<IWindowChromeService>
 {

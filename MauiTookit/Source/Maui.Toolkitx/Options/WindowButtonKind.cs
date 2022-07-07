@@ -4,7 +4,7 @@
 public enum WindowButtonKind : byte
 {
     Hide = 0x00,
-    Show = 0xFF,
+    Show = 0x0F,
 
     EnableMaximizable = 0x01,
     EnableMinizable = 0x02,

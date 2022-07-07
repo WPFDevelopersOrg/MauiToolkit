@@ -43,10 +43,15 @@ internal partial class WindowChromeService : IWindowChromeService
 
     bool _IsTitleBarIsSet = false;
 
+    bool _IsLastFullScreen = false;
+
     bool IService.Run()
     {
         if (_WindowRootView is null)
             return false;
+
+        if (_AppWindow is not null)
+            _AppWindow.Changed += AppWindow_Changed;
 
         _RootNavigationView = _WindowRootView.NavigationViewControl;
         LoadTitleBarColor(_WindowChrome.CaptionActiveBackgroundColor, _WindowChrome.CaptionInactiveBackgroundColor, _WindowChrome.CaptionActiveForegroundColor, _WindowChrome.CaptionInactiveForegroundColor);
@@ -59,6 +64,9 @@ internal partial class WindowChromeService : IWindowChromeService
 
     bool IService.Stop()
     {
+        if (_AppWindow is not null)
+            _AppWindow.Changed += AppWindow_Changed;
+
         UnloadWindowRootViewEvent();
         UnloadWindowEvent();
         UnregisterApplicationThemeChangedEvent();

@@ -395,7 +395,7 @@ internal partial class WinuiWindowController : IController, IWindowsService
             _TitleBar = frameworkElement;
 
         RemoveTitleBar(_Options.TitleBarKind);
-        if (_Options.TitleBarKind is not WindowTitleBarKind.Default)
+        if (_Options.TitleBarKind is not WindowTitleBarKind.Default or WindowTitleBarKind.DefaultWithExtension)
             SetWindowConfigrations(_Options.ConfigurationKind);
 
         if (Application.Current?.MainPage is Shell shell)

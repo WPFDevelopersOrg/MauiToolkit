@@ -1,22 +1,21 @@
-﻿using Microsoft.Maui.Platform;
-using System.Reflection;
+﻿using Maui.Toolkitx.Platforms.Windows.Extensions;
+using Maui.Toolkitx.Platforms.Windows.Runtimes.User32;
+using Microsoft.Maui.Platform;
+using PInvoke;
+using WinRT;
+using static PInvoke.User32;
+using Microsoftui = Microsoft.UI;
 using MicrosoftuiWindowing = Microsoft.UI.Windowing;
 using MicrosoftuiXaml = Microsoft.UI.Xaml;
-using Microsoftui = Microsoft.UI;
-using Winui = Windows.UI;
 using MicrosoftuixamlControls = Microsoft.UI.Xaml.Controls;
-using Windowsgraphics = Windows.Graphics;
 using MicrosoftuixamlData = Microsoft.UI.Xaml.Data;
 using MicrosoftuixamlmediaImaging = Microsoft.UI.Xaml.Media.Imaging;
-using Maui.Toolkitx.Platforms.Windows.Extensions;
-using PInvoke;
-using static PInvoke.User32;
-using Maui.Toolkitx.Platforms.Windows.Runtimes.User32;
+using Winui = Windows.UI;
 
 namespace Maui.Toolkitx;
 
 // All the code in this file is only included on Windows.
-internal partial class WindowChromeService  
+internal partial class WindowChromeService
 {
     private MicrosoftuiXaml.Thickness _NavigationViewContentMargin;
     public MicrosoftuiXaml.Thickness NavigationViewContentMargin
@@ -177,7 +176,7 @@ internal partial class WindowChromeService
             resource["WindowCaptionForegroundDisabled"] = inactiveForeground.ToPlatform();
 
         //resource["TitleBarHeight"] = 50;
-        
+
 
         TriggertTitleBarRepaint();
 
@@ -217,6 +216,61 @@ internal partial class WindowChromeService
             image.Source = imageBitmap;
             image.Width = 25;
             image.Height = 25;
+        }
+
+        return true;
+    }
+
+    bool SetButtonConfigrations(WindowButtonKind kind)
+    {
+        if (_AppWindow is null)
+            return false;
+
+        switch (kind)
+        {
+            case WindowButtonKind.Hide:
+                var customOverlappedPresenter = MicrosoftuiWindowing.OverlappedPresenter.CreateForContextMenu();
+                _AppWindow.SetPresenter(customOverlappedPresenter);
+                break;
+            case WindowButtonKind.Show:
+                var mainOverlappedPresenter = MicrosoftuiWindowing.OverlappedPresenter.Create();
+                _AppWindow.SetPresenter(mainOverlappedPresenter);
+                break;
+            default:
+                {
+                    if (_AppWindow.Presenter.Kind is not MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped)
+                        _AppWindow.SetPresenter(MicrosoftuiWindowing.AppWindowPresenterKind.Overlapped);
+
+                    var overlappedPresenter = _AppWindow.Presenter.As<MicrosoftuiWindowing.OverlappedPresenter>();
+                    if (overlappedPresenter is not null)
+                    {
+                        overlappedPresenter.IsMinimizable = kind.HasFlag(WindowButtonKind.EnableMinizable);
+                        overlappedPresenter.IsMaximizable = kind.HasFlag(WindowButtonKind.EnableMaximizable);
+                        overlappedPresenter.IsResizable = kind.HasFlag(WindowButtonKind.EnableResizable);
+                    }
+                }
+                break;
+        }
+
+        return true;
+    }
+
+    bool RestorButtonConfigrations()
+    {
+        if (_AppWindow is null)
+            return false;
+
+        var overlappedPresenter = _AppWindow.Presenter.As<MicrosoftuiWindowing.OverlappedPresenter>();
+        if (overlappedPresenter is not null)
+        {
+            overlappedPresenter.IsMinimizable = true;
+            overlappedPresenter.IsMaximizable = true;
+            overlappedPresenter.IsResizable = true;
+        }
+        else
+        {
+            var mainOverlappedPresenter = MicrosoftuiWindowing.OverlappedPresenter.Create();
+            _AppWindow.SetPresenter(mainOverlappedPresenter);
         }
 
         return true;
@@ -340,8 +394,8 @@ internal partial class WindowChromeService
         LoadAppTitleBar(_WindowChrome.CaptionHeight, _WindowChrome.TitleFontSize);
         LoadAppIcon(_WindowChrome.Icon);
         SwitchTitleBar(_WindowChrome.WindowTitleBarKind);
-        //if (_WindowChrome.WindowTitleBarKind  is not WindowTitleBarKind.Default)
-        //SetWindowConfigrations(_WindowChrome.ConfigurationKind);
+        if (_WindowChrome.WindowTitleBarKind is not WindowTitleBarKind.Default or WindowTitleBarKind.DefaultWithExtension)
+            SetButtonConfigrations(_WindowChrome.WindowButtonKind);
 
         var contentProperty = typeof(MauiNavigationView).GetProperty("ContentGrid", BindingFlags.Instance | BindingFlags.NonPublic);
         if (contentProperty is not null)
@@ -382,6 +436,23 @@ internal partial class WindowChromeService
     void Application_RequestedThemeChanged(object? sender, AppThemeChangedEventArgs e)
     {
         LoadTitleBarCorlor(_AppWindow?.TitleBar);
+    }
+
+
+
+    private void AppWindow_Changed(MicrosoftuiWindowing.AppWindow sender, MicrosoftuiWindowing.AppWindowChangedEventArgs args)
+    {
+        if (!args.DidPresenterChange)
+            return;
+
+        if (_IsLastFullScreen)
+            SetButtonConfigrations(_WindowChrome.WindowButtonKind);
+
+        if (sender.Presenter.Kind == MicrosoftuiWindowing.AppWindowPresenterKind.FullScreen)
+            _IsLastFullScreen = true;
+        else
+            _IsLastFullScreen = false;
+
     }
 
 

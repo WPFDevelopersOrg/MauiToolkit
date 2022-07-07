@@ -1,21 +1,20 @@
 ﻿namespace Maui.Toolkitx.Core;
 
-internal partial class WindowChromeWorker : IAttachedObject
+internal partial class ShellViewWorker : IAttachedObject
 {
-    public WindowChromeWorker(WindowChrome windowChrome)
+    public ShellViewWorker(ShellView shellView)
     {
-        _WindowChrome = windowChrome;
+        _ShellView = shellView;
     }
 
-    readonly WindowChrome _WindowChrome;
+    readonly ShellView _ShellView;
 
     bool _IsAttached = false;
-    IWindowChromeService? _Service;
-
+    IShellViewService? _Service;
+ 
     Window? _AssociatedObject;
     BindableObject? IAttachedObject.AssociatedObject => _AssociatedObject;
     bool IAttachedObject.IsAttached => _IsAttached;
-
     public void Attach(BindableObject bindableObject)
     {
         if (_IsAttached)
@@ -24,11 +23,9 @@ internal partial class WindowChromeWorker : IAttachedObject
         if (bindableObject is not Window window)
             return;
 
-        _AssociatedObject = window;
-
         if (window.Handler?.PlatformView is not null)
         {
-            _Service = PlatformHelper.GetPlatformWindowChromeSevice(window, _WindowChrome);
+            _Service = PlatformHelper.GetShellViewService(window, _ShellView);
             _Service?.Run();
         }
 
@@ -36,6 +33,9 @@ internal partial class WindowChromeWorker : IAttachedObject
         window.Created += Window_Created;
         window.Destroying += Window_Destroying;
         window.Stopped += Window_Stopped;
+
+        _AssociatedObject = window;
+
         _IsAttached = true;
     }
 
@@ -60,7 +60,7 @@ internal partial class WindowChromeWorker : IAttachedObject
 
     private void Window_Created(object? sender, EventArgs e)
     {
-        
+
     }
 
     private void Window_HandlerChanged(object? sender, EventArgs e)
@@ -71,7 +71,7 @@ internal partial class WindowChromeWorker : IAttachedObject
         if (sender is not Window window)
             return;
 
-        _Service = PlatformHelper.GetPlatformWindowChromeSevice(window, _WindowChrome);
+        _Service = PlatformHelper.GetShellViewService(window, _ShellView);
         _Service?.Run();
     }
 

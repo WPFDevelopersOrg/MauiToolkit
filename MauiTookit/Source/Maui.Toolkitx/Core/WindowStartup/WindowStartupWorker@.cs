@@ -1,4 +1,5 @@
-﻿namespace Maui.Toolkitx;
+﻿namespace Maui.Toolkitx.Core;
+
 internal partial class WindowStartupWorker : IAttachedObject
 {
     public WindowStartupWorker(WindowStartup windowStartup)
@@ -44,12 +45,12 @@ internal partial class WindowStartupWorker : IAttachedObject
         if (!_IsAttached)
             return;
 
-        if (_AssociatedObject is Window window)
+        if (_AssociatedObject is not null)
         {
-            window.HandlerChanged -= Window_HandlerChanged;
-            window.Created -= Window_Created;
-            window.Destroying -= Window_Destroying;
-            window.Stopped -= Window_Stopped;
+            _AssociatedObject.HandlerChanged -= Window_HandlerChanged;
+            _AssociatedObject.Created -= Window_Created;
+            _AssociatedObject.Destroying -= Window_Destroying;
+            _AssociatedObject.Stopped -= Window_Stopped;
         }
 
         _IsAttached = false;

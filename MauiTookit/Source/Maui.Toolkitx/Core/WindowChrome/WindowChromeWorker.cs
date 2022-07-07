@@ -1,4 +1,4 @@
-﻿namespace Maui.Toolkitx;
+﻿namespace Maui.Toolkitx.Core;
 
 internal partial class WindowChromeWorker
 {

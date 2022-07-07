@@ -32,4 +32,19 @@ public class PlatformHelper
 #endif
     }
 
+    internal static IShellViewService? GetShellViewService(Window window, ShellView shellView)
+    {
+        if (window is null)
+            return default;
+
+        if (window.Handler is null)
+            return default;
+
+#if WINDOWS || MACCATALYST || IOS || ANDROID
+        return new ShellViewService(window, shellView);
+#else
+        return default;
+#endif
+    }
+
 }

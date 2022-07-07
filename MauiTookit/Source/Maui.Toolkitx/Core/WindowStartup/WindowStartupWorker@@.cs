@@ -1,6 +1,6 @@
 ﻿using Maui.Toolkitx.Providers;
 
-namespace Maui.Toolkitx;
+namespace Maui.Toolkitx.Core;
 internal partial class WindowStartupWorker : IProvider<IWindowStartupService>
 {
     IWindowStartupService? IProvider<IWindowStartupService>.GetService() => _Service;

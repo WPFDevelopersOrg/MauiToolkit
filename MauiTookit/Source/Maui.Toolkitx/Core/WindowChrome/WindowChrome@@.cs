@@ -36,7 +36,7 @@ public partial class WindowChrome : BindableObject
                            BindableProperty.Create(propertyName: nameof(WindowButtonKind),
                                                    returnType: typeof(WindowButtonKind),
                                                    declaringType: typeof(WindowChrome),
-                                                   defaultValue: default,
+                                                   defaultValue:  WindowButtonKind.Show,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty CaptionActiveBackgroundColorProperty =

@@ -19,11 +19,12 @@ public partial class App : Application
         //var window = base.CreateWindow(activationState);
         var window = new ClassicalWindow()
         {
+            Width = 800d,
+            Height = 600d,
             Title = PlatformShared.GetApplicationName(),
             BackdropsKind = Maui.Toolkitx.Options.BackdropsKind.Mica,
-        };
-        window.Page = MainPage;
-        window.UseWindowChrome(options => 
+            Page = MainPage,
+        }.UseWindowChrome(options => 
         {
 #if WINDOWS
 
