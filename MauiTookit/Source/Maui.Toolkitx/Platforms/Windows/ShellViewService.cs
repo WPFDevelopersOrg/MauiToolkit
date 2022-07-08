@@ -9,7 +9,7 @@ using Microsoft.Maui.Platform;
 
 namespace Maui.Toolkitx;
 
-internal partial class ShellViewService : IShellViewService
+internal partial class ShellViewService : IService
 {
     public ShellViewService(Window window, ShellView shellView)
     {

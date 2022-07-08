@@ -1,6 +1,6 @@
 ﻿namespace Maui.Toolkitx.Services;
 
-public interface IWindowChromeService : IService
+public interface IWindowChromeService
 {
 
 }

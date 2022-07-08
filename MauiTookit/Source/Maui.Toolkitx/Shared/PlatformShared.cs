@@ -23,7 +23,7 @@ public class PlatformShared
 
         //this is null when in ios
 #if WINDOWS || MACCATALYST 
-        appName = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
+        appName = Process.GetCurrentProcess().ProcessName;
 #else
         appName = "Application";
 #endif

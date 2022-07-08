@@ -11,7 +11,7 @@
     FlyoutIsPresented="False"
     FlyoutWidth="180"
     FlyoutIcon="im_hospital.png"
-    Shell.NavBarIsVisible="False">
+    Shell.NavBarIsVisible="True">
 
     <Shell.FlyoutHeader>
         <StackLayout IsVisible="{OnPlatform MacCatalyst=False}">

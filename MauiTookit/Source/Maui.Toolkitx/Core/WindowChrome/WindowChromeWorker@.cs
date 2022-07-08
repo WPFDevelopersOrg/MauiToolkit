@@ -10,7 +10,7 @@ internal partial class WindowChromeWorker : IAttachedObject
     readonly WindowChrome _WindowChrome;
 
     bool _IsAttached = false;
-    IWindowChromeService? _Service;
+    IService? _Service;
 
     Window? _AssociatedObject;
     BindableObject? IAttachedObject.AssociatedObject => _AssociatedObject;

@@ -1,7 +1,5 @@
 ﻿namespace Maui.Toolkitx.Services;
-
-public interface IShellViewService 
+public interface IStatusBarService
 {
-    
 
 }

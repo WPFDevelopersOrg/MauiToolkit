@@ -4,7 +4,7 @@ namespace Maui.Toolkitx.Core;
 
 internal partial class ShellViewWorker : IProvider<IShellViewService>
 {
-    IShellViewService? IProvider<IShellViewService>.GetService() => _Service;
+    IShellViewService? IProvider<IShellViewService>.GetService() => _Service as IShellViewService;
 
     object? IProvider.GetService(Type serviceType)
     {

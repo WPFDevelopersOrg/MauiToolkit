@@ -1,6 +1,6 @@
 ﻿namespace Maui.Toolkitx.Services;
 
-public interface IWindowStartupService : IService
+public interface IWindowStartupService
 {
     bool SetBackdropsKind(BackdropsKind kind);
 

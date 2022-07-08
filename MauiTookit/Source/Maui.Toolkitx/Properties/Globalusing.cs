@@ -3,8 +3,9 @@ global using Maui.Toolkitx.Helpers;
 global using Maui.Toolkitx.Options;
 global using Maui.Toolkitx.Services;
 global using Microsoft.Extensions.Options;
+global using Microsoft.Maui.LifecycleEvents;
 global using System.ComponentModel;
+global using System.Diagnostics;
 global using System.Reflection;
 global using System.Runtime.InteropServices;
 global using System.Windows.Input;
-

@@ -2,7 +2,7 @@
 
 public class PlatformHelper
 {
-    internal static IWindowChromeService? GetPlatformWindowChromeSevice(Window window, WindowChrome windowChrome)
+    internal static IService? GetPlatformWindowChromeSevice(Window window, WindowChrome windowChrome)
     {
         if (window is null)
             return default;
@@ -17,7 +17,7 @@ public class PlatformHelper
 #endif
     }
 
-    internal static IWindowStartupService? GetPlatformWindowStartupSevice(Window window, WindowStartup windowStartup)
+    internal static IService? GetPlatformWindowStartupSevice(Window window, WindowStartup windowStartup)
     {
         if (window is null)
             return default;
@@ -32,7 +32,7 @@ public class PlatformHelper
 #endif
     }
 
-    internal static IWindowStartupService? GetPlatformWindowStartupSevice(Window window, IElementHandler handler, WindowStartup windowStartup)
+    internal static IService? GetPlatformWindowStartupSevice(Window window, IElementHandler handler, WindowStartup windowStartup)
     {
         if (window is null)
             return default;
@@ -47,7 +47,7 @@ public class PlatformHelper
 #endif
     }
 
-    internal static IShellViewService? GetShellViewService(Window window, ShellView shellView)
+    internal static IService? GetShellViewService(Window window, ShellView shellView)
     {
         if (window is null)
             return default;

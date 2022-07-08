@@ -1,6 +1,6 @@
 ﻿namespace Maui.Toolkitx;
 
-internal partial class ShellViewService : IShellViewService
+internal partial class ShellViewService : IShellViewService, IService
 {
     public ShellViewService(Window window, ShellView shellView)
     {

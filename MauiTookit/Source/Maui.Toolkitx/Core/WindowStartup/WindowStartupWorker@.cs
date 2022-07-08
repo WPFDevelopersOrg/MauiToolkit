@@ -11,7 +11,7 @@ internal partial class WindowStartupWorker : IAttachedObject
 
     bool _IsAttached = false;
 
-    IWindowStartupService? _Service;
+    IService? _Service;
 
     Window? _AssociatedObject;
     BindableObject? IAttachedObject.AssociatedObject => _AssociatedObject;

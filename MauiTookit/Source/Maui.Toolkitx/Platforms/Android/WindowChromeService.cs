@@ -1,7 +1,7 @@
 ﻿namespace Maui.Toolkitx;
 
 // All the code in this file is only included on Android.
-internal class WindowChromeService : IWindowChromeService
+internal class WindowChromeService : IWindowChromeService, IService
 {
     public WindowChromeService(Window window, WindowChrome windowChrome)
     {

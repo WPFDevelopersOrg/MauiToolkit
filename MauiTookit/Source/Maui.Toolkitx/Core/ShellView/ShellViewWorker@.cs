@@ -10,7 +10,7 @@ internal partial class ShellViewWorker : IAttachedObject
     readonly ShellView _ShellView;
 
     bool _IsAttached = false;
-    IShellViewService? _Service;
+    IService? _Service;
  
     Window? _AssociatedObject;
     BindableObject? IAttachedObject.AssociatedObject => _AssociatedObject;

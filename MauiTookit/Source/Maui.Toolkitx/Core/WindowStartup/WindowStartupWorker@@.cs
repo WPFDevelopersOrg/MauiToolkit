@@ -3,7 +3,7 @@
 namespace Maui.Toolkitx.Core;
 internal partial class WindowStartupWorker : IProvider<IWindowStartupService>
 {
-    IWindowStartupService? IProvider<IWindowStartupService>.GetService() => _Service;
+    IWindowStartupService? IProvider<IWindowStartupService>.GetService() => _Service as IWindowStartupService;
 
     object? IProvider.GetService(Type serviceType)
     {

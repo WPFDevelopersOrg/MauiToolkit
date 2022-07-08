@@ -11,7 +11,7 @@ using MicrosoftuixamlData = Microsoft.UI.Xaml.Data;
 namespace Maui.Toolkitx;
 
 // All the code in this file is only included on Windows.
-internal partial class WindowChromeService : IWindowChromeService
+internal partial class WindowChromeService : IService
 {
     public WindowChromeService(Window window, WindowChrome windowChrome)
     {
