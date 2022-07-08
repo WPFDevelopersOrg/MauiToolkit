@@ -14,7 +14,6 @@ public partial class ShellView
         target.RemoveBinding(ShellView.ShellViewProperty);
     }
 
-
     private static void ShellViewPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         if (bindable is not Window window)

@@ -14,15 +14,18 @@ internal partial class WindowStartupService
         _BackdropService?.Stop();
         _BackdropService = default;
 
+        if (_WinUIWindow is null)
+            return false;
+
         switch (kind)
         {
             case BackdropsKind.Default:
                 break;
             case BackdropsKind.Mica:
-                _BackdropService = new WinuiMicaController(_Window, config);
+                _BackdropService = new WinuiMicaController(_WinUIWindow, config);
                 break;
             case BackdropsKind.Acrylic:
-                _BackdropService = new WinuiAcrylicController(_Window, config);
+                _BackdropService = new WinuiAcrylicController(_WinUIWindow, config);
                 break;
             case BackdropsKind.BlurEffect:
                 break;
@@ -49,6 +52,23 @@ internal partial class WindowStartupService
 
         _AppWindow.MoveInZOrderAtTop();
         //_AppWindow.ShowOnceWithRequestedStartupState();
+        return true;
+    }
+
+    bool ShowWindow(WindowPresenterKind kind, WindowAlignment alignment, Size size)
+    {
+        switch (kind)
+        {
+            case WindowPresenterKind.Maximize:
+            case WindowPresenterKind.FullScreen:
+                ShowPresenter(kind);
+                break;
+            default:
+                MoveWindow(alignment, size);
+                ShowPresenter(kind);
+                break;
+        }
+
         return true;
     }
 
@@ -83,6 +103,12 @@ internal partial class WindowStartupService
             return false;
 
         var displyArea = MicrosoftuiWindowing.DisplayArea.Primary;
+        //获取焦点屏幕
+        if (true)
+        {
+
+        }
+
         double scalingFactor = _WinUIWindow.GetDisplayDensity();
 
         var width = size.Width * scalingFactor;

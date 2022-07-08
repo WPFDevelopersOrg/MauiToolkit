@@ -33,6 +33,7 @@ internal partial class WindowStartupWorker : IAttachedObject
             _Service?.Run();
         }
 
+        window.HandlerChanging += Window_HandlerChanging;
         window.HandlerChanged += Window_HandlerChanged;
         window.Created += Window_Created;
         window.Destroying += Window_Destroying;
@@ -47,6 +48,7 @@ internal partial class WindowStartupWorker : IAttachedObject
 
         if (_AssociatedObject is not null)
         {
+            _AssociatedObject.HandlerChanging -= Window_HandlerChanging;
             _AssociatedObject.HandlerChanged -= Window_HandlerChanged;
             _AssociatedObject.Created -= Window_Created;
             _AssociatedObject.Destroying -= Window_Destroying;
@@ -62,6 +64,19 @@ internal partial class WindowStartupWorker : IAttachedObject
     private void Window_Created(object? sender, EventArgs e)
     {
 
+    }
+
+    private void Window_HandlerChanging(object? sender, HandlerChangingEventArgs e)
+    {
+        if (_Service is not null)
+            return;
+
+        if (sender is not Window window)
+            return;
+
+        //_Service = PlatformHelper.GetPlatformWindowStartupSevice(window, _WindowStartup);
+        //_Service = PlatformHelper.GetPlatformWindowStartupSevice(window, e.NewHandler, _WindowStartup);
+        //_Service?.Run();
     }
 
     private void Window_HandlerChanged(object? sender, EventArgs e)

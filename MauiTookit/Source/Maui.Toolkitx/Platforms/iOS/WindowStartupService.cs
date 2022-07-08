@@ -14,6 +14,15 @@ internal partial class WindowStartupService : IWindowStartupService
 
     }
 
+    public WindowStartupService(Window window, IElementHandler handler, WindowStartup windowStartup)
+    {
+        ArgumentNullException.ThrowIfNull(window);
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(windowStartup);
+        _Window = window;
+        _WindowStartup = windowStartup;
+    }
+
     readonly Window _Window;
     readonly WindowStartup _WindowStartup;
 

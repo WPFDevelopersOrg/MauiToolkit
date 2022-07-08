@@ -11,9 +11,9 @@ namespace Maui.Toolkitx.Platforms.Windows.Controllers;
 
 internal class WinuiAcrylicController : IService
 {
-    public WinuiAcrylicController(Window window, BackdropConfigurations config)
+    public WinuiAcrylicController(MicrosoftuiXaml.Window window, BackdropConfigurations config)
     {
-        _Window = window.Handler.PlatformView as MicrosoftuiXaml.Window;
+        _Window = window;
         SystemDispatcherQueue.Instance.EnsureWindowsSystemDispatcherQueueController();
 
         _BackdropConfigurations = config;

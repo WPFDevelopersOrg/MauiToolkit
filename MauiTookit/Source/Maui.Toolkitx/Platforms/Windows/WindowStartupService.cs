@@ -17,6 +17,17 @@ internal partial class WindowStartupService : IWindowStartupService
         _AppWindow = _WinUIWindow?.GetAppWindow();
     }
 
+    public WindowStartupService(Window window, IElementHandler handler, WindowStartup windowStartup)
+    {
+        ArgumentNullException.ThrowIfNull(window);
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(windowStartup);
+        _Window = window;
+        _WindowStartup = windowStartup;
+        _WinUIWindow = handler.PlatformView as MicrosoftuiXaml.Window;
+        _AppWindow = _WinUIWindow?.GetAppWindow();
+    }
+
     readonly Window _Window;
     readonly WindowStartup _WindowStartup;
 
@@ -28,8 +39,7 @@ internal partial class WindowStartupService : IWindowStartupService
     {
         SwitchBackdrop(_WindowStartup.BackdropsKind, _WindowStartup.BackdropConfigurations);
         ShownInSwitchers(_WindowStartup.ShowInSwitcher);
-        MoveWindow(_WindowStartup.WindowAlignment, new Size(_WindowStartup.Width, _WindowStartup.Height));
-        ShowPresenter(_WindowStartup.WindowPresenterKind);
+        ShowWindow(_WindowStartup.WindowPresenterKind, _WindowStartup.WindowAlignment, new Size(_WindowStartup.Width, _WindowStartup.Height));
         ShowInTopMost(_WindowStartup.TopMost);
 
         return true;

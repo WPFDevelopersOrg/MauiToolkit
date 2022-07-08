@@ -1,4 +1,5 @@
 ﻿namespace Maui.Toolkitx.Config;
+
 public class BackdropConfigurations : BindableObject
 {
     public static readonly BindableProperty IsHighContrastProperty =

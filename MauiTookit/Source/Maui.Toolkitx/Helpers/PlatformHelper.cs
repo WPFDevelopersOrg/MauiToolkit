@@ -32,6 +32,21 @@ public class PlatformHelper
 #endif
     }
 
+    internal static IWindowStartupService? GetPlatformWindowStartupSevice(Window window, IElementHandler handler, WindowStartup windowStartup)
+    {
+        if (window is null)
+            return default;
+
+        if (handler is null)
+            return default;
+
+#if WINDOWS || MACCATALYST || IOS || ANDROID
+        return new WindowStartupService(window, handler, windowStartup);
+#else
+        return default;
+#endif
+    }
+
     internal static IShellViewService? GetShellViewService(Window window, ShellView shellView)
     {
         if (window is null)

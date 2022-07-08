@@ -4,18 +4,21 @@ namespace Maui.Toolkitx.Core;
 
 internal partial class ShellViewWorker : IProvider<IShellViewService>
 {
-    IShellViewService? IProvider<IShellViewService>.GetService()
-    {
-        throw new NotImplementedException();
-    }
+    IShellViewService? IProvider<IShellViewService>.GetService() => _Service;
 
     object? IProvider.GetService(Type serviceType)
     {
-        throw new NotImplementedException();
+        if (serviceType != typeof(IWindowChromeService))
+            return default;
+
+        return _Service;
     }
 
     public T? GetService<T>()
     {
-        throw new NotImplementedException();
+        if (_Service is T tValue)
+            return tValue;
+
+        return default;
     }
 }

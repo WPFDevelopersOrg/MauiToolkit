@@ -44,6 +44,10 @@ public partial class App : Application
             options.CaptionHeight = 45d;
             options.CaptionActiveBackgroundColor = Colors.Transparent;
             options.WindowTitleBarKind = Maui.Toolkitx.Options.WindowTitleBarKind.Default;
+        }).UseShellView(options => 
+        {
+            options.IsSearchBarVisible = true;
+            options.IsPaneToggleButtonVisible = true;
         });
 
         return window;

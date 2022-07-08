@@ -11,9 +11,9 @@ namespace Maui.Toolkitx.Platforms.Windows.Controllers;
 
 internal class WinuiMicaController : IService
 {
-    public WinuiMicaController(Window window, BackdropConfigurations config)
+    public WinuiMicaController(MicrosoftuiXaml.Window window, BackdropConfigurations config)
     {
-        _Window = window.Handler.PlatformView as MicrosoftuiXaml.Window;
+        _Window = window;
         SystemDispatcherQueue.Instance.EnsureWindowsSystemDispatcherQueueController();
 
         _BackdropConfigurations = config;
