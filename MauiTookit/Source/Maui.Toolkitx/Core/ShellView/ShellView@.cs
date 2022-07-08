@@ -7,7 +7,7 @@ public partial class ShellView : BindableObject
                            BindableProperty.Create(propertyName: nameof(BackButtonVisible),
                                                    returnType: typeof(Visibility),
                                                    declaringType: typeof(ShellView),
-                                                   defaultValue: Visibility.Visible,
+                                                   defaultValue: Visibility.Hidden,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty IsPaneToggleButtonVisibleProperty =
@@ -28,7 +28,7 @@ public partial class ShellView : BindableObject
                            BindableProperty.Create(propertyName: nameof(SettingConfigurations),
                                                    returnType: typeof(SettingConfigurations),
                                                    declaringType: typeof(ShellView),
-                                                   defaultValue: default,
+                                                   defaultValue: new SettingConfigurations { Margin = new Thickness(0,5,0,10)},
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty IsSearchBarVisibleProperty =
@@ -42,7 +42,7 @@ public partial class ShellView : BindableObject
                            BindableProperty.Create(propertyName: nameof(SearchBarConfigurations),
                                                    returnType: typeof(SearchBarConfigurations),
                                                    declaringType: typeof(ShellView),
-                                                   defaultValue: default,
+                                                   defaultValue: new SearchBarConfigurations { PlaceholderText = "Query"},
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty BackgroundProperty =

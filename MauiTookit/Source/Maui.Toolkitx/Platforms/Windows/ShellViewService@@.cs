@@ -10,7 +10,7 @@ internal partial class ShellViewService
 {
     private void RootNavigationView_Loaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
     {
-        
+        LoadSettings(_ShellView.IsSettingVisible, _ShellView.SettingConfigurations);
     }
 
     private void RootNavigationView_SelectionChanged(MicrosoftuixamlControls.NavigationView sender, MicrosoftuixamlControls.NavigationViewSelectionChangedEventArgs args)
@@ -24,6 +24,28 @@ internal partial class ShellViewService
         _ShellView.SettingConfigurations.Selected?.Execute(default);
     }
 
+
+    bool LoadBackground(Color? color)
+    {
+        if (_RootNavigationView is null)
+            return false;
+
+        _RootNavigationView.Background = color?.ToPlatform();
+
+        return true;
+    }
+
+    bool LoadContentBackground(Color? color)
+    {
+        if (_RootNavigationView is null)
+            return false;
+
+        var navigationViewContent = _RootNavigationView.Content;
+        if (navigationViewContent is MauiNavigationView mauiNavigationView)
+            mauiNavigationView.Background = color?.ToPlatform();
+
+        return true;
+    }
 
     bool LoadBackButton(Visibility visibility)
     {

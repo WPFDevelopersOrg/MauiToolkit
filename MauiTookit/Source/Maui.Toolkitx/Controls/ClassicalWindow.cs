@@ -43,7 +43,7 @@ public class ClassicalWindow : Window
                            BindableProperty.Create(propertyName: nameof(WindowPresenterKind),
                                                    returnType: typeof(WindowPresenterKind),
                                                    declaringType: typeof(ClassicalWindow),
-                                                   defaultValue: WindowPresenterKind.Maximize,
+                                                   defaultValue: WindowPresenterKind.Default,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty TopMostProperty =

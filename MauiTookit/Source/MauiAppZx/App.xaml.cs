@@ -47,7 +47,10 @@ public partial class App : Application
         }).UseShellView(options => 
         {
             options.IsSearchBarVisible = true;
+            options.IsSettingVisible = true;
             options.IsPaneToggleButtonVisible = true;
+            //options.Background = Colors.Red;
+            //options.ContentBackground = Colors.Blue;
         });
 
         return window;

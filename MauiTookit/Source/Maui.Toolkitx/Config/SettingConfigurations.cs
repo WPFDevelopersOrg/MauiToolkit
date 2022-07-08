@@ -10,19 +10,19 @@ public class SettingConfigurations : BindableObject
 
     public static readonly BindableProperty HeightProperty =
                            BindableProperty.Create(propertyName: nameof(Height),
-                                                   returnType: typeof(double),
+                                                   returnType: typeof(double?),
                                                    declaringType: typeof(SettingConfigurations),
                                                    defaultValue: default);
 
     public static readonly BindableProperty WidthProperty =
                            BindableProperty.Create(propertyName: nameof(Width),
-                                                   returnType: typeof(double),
+                                                   returnType: typeof(double?),
                                                    declaringType: typeof(SettingConfigurations),
                                                    defaultValue: default);
 
     public static readonly BindableProperty MarginProperty =
                            BindableProperty.Create(propertyName: nameof(Margin),
-                                                   returnType: typeof(Thickness),
+                                                   returnType: typeof(Thickness?),
                                                    declaringType: typeof(SettingConfigurations),
                                                    defaultValue: default);
 

@@ -46,8 +46,10 @@ internal partial class ShellViewService : IShellViewService
             _RootNavigationView.SelectionChanged += RootNavigationView_SelectionChanged; 
         }
 
+        LoadBackground(_ShellView.Background);
+        LoadContentBackground(_ShellView.ContentBackground);
         LoadBackButton(_ShellView.BackButtonVisible);
-        LoadSettings(_ShellView.IsSettingVisible, _ShellView.SettingConfigurations);
+        //LoadSettings(_ShellView.IsSettingVisible, _ShellView.SettingConfigurations);
         LoadSearchBar(_ShellView.IsSearchBarVisible, _ShellView.SearchBarConfigurations);
         LoadToggleButton(_ShellView.IsPaneToggleButtonVisible);
 

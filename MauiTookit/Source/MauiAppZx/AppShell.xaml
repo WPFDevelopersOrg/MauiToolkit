@@ -3,12 +3,46 @@
     x:Class="MauiAppZx.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sys="clr-namespace:System;assembly=netstandard"
     xmlns:local="clr-namespace:MauiAppZx"
-    Shell.FlyoutBehavior="Disabled" BackgroundColor="Transparent">
+    Shell.FlyoutBehavior="Locked" 
+    BackgroundColor="Transparent"
+    FlyoutBackgroundColor="Transparent"
+    FlyoutIsPresented="False"
+    FlyoutWidth="180"
+    FlyoutIcon="im_hospital.png"
+    Shell.NavBarIsVisible="False">
+
+    <Shell.FlyoutHeader>
+        <StackLayout IsVisible="{OnPlatform MacCatalyst=False}">
+            <Image Aspect="AspectFill"
+                   Source="im_endoc.png" 
+                   Opacity="0.6" />
+            <Label Text="Animals"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center" />
+        </StackLayout>
+    </Shell.FlyoutHeader>
 
     <ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
+
+    <Shell.FlyoutFooter>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Text="Xaminals"
+               FontAttributes="Bold"
+               HorizontalOptions="Center" />
+            <Label Grid.Row="1" Text="{Binding Source={x:Static sys:DateTime.Now}, StringFormat='{0:MMMM dd, yyyy}'}"
+               HorizontalOptions="Center" />
+        </Grid>
+    </Shell.FlyoutFooter>
 
 </Shell>
