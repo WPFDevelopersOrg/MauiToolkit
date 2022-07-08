@@ -1,4 +1,5 @@
 ﻿using Maui.Toolkitx.Config;
+using Maui.Toolkitx.Controls;
 using System.Runtime.CompilerServices;
 
 namespace Maui.Toolkitx;
@@ -54,6 +55,13 @@ public partial class WindowStartup : BindableObject
                                                    defaultValue: default,
                                                    propertyChanged: OnProperyChanged);
 
+    public static readonly BindableProperty IsShowFllowMouseProperty =
+                           BindableProperty.Create(propertyName: nameof(IsShowFllowMouse),
+                                                   returnType: typeof(bool),
+                                                   declaringType: typeof(WindowStartup),
+                                                   defaultValue: true,
+                                                   propertyChanged: OnProperyChanged);
+
     public static readonly BindableProperty BackdropConfigurationsProperty =
                            BindableProperty.Create(propertyName: nameof(BackdropConfigurations),
                                                    returnType: typeof(BackdropConfigurations),
@@ -95,6 +103,12 @@ public partial class WindowStartup : BindableObject
     {
         get => (WindowAlignment)GetValue(WindowAlignmentProperty);
         set => SetValue(WindowAlignmentProperty, value);
+    }
+
+    public bool IsShowFllowMouse
+    {
+        get => (bool)GetValue(IsShowFllowMouseProperty);
+        set => SetValue(IsShowFllowMouseProperty, value);
     }
 
     public BackdropsKind BackdropsKind

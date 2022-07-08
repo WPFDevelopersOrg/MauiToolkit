@@ -21,6 +21,7 @@ public partial class App : Application
         {
             Width = 800d,
             Height = 600d,
+            IsShowFllowMouse = true,
             Title = PlatformShared.GetApplicationName(),
             BackdropsKind = Maui.Toolkitx.Options.BackdropsKind.Mica,
             Page = MainPage,

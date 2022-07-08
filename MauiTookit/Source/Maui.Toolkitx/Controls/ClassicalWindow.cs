@@ -24,7 +24,6 @@ public class ClassicalWindow : Window
         }
     }
 
-
     public static readonly BindableProperty WidthProperty =
                            BindableProperty.Create(propertyName: nameof(Width),
                                                    returnType: typeof(double),
@@ -66,6 +65,14 @@ public class ClassicalWindow : Window
                                                    declaringType: typeof(ClassicalWindow),
                                                    defaultValue: WindowAlignment.Center,
                                                    propertyChanged: OnProperyChanged);
+
+    public static readonly BindableProperty IsShowFllowMouseProperty =
+                           BindableProperty.Create(propertyName: nameof(IsShowFllowMouse),
+                                                   returnType: typeof(bool),
+                                                   declaringType: typeof(ClassicalWindow),
+                                                   defaultValue: true,
+                                                   propertyChanged: OnProperyChanged);
+
 
     public static readonly BindableProperty BackdropsKindProperty =
                            BindableProperty.Create(propertyName: nameof(BackdropsKind),
@@ -125,6 +132,12 @@ public class ClassicalWindow : Window
         set => SetValue(WindowAlignmentProperty, value);
     }
 
+    public bool IsShowFllowMouse
+    { 
+        get => (bool)GetValue(IsShowFllowMouseProperty);
+        set => SetValue(IsShowFllowMouseProperty, value);
+    }
+
     public BackdropsKind BackdropsKind
     {
         get => (BackdropsKind)GetValue(BackdropsKindProperty);
@@ -173,6 +186,9 @@ public class ClassicalWindow : Window
                 break;
             case nameof(WindowAlignment):
                 startup.WindowAlignment = WindowAlignment;
+                break;
+            case nameof(IsShowFllowMouse):
+                startup.IsShowFllowMouse = IsShowFllowMouse;
                 break;
             case nameof(BackdropConfigurations):
                 startup.BackdropConfigurations = BackdropConfigurations;

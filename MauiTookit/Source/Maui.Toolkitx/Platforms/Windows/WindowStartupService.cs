@@ -39,7 +39,7 @@ internal partial class WindowStartupService : IWindowStartupService
     {
         SwitchBackdrop(_WindowStartup.BackdropsKind, _WindowStartup.BackdropConfigurations);
         ShownInSwitchers(_WindowStartup.ShowInSwitcher);
-        ShowWindow(_WindowStartup.WindowPresenterKind, _WindowStartup.WindowAlignment, new Size(_WindowStartup.Width, _WindowStartup.Height));
+        ShowWindow(_WindowStartup.WindowPresenterKind, _WindowStartup.IsShowFllowMouse, _WindowStartup.WindowAlignment, new Size(_WindowStartup.Width, _WindowStartup.Height));
         ShowInTopMost(_WindowStartup.TopMost);
 
         return true;

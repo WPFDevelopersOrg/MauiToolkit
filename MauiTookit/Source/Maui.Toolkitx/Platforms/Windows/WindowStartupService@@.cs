@@ -3,6 +3,7 @@ using Maui.Toolkitx.Platforms.Windows.Controllers;
 using Microsoft.Maui.Platform;
 using static PInvoke.User32;
 using MicrosoftuiWindowing = Microsoft.UI.Windowing;
+using WindowsGraphics = Windows.Graphics;
 
 namespace Maui.Toolkitx;
 
@@ -55,7 +56,7 @@ internal partial class WindowStartupService
         return true;
     }
 
-    bool ShowWindow(WindowPresenterKind kind, WindowAlignment alignment, Size size)
+    bool ShowWindow(WindowPresenterKind kind, bool isFllowMouse , WindowAlignment alignment, Size size)
     {
         switch (kind)
         {
@@ -64,7 +65,7 @@ internal partial class WindowStartupService
                 ShowPresenter(kind);
                 break;
             default:
-                MoveWindow(alignment, size);
+                MoveWindow(isFllowMouse, alignment, size);
                 ShowPresenter(kind);
                 break;
         }
@@ -94,7 +95,7 @@ internal partial class WindowStartupService
         return true;
     }
 
-    bool MoveWindow(WindowAlignment alignment, Size size)
+    bool MoveWindow(bool isFllowMouse, WindowAlignment alignment, Size size)
     {
         if (_WinUIWindow is null)
             return false;
@@ -103,10 +104,12 @@ internal partial class WindowStartupService
             return false;
 
         var displyArea = MicrosoftuiWindowing.DisplayArea.Primary;
-        //获取焦点屏幕
-        if (true)
+        //获取焦点屏幕 根据鼠标获取当前激活的屏幕
+        if (isFllowMouse)
         {
-
+            var vPoint =  GetCursorPos();
+            var vInt32Point = new WindowsGraphics.PointInt32(vPoint.x, vPoint.y);
+            displyArea = MicrosoftuiWindowing.DisplayArea.GetFromPoint(vInt32Point, MicrosoftuiWindowing.DisplayAreaFallback.None);
         }
 
         double scalingFactor = _WinUIWindow.GetDisplayDensity();
