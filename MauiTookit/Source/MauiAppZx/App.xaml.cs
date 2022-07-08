@@ -50,6 +50,7 @@ public partial class App : Application
             options.IsSearchBarVisible = true;
             options.IsSettingVisible = true;
             options.IsPaneToggleButtonVisible = true;
+            options.SettingConfigurations.Height = 35;
             //options.Background = Colors.Red;
             //options.ContentBackground = Colors.Blue;
         });
