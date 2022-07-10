@@ -1,5 +1,7 @@
 ﻿using Maui.Toolkitx.Platforms.Windows.Runtimes;
 using Maui.Toolkitx.Platforms.Windows.Runtimes.Shell32;
+using MicrosoftuixamlcontrolsPrimitives = Microsoft.UI.Xaml.Controls.Primitives;
+using MicrosoftuixamlControls = Microsoft.UI.Xaml.Controls;
 using PInvoke;
 using static PInvoke.User32;
 
@@ -65,6 +67,30 @@ internal partial class StatusBarService
 
     bool Show()
     {
+        //MicrosoftuixamlcontrolsPrimitives.Popup popup = new();
+        //popup.PlacementTarget = 
+        //popup.IsLightDismissEnabled = true;
+        //popup.Height = 100; 
+        //popup.Width = 100;
+        //popup.DesiredPlacement = MicrosoftuixamlcontrolsPrimitives.PopupPlacementMode.Top;
+        //popup.IsOpen = true;
+
+        MicrosoftuixamlControls.Flyout flyout = new();
+
+        //flyout.AreOpenCloseAnimationsEnabled = true;
+        //flyout.LightDismissOverlayMode = MicrosoftuixamlControls.LightDismissOverlayMode.Auto;
+        //flyout.ShowMode = MicrosoftuixamlcontrolsPrimitives.FlyoutShowMode.TransientWithDismissOnPointerMoveAway;
+        //flyout.ShowAt(null);
+
+        
+
+        //MicrosoftuixamlControls.MenuFlyout menuBar = new();
+        //menuBar.Chi
+        //menuBar.Chi.Add(new MicrosoftuixamlControls.MenuBarItem() { Title = "1231231"});
+        //menuBar.Items.Add(new MicrosoftuixamlControls.MenuBarItem() { Title = "232323"});
+        //menuBar.Items.Add(new MicrosoftuixamlControls.MenuBarItem() { Title = "343456546"});
+
+        //menuBar.ShowAt()
         lock (this)
         {
             if (Volatile.Read(ref _IsShowIn))
@@ -97,9 +123,16 @@ internal partial class StatusBarService
         {
             IntPtr lparamPtr = (IntPtr)lparam;
 
-            switch (lparamPtr.ToInt64())
+            switch ((WindowMessage)lparamPtr.ToInt64())
             {
-
+                case WindowMessage.WM_LBUTTONDOWN:
+                    break;
+                case WindowMessage.WM_LBUTTONDBLCLK:
+                    break;
+                case WindowMessage.WM_RBUTTONDOWN:
+                    break;
+                default:
+                    break;
             }
         }
 
