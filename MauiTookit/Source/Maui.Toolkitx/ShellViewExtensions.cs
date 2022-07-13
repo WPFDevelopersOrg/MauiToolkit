@@ -10,11 +10,11 @@ public static class ShellViewExtensions
 {
     public static Window UseShellView(this Window window) => window.UseShellView(default);
 
-    public static Window UseShellView(this Window window, Action<ShellView>? configureDelegate)
+    public static Window UseShellView(this Window window, Action<ShellFrame>? configureDelegate)
     {
-        var shellView = new ShellView();
+        var shellView = new ShellFrame();
         configureDelegate?.Invoke(shellView);
-        ShellView.SetShellView(window, shellView);
+        ShellFrame.SetShellFrame(window, shellView);
         return window;
     }
 
@@ -23,7 +23,7 @@ public static class ShellViewExtensions
         if (window == null)
             return default;
 
-        var worker = ShellViewWorker.GetShellViewWorker(window);
+        var worker = ShellFrameWorker.GetShellFrameWorker(window);
         if (worker is not IProvider<IShellViewService> provider)
             return default;
 

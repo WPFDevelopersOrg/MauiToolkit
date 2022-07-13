@@ -6,31 +6,45 @@ using MicrosoftuixamlControls = Microsoft.UI.Xaml.Controls;
 using Windowsgraphics = Windows.Graphics;
 using MicrosoftuixamlData = Microsoft.UI.Xaml.Data;
 using Microsoft.Maui.Platform;
+using Maui.Toolkitx.Extensions;
+using Microsoft.Maui.Controls.Platform;
+using Maui.Toolkitx.Platforms.Windows.Extensions;
 
 namespace Maui.Toolkitx;
 
 internal partial class ShellViewService : IService
 {
-    public ShellViewService(Window window, ShellView shellView)
+    public ShellViewService(Window window, ShellFrame shellView)
     {
         ArgumentNullException.ThrowIfNull(window);
         ArgumentNullException.ThrowIfNull(shellView);
         ArgumentNullException.ThrowIfNull(window.Handler?.PlatformView);
 
+        _Application = MicrosoftuiXaml.Application.Current;
         _Window = window;
         _ShellView = shellView;
 
         _WinuiWindow = window.Handler.PlatformView as MicrosoftuiXaml.Window;
 
-        if (_WinuiWindow?.Content is WindowRootView windowRootView)
+        var mauiContext = _Window.Page?.RequireMauiContext();
+        if (mauiContext is not null)
         {
-            _WindowRootView = windowRootView;
-            _RootNavigationView = windowRootView.NavigationViewControl;
+            var platformElement = window.Page?.ToPlatform() as ShellView;
+            _RootNavigationView = platformElement;
+
+            _WindowRootView = mauiContext.GetNavigationRootManager().RootView as WindowRootView;
         }
+
+        //if (_WinuiWindow?.Content is WindowRootView windowRootView)
+        //{
+        //    _WindowRootView = windowRootView;
+        //    _RootNavigationView = windowRootView.NavigationViewControl;
+        //}
     }
 
+    readonly MicrosoftuiXaml.Application _Application;
     readonly Window _Window;
-    readonly ShellView _ShellView;
+    readonly ShellFrame _ShellView;
 
     readonly MicrosoftuiXaml.Window? _WinuiWindow = default;
     readonly WindowRootView? _WindowRootView = default;

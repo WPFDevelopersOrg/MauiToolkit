@@ -1,8 +1,7 @@
-﻿using Windowsui = Windows.UI;
-using Microsoftui = Microsoft.UI;
-using MicrosoftuixamlMedia = Microsoft.UI.Xaml.Media;
+﻿using Microsoftui = Microsoft.UI;
 using MicrosoftuiXaml = Microsoft.UI.Xaml;
-
+using MicrosoftuixamlMedia = Microsoft.UI.Xaml.Media;
+using Windowsui = Windows.UI;
 
 namespace Maui.Toolkitx.Platforms.Windows.Extensions;
 public static class PlatformExtensions
@@ -20,4 +19,5 @@ public static class PlatformExtensions
 
 
     public static MicrosoftuiXaml.Thickness ToPlatformThickness(this Thickness thickness) => new MicrosoftuiXaml.Thickness(thickness.Left, thickness.Top, thickness.Right, thickness.Bottom);
+
 }

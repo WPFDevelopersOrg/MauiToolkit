@@ -122,7 +122,15 @@ internal partial class ShellViewService
             return false;
 
         _RootNavigationView.IsPaneToggleButtonVisible = isVisible;
+        //_RootNavigationView.CompactPaneLength = 30d;
+        //_RootNavigationView.IsPaneVisible = false;
         //_RootNavigationView.PaneDisplayMode = MicrosoftuiControls.NavigationViewPaneDisplayMode.Top;
+        //_RootNavigationView.CompactModeThresholdWidth = 20;
+
+        //var resource = _Application.Resources;
+        //resource["NavigationBackButtonHeight"] = 40;
+        //resource["NavigationBackButtonWidth"] = 40;
+
         return true;
     }
 

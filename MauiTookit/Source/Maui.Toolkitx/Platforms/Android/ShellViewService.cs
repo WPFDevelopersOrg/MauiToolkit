@@ -3,7 +3,7 @@
 internal partial class ShellViewService : IShellViewService, IService
 {
 
-    public ShellViewService(Window window, ShellView shellView)
+    public ShellViewService(Window window, ShellFrame shellView)
     {
         ArgumentNullException.ThrowIfNull(window);
         ArgumentNullException.ThrowIfNull(shellView);
@@ -13,7 +13,7 @@ internal partial class ShellViewService : IShellViewService, IService
     }
 
     readonly Window _Window;
-    readonly ShellView _ShellView;
+    readonly ShellFrame _ShellView;
 
     bool IService.Run()
     {

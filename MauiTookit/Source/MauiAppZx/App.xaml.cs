@@ -42,9 +42,10 @@ public partial class App : Application
                                              .AddArgument("app.png")
                                              .Build();
 #endif
-            options.CaptionHeight = 45d;
+            options.CaptionHeight = 40d;
             options.CaptionActiveBackgroundColor = Colors.Transparent;
-            options.WindowTitleBarKind = Maui.Toolkitx.Options.WindowTitleBarKind.Default;
+            options.WindowTitleBarKind = Maui.Toolkitx.Options.WindowTitleBarKind.PlatformDefault;
+            options.WindowButtonKind = Maui.Toolkitx.Options.WindowButtonKind.Hide;
         }).UseShellView(options => 
         {
             options.IsSearchBarVisible = true;

@@ -47,7 +47,7 @@ public class PlatformHelper
 #endif
     }
 
-    internal static IService? GetShellViewService(Window window, ShellView shellView)
+    internal static IService? GetShellViewService(Window window, ShellFrame shellView)
     {
         if (window is null)
             return default;

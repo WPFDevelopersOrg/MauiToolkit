@@ -1,13 +1,13 @@
 ﻿namespace Maui.Toolkitx.Core;
 
-internal partial class ShellViewWorker : IAttachedObject
+internal partial class ShellFrameWorker : IAttachedObject
 {
-    public ShellViewWorker(ShellView shellView)
+    public ShellFrameWorker(ShellFrame shellView)
     {
         _ShellView = shellView;
     }
 
-    readonly ShellView _ShellView;
+    readonly ShellFrame _ShellView;
 
     bool _IsAttached = false;
     IService? _Service;

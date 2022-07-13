@@ -1,61 +1,61 @@
 ﻿using Maui.Toolkitx.Config;
 
 namespace Maui.Toolkitx;
-public partial class ShellView : BindableObject
+public partial class ShellFrame : BindableObject
 {
     public static readonly BindableProperty BackButtonVisibleProperty =
                            BindableProperty.Create(propertyName: nameof(BackButtonVisible),
                                                    returnType: typeof(Visibility),
-                                                   declaringType: typeof(ShellView),
+                                                   declaringType: typeof(ShellFrame),
                                                    defaultValue: Visibility.Hidden,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty IsPaneToggleButtonVisibleProperty =
                            BindableProperty.Create(propertyName: nameof(IsPaneToggleButtonVisible),
                                                    returnType: typeof(bool),
-                                                   declaringType: typeof(ShellView),
+                                                   declaringType: typeof(ShellFrame),
                                                    defaultValue: false,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty IsSettingVisibleProperty =
                            BindableProperty.Create(propertyName: nameof(IsSettingVisible),
                                                    returnType: typeof(bool),
-                                                   declaringType: typeof(ShellView),
+                                                   declaringType: typeof(ShellFrame),
                                                    defaultValue: false,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty SettingConfigurationsProperty =
                            BindableProperty.Create(propertyName: nameof(SettingConfigurations),
                                                    returnType: typeof(SettingConfigurations),
-                                                   declaringType: typeof(ShellView),
+                                                   declaringType: typeof(ShellFrame),
                                                    defaultValue: new SettingConfigurations { Margin = new Thickness(0,5,0,10)},
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty IsSearchBarVisibleProperty =
                            BindableProperty.Create(propertyName: nameof(IsSearchBarVisible),
                                                    returnType: typeof(bool),
-                                                   declaringType: typeof(ShellView),
+                                                   declaringType: typeof(ShellFrame),
                                                    defaultValue: false,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty SearchBarConfigurationsProperty =
                            BindableProperty.Create(propertyName: nameof(SearchBarConfigurations),
                                                    returnType: typeof(SearchBarConfigurations),
-                                                   declaringType: typeof(ShellView),
+                                                   declaringType: typeof(ShellFrame),
                                                    defaultValue: new SearchBarConfigurations { PlaceholderText = "Query"},
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty BackgroundProperty =
                            BindableProperty.Create(propertyName: nameof(Background),
                                                    returnType: typeof(Color),
-                                                   declaringType: typeof(ShellView),
+                                                   declaringType: typeof(ShellFrame),
                                                    defaultValue: default,
                                                    propertyChanged: OnProperyChanged);
 
     public static readonly BindableProperty ContentBackgroundProperty =
                            BindableProperty.Create(propertyName: nameof(ContentBackground),
                                                    returnType: typeof(Color),
-                                                   declaringType: typeof(ShellView),
+                                                   declaringType: typeof(ShellFrame),
                                                    defaultValue: default,
                                                    propertyChanged: OnProperyChanged);
 

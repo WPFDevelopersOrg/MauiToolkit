@@ -7,6 +7,9 @@ using Winui = Windows.UI;
 using MicrosoftuixamlControls = Microsoft.UI.Xaml.Controls;
 using Windowsgraphics = Windows.Graphics;
 using MicrosoftuixamlData = Microsoft.UI.Xaml.Data;
+using Maui.Toolkitx.Extensions;
+using Microsoft.Maui.Controls.Platform;
+using Maui.Toolkitx.Platforms.Windows.Extensions;
 
 namespace Maui.Toolkitx;
 
@@ -25,9 +28,19 @@ internal partial class WindowChromeService : IService
 
         _WinUIWindow = _Window.Handler.PlatformView as MicrosoftuiXaml.Window;
         _AppWindow = _WinUIWindow?.GetAppWindow();
+        //WindowRootViewContainer
+        var panel = _WinUIWindow?.Content as MicrosoftuixamlControls.Panel;
+        var mauiContext = _Window.Page?.RequireMauiContext();
+        if (mauiContext is not null)
+        {
+           var platformElement = window.Page?.ToPlatform() as ShellView;
+            _RootNavigationView = platformElement;
 
-        if (_WinUIWindow?.Content is WindowRootView windowRootView)
-            _WindowRootView = windowRootView;
+            _WindowRootView = mauiContext.GetNavigationRootManager().RootView as WindowRootView;
+        }
+
+        //if (_WinUIWindow?.Content is WindowRootView windowRootView)
+        //_WindowRootView = windowRootView;
     }
 
     readonly MicrosoftuiXaml.Application _Application;
@@ -38,7 +51,7 @@ internal partial class WindowChromeService : IService
     readonly MicrosoftuiXaml.Window? _WinUIWindow;
     readonly MicrosoftuiWindowing.AppWindow? _AppWindow;
 
-    RootNavigationView? _RootNavigationView;
+    readonly RootNavigationView? _RootNavigationView;
     MicrosoftuiXaml.FrameworkElement? _TitleBar;
 
     bool _IsTitleBarIsSet = false;
@@ -47,13 +60,13 @@ internal partial class WindowChromeService : IService
 
     bool IService.Run()
     {
-        if (_WindowRootView is null)
-            return false;
+        //if (_WindowRootView is null)
+            //return false;
 
         if (_AppWindow is not null)
             _AppWindow.Changed += AppWindow_Changed;
 
-        _RootNavigationView = _WindowRootView.NavigationViewControl;
+        //_RootNavigationView = _WindowRootView.NavigationViewControl;
         LoadTitleBarColor(_WindowChrome.CaptionActiveBackgroundColor, _WindowChrome.CaptionInactiveBackgroundColor, _WindowChrome.CaptionActiveForegroundColor, _WindowChrome.CaptionInactiveForegroundColor);
         LoadWindowRootViewEvent();
         LoadWindowEvent();
