@@ -12,13 +12,12 @@ public partial class VisualElementAssists
     private static void AcrylicBrushPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         if (bindable is null)
-        {
+            return;
 
-        }
+        if (oldValue is IAttachedObject attachedObject)
+            attachedObject.Detach();
 
-        if (oldValue is not null)
-        {
-
-        }
+        if (newValue is IAttachedObject attachedObject1)
+            attachedObject1.Attach(bindable);
     }
 }

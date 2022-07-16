@@ -9,3 +9,4 @@ global using System.Diagnostics;
 global using System.Reflection;
 global using System.Runtime.InteropServices;
 global using System.Windows.Input;
+global using TimerX = System.Timers.Timer;

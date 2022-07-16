@@ -16,11 +16,9 @@
         <VerticalStackLayout   
             Spacing="25" 
             Padding="30,0" 
+            BackgroundColor="Transparent"
             VerticalOptions="Center">
-            <toolkitx:VisualElementAssists.AcrylicBrush>
-                <toolkitx:MauiAcrylicBrush/>
-            </toolkitx:VisualElementAssists.AcrylicBrush>
-
+         
             <Image
                 Source="dotnet_bot.png"
                 SemanticProperties.Description="Cute dot net bot waving hi to you!"
@@ -47,7 +45,32 @@
                 Text="Click me"
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
+                HorizontalOptions="Center" >
+                <toolkitx:VisualElementAssists.AcrylicBrush>
+                    <toolkitx:MauiAcrylicBrush TintColor="Black" TintOpacity="0.5"  FallbackColor="Green"/>
+                </toolkitx:VisualElementAssists.AcrylicBrush>
+            </Button>
+
+            <Grid WidthRequest="300" HeightRequest="300" >
+                <Border WidthRequest="100" HeightRequest="100" HorizontalOptions="Start" VerticalOptions="Start" BackgroundColor="DeepSkyBlue"></Border>
+                <Border WidthRequest="100" HeightRequest="100"  HorizontalOptions="End" VerticalOptions="End" BackgroundColor="Yellow"></Border>
+                <Border Stroke="#C49B33"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 100,100,100,100"
+                        BackgroundColor="Purple"
+                        HeightRequest="200"
+                        WidthRequest="200"
+                        HorizontalOptions="Center"> 
+                </Border>
+                
+                <Border Margin="10">
+                    <toolkitx:VisualElementAssists.AcrylicBrush>
+                        <toolkitx:MauiAcrylicBrush TintColor="SkyBlue" TintOpacity="0" TintLuminosityOpacity="1"  FallbackColor="SkyBlue"/>
+                    </toolkitx:VisualElementAssists.AcrylicBrush>
+                </Border>
+
+
+            </Grid>
         </VerticalStackLayout>
     </ScrollView>
  

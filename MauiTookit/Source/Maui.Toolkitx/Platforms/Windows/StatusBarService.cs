@@ -56,7 +56,6 @@ internal partial class StatusBarService : IService
         return true;
     }
 
-
     bool IService.Run()
     {
         //启动托盘服务

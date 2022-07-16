@@ -93,4 +93,14 @@ internal partial class StatusBarService : IStatusBarService, IService
     {
         throw new NotImplementedException();
     }
+
+    IDisposable IStatusBarService.Blink(TimeSpan period, Func<bool, string>? action)
+    {
+        throw new NotImplementedException();
+    }
+
+    bool IStatusBarService.StopBlink()
+    {
+        throw new NotImplementedException();
+    }
 }
