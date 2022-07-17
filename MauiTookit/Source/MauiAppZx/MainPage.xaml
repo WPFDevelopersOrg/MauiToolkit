@@ -7,7 +7,6 @@
     <ContentPage.MenuBarItems>
         <MenuBarItem Text="File">
             <MenuFlyoutItem Text="Exit"
-                            
                             Command="{Binding ExitCommand}" />
         </MenuBarItem>
     </ContentPage.MenuBarItems>
@@ -46,9 +45,6 @@
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Center" >
-                <toolkitx:VisualElementAssists.AcrylicBrush>
-                    <toolkitx:MauiAcrylicBrush TintColor="Black" TintOpacity="0.5"  FallbackColor="Green"/>
-                </toolkitx:VisualElementAssists.AcrylicBrush>
             </Button>
 
             <Grid WidthRequest="300" HeightRequest="300" >
@@ -68,7 +64,6 @@
                         <toolkitx:MauiAcrylicBrush TintColor="SkyBlue" TintOpacity="0" TintLuminosityOpacity="1"  FallbackColor="SkyBlue"/>
                     </toolkitx:VisualElementAssists.AcrylicBrush>
                 </Border>
-
 
             </Grid>
         </VerticalStackLayout>
