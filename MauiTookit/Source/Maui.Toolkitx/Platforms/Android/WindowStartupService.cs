@@ -29,18 +29,16 @@ internal partial class WindowStartupService : IWindowStartupService, IService
 
     bool IService.Run()
     {
-
         return true;
     }
 
     bool IService.Stop()
     {
-
         return true;
     }
 
     bool IWindowStartupService.SetBackdropsKind(BackdropsKind kind)
     {
-        throw new NotImplementedException();
+        return true;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Maui.Toolkitx.Config;
+using Maui.Toolkitx.Disposables;
 
 namespace Maui.Toolkitx;
 internal partial class StatusBarService : IStatusBarService, IService
@@ -86,21 +87,21 @@ internal partial class StatusBarService : IStatusBarService, IService
 
     bool IService.Run()
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     bool IService.Stop()
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     IDisposable IStatusBarService.Blink(TimeSpan period, Func<bool, string>? action)
     {
-        throw new NotImplementedException();
+        return new NullDisposable();
     }
 
     bool IStatusBarService.StopBlink()
     {
-        throw new NotImplementedException();
+        return true;
     }
 }

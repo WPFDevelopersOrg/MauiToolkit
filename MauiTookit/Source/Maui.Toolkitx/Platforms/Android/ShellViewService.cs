@@ -17,11 +17,11 @@ internal partial class ShellViewService : IShellViewService, IService
 
     bool IService.Run()
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     bool IService.Stop()
     {
-        throw new NotImplementedException();
+        return true;
     }
 }
