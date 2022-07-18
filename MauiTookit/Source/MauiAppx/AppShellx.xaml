@@ -49,6 +49,19 @@
         </DataTemplate>
         
     </Shell.Resources>
+
+    <Shell.FlyoutHeader>
+         <StackLayout>
+            <Image Aspect="AspectFill"
+               Source="im_endoc.png" 
+               Opacity="0.6" />
+            <Label Text="Animals"
+               TextColor="White"
+               FontAttributes="Bold"
+               HorizontalTextAlignment="Center"
+               VerticalTextAlignment="Center" />
+        </StackLayout>
+    </Shell.FlyoutHeader>
    
     <Shell.SearchHandler>
         <SearchHandler ShowsResults="True" IsSearchEnabled="True" DisplayMemberName="Name" SearchBoxVisibility="Expanded" Placeholder="let me try" />

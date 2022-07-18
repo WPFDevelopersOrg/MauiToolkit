@@ -12,20 +12,13 @@ public partial class AppShellx : Shell
         Routing.RegisterRoute("LoginRouter", typeof(LoginPage));
 
 
-        //if (Resources.TryGetValue("FlyoutHeaderKey", out var value))
-        //    FlyoutHeader = value;
-#if WINDOWS
-
-        if (Resources.TryGetValue("FlyoutHeaderKey", out var value))
-            FlyoutHeader = value;
-
-#elif MACCATALYST
+#if MACCATALYST
         
-        if (Resources.TryGetValue("ShellItemTemplateKey", out var value1))
-        {
-            if (value1 is DataTemplate dataTemplate)
-                ItemTemplate = dataTemplate;
-        }
+        //if (Resources.TryGetValue("ShellItemTemplateKey", out var value1))
+        //{
+            //if (value1 is DataTemplate dataTemplate)
+                //ItemTemplate = dataTemplate;
+        //}
 
 #endif
 
