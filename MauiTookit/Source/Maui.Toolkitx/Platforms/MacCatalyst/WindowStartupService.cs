@@ -41,6 +41,6 @@ internal partial class WindowStartupService : IWindowStartupService, IService
 
     bool IWindowStartupService.SetBackdropsKind(BackdropsKind kind)
     {
-        throw new NotImplementedException();
+        return true;
     }
 }

@@ -8,6 +8,8 @@ public partial class AppShell : Shell
 
         //var xxxx = Application.Current?.Resources["123"];
 
-       Application.Current?.Resources.TryGetValue("Primary", out var color);
+        Application.Current?.Resources.TryGetValue("Primary", out var color);
+
+        //Application.Current.OpenWindow();
     }
 }

@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 namespace Maui.Toolkitx.Controls;
 public class ClassicalWindow : Window
 {
-    public ClassicalWindow()
+    public ClassicalWindow() : base()
     {
         var startup = WindowStartup.GetWindowStartup(this);
         if (startup is null)
@@ -22,6 +22,11 @@ public class ClassicalWindow : Window
 
             WindowStartup.SetWindowStartup(this, startup);
         }
+    }
+
+    public ClassicalWindow(Page page) : this()
+    {
+        Page = page;
     }
 
     public static readonly BindableProperty WidthProperty =

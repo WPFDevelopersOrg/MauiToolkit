@@ -10,13 +10,15 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
-
         MainPage = new AppShell();
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        //var window = base.CreateWindow(activationState);
+        //var baseWindow = base.CreateWindow(activationState) 
+        if (Windows is not null && Windows.Count > 0)
+            return Windows.First();
+
         var window = new ClassicalWindow()
         {
             Width = 800d,
@@ -55,7 +57,7 @@ public partial class App : Application
             //options.Background = Colors.Red;
             //options.ContentBackground = Colors.Blue;
         });
-
+        
         return window;
     }
 }
