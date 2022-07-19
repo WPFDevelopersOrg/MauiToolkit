@@ -1,4 +1,4 @@
-﻿using Maui.Toolkitx.Assists.Compositions;
+﻿using Maui.Toolkitx.Compositions;
 
 namespace Maui.Toolkitx;
 

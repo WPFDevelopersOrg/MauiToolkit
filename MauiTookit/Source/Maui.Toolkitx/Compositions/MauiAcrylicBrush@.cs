@@ -1,6 +1,6 @@
 ﻿using Maui.Toolkitx.Services;
 
-namespace Maui.Toolkitx.Assists.Compositions;
+namespace Maui.Toolkitx.Compositions;
 public partial class MauiAcrylicBrush : IAttachedObject
 {
     public MauiAcrylicBrush()

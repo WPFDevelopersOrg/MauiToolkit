@@ -1,4 +1,4 @@
-﻿using Maui.Toolkitx.Assists.Compositions;
+﻿using Maui.Toolkitx.Compositions;
 using Microsoft.Maui.Platform;
 using Microsoft.UI.Xaml.Media;
 using PlatformControls = Microsoft.UI.Xaml.Controls;

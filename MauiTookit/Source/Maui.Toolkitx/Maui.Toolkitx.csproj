@@ -25,4 +25,12 @@
 		<PackageReference Include="PInvoke.User32" Version="0.7.104" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="Compositions\" />
+	  <None Remove="Primitive\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Compositions\" />
+	  <Folder Include="Primitive\" />
+	</ItemGroup>
 </Project>

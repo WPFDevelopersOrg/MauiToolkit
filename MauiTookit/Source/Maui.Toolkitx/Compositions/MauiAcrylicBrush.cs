@@ -1,4 +1,4 @@
-﻿namespace Maui.Toolkitx.Assists.Compositions;
+﻿namespace Maui.Toolkitx.Compositions;
 public partial class MauiAcrylicBrush : BindableObject
 {
     public static readonly BindableProperty TintColorProperty =
