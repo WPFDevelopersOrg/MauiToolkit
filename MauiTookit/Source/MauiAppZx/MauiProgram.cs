@@ -1,4 +1,6 @@
 ﻿using Maui.Toolkitx;
+using Maui.Toolkitx.Extensions;
+using Maui.Toolkitx.Shared;
 
 namespace MauiAppZx;
 
@@ -10,7 +12,15 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiToolkitx()
-            .UseStatusBar()
+            .UseStatusBar(options =>
+            {
+#if MACCATALYST
+                options.Icon1 = PlatformShared.CreatePathBuilder()
+                                              .AddArgument("Resources")
+                                              .AddArgument("app.png")
+                                              .Build();
+#endif
+            })
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

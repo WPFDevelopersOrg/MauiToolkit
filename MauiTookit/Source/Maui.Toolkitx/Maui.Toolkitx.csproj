@@ -28,9 +28,17 @@
 	<ItemGroup>
 	  <None Remove="Compositions\" />
 	  <None Remove="Primitive\" />
+	  <None Remove="Platforms\MacCatalyst\Runtimes\" />
+	  <None Remove="Platforms\MacCatalyst\Notifications\" />
+	  <None Remove="Platforms\MacCatalyst\Helpers\" />
+	  <None Remove="Platforms\MacCatalyst\Extensions\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Compositions\" />
 	  <Folder Include="Primitive\" />
+	  <Folder Include="Platforms\MacCatalyst\Runtimes\" />
+	  <Folder Include="Platforms\MacCatalyst\Notifications\" />
+	  <Folder Include="Platforms\MacCatalyst\Helpers\" />
+	  <Folder Include="Platforms\MacCatalyst\Extensions\" />
 	</ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Security;
 
-namespace Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
+namespace Maui.Toolkitx.Platforms.MacCatalyst.Runtimes;
 
 public static partial class RuntimeInterop
 {

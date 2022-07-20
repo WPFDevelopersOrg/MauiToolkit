@@ -1,93 +1,107 @@
-﻿using Foundation;
-using Maui.Toolkitx.Config;
-using UIKit;
+﻿using AppKit;
+using CoreGraphics;
+using Foundation;
+using Maui.Toolkitx.Platforms.MacCatalyst.Extensions;
+using Maui.Toolkitx.Platforms.MacCatalyst.Helpers;
+using ObjCRuntime;
 
 namespace Maui.Toolkitx;
-internal partial class StatusBarService : IStatusBarService, IService
+
+internal partial class StatusBarService : NSObject
 {
-
-    public StatusBarService(StatusBarConfigurations config)
+    bool LoadStatusBar()
     {
-        ArgumentNullException.ThrowIfNull(config);
-        _Config = config;
-    }
+        _StatusBar = Runtime.GetNSObject(Class.GetHandle("NSStatusBar"));
+        if (_StatusBar is null)
+            return false;
 
-    readonly StatusBarConfigurations _Config;
+        _SystemStatusBar = _StatusBar.PerformSelector(new Selector("systemStatusBar"));
+        if (_SystemStatusBar is null)
+            return false;
 
-    NSObject? _SystemStatusBar;
-    NSObject? _StatusBar;
-    NSObject? _StatusBarItem;
-    NSObject? _StatusBarButton;
-    UIApplication? _Application;
+        _StatusBarItem = _SystemStatusBar.GetNSObjectFromWithArgument<NFloat>("statusItemWithLength:", 40);
+        if (_StatusBarItem is null)
+            return false;
 
-    IDisposable? _Disposable;
+        _StatusBarButton = _StatusBarItem.GetNsObjectFrom("button");
+        if (_StatusBarButton is null)
+            return false;
 
-    public bool RegisterApplicationEvent(ILifecycleBuilder lifecycleBuilder)
-    {
-        lifecycleBuilder.AddiOS(windowsLeftCycle =>
-        {
-            windowsLeftCycle.OnActivated(app =>
-            {
-
-
-            }).OnResignActivation(app =>
-            {
-
-            }).ContinueUserActivity((app, user, handler) =>
-            {
-
-                return true;
-
-            }).DidEnterBackground(app =>
-            {
-
-            }).WillFinishLaunching((app, options) =>
-            {
-                return true;
-            }).FinishedLaunching((app, options) =>
-            {
-                return true;
-            }).OpenUrl((app, url, options) =>
-            {
-                return true;
-            }).PerformActionForShortcutItem((app, item, handler) =>
-            {
-
-            }).WillEnterForeground(app =>
-            {
-
-            }).WillTerminate(app =>
-            {
-
-            }).SceneWillConnect((scrne, session, options) =>
-            {
-
-            }).SceneDidDisconnect(scene =>
-            {
-
-            });
-        });
+        _StatusBarButton.SetValueForNsobject<IntPtr>("setTarget:", Handle);
+        _StatusBarButton.SetValueForNsobject<IntPtr>("setAction:", new Selector("handleButtonClick:").Handle);
 
         return true;
     }
 
-    bool IService.Run()
+    bool SetImage(string? image)
     {
-        throw new NotImplementedException();
+        if (_StatusBarButton is null)
+            return false;
+
+        IntPtr nsImagePtr = IntPtr.Zero;
+        if (!string.IsNullOrWhiteSpace(image))
+        {
+            if (_NsImage is null)
+            {
+                var statusBarImage = new NSImage(image)
+                {
+                    Size = new CGSize(18, 18),
+                    Template = true,
+                };
+
+                _NsImage = statusBarImage;
+            }
+            else
+            {
+                if (image != _Config.Icon1)
+                {
+                    _NsImage?.Dispose();
+                    var statusBarImage = new NSImage(image)
+                    {
+                        Size = new CGSize(18, 18),
+                        Template = true,
+                    };
+                    _NsImage = statusBarImage;
+                }
+            }
+
+            nsImagePtr = _NsImage.Handle;
+        }
+        
+        _StatusBarButton.SetValueForNsobject<IntPtr>("setImage:", nsImagePtr);
+        _StatusBarButton.SetValueForNsobject<long>("setImagePosition:", 2);
+
+        return true;
     }
 
-    bool IService.Stop()
+    bool UnloadStatusBar()
     {
-        throw new NotImplementedException();
-    }
+        _NsImage?.Dispose();
+        _StatusBarButton?.Dispose();
+        _StatusBarItem?.Dispose();
+        _SystemStatusBar?.Dispose();
+        _StatusBar?.Dispose();
 
-    IDisposable IStatusBarService.Blink(TimeSpan period, Func<bool, string>? action)
-    {
-        throw new NotImplementedException();
+        return true;
     }
+    
 
-    bool IStatusBarService.StopBlink()
+    [Export("handleButtonClick:")]
+    protected void HandleButtonClick(NSObject senderStatusBarButton)
     {
-        throw new NotImplementedException();
+        var mainWindow = _Application?.Windows.FirstOrDefault();
+        if (mainWindow is null)
+            return;
+
+        var sharedApplication = UIWindowExtension.GetSharedNsApplication();
+        if (sharedApplication is null)
+            return;
+
+        sharedApplication.SetValueForNsobject<bool>("activateIgnoringOtherApps:", true);
+
+        var uiNsWindow = mainWindow?.GetHostWidnowForUiWindow();
+        uiNsWindow?.SetValueForNsobject<IntPtr>("makeKeyAndOrderFront:", this.Handle);
+
+        //StatusBarEventChanged?.Invoke(this, new EventArgs());
     }
 }

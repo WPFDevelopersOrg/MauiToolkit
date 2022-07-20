@@ -1,93 +1,43 @@
-﻿using Foundation;
-using Maui.Toolkitx.Config;
-using UIKit;
+﻿using Maui.Toolkitx.Concurrency;
 
 namespace Maui.Toolkitx;
-internal partial class StatusBarService : IStatusBarService, IService
+internal partial class StatusBarService : IStatusBarService
 {
-
-    public StatusBarService(StatusBarConfigurations config)
-    {
-        ArgumentNullException.ThrowIfNull(config);
-        _Config = config;
-    }
-
-    readonly StatusBarConfigurations _Config;
-
-    NSObject? _SystemStatusBar;
-    NSObject? _StatusBar;
-    NSObject? _StatusBarItem;
-    NSObject? _StatusBarButton;
-    UIApplication? _Application;
-
-    IDisposable? _Disposable;
-
-    public bool RegisterApplicationEvent(ILifecycleBuilder lifecycleBuilder)
-    {
-        lifecycleBuilder.AddiOS(windowsLeftCycle =>
-        {
-            windowsLeftCycle.OnActivated(app =>
-            {
-
-
-            }).OnResignActivation(app =>
-            {
-
-            }).ContinueUserActivity((app, user, handler) =>
-            {
-
-                return true;
-
-            }).DidEnterBackground(app =>
-            {
-
-            }).WillFinishLaunching((app, options) =>
-            {
-                return true;
-            }).FinishedLaunching((app, options) =>
-            {
-                return true;
-            }).OpenUrl((app, url, options) =>
-            {
-                return true;
-            }).PerformActionForShortcutItem((app, item, handler) =>
-            {
-
-            }).WillEnterForeground(app =>
-            {
-
-            }).WillTerminate(app =>
-            {
-
-            }).SceneWillConnect((scrne, session, options) =>
-            {
-
-            }).SceneDidDisconnect(scene =>
-            {
-
-            });
-        });
-
-        return true;
-    }
-
-    bool IService.Run()
-    {
-        throw new NotImplementedException();
-    }
-
-    bool IService.Stop()
-    {
-        throw new NotImplementedException();
-    }
-
     IDisposable IStatusBarService.Blink(TimeSpan period, Func<bool, string>? action)
     {
-        throw new NotImplementedException();
+        if (_Disposable is not null)
+            return _Disposable;
+
+        var rate = period.TotalMilliseconds;
+        if (rate <= 0)
+            rate = 500;
+        else if (rate > 1000)
+            rate = 1000;
+
+        period = TimeSpan.FromMilliseconds(rate);
+        var scheduler = new TimestampedScheduler();
+        _Disposable = scheduler;
+
+        scheduler.Run(period, (isFlag, canable) =>
+        {
+            string? path = _Config.Icon1;
+            if (!canable.IsDisposed)
+            {
+                if (isFlag)
+                    path = action?.Invoke(isFlag);
+            }
+            else
+                _Disposable = null;
+
+            SetImage(path);
+        });
+
+        return scheduler;
     }
 
     bool IStatusBarService.StopBlink()
     {
-        throw new NotImplementedException();
+        _Disposable?.Dispose();
+        return true;
     }
 }

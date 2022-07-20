@@ -1,10 +1,10 @@
 ﻿using Foundation;
-using Maui.Toolkit.Platforms.MacCatalyst.Helpers;
-using Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
+using Maui.Toolkitx.Platforms.MacCatalyst.Helpers;
+using Maui.Toolkitx.Platforms.MacCatalyst.Runtimes;
 using ObjCRuntime;
 using UIKit;
 
-namespace Maui.Toolkit.Platforms.MacCatalyst.Extensions;
+namespace Maui.Toolkitx.Platforms.MacCatalyst.Extensions;
 
 public static class UIWindowExtension
 {

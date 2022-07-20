@@ -1,6 +1,6 @@
 ﻿using ObjCRuntime;
 
-namespace Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
+namespace Maui.Toolkitx.Platforms.MacCatalyst.Runtimes;
 internal static class Libraries
 {
     public static class AppKit

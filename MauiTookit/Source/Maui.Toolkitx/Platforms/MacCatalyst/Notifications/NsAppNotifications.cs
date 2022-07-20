@@ -1,8 +1,8 @@
 ﻿using Foundation;
-using Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
+using Maui.Toolkitx.Platforms.MacCatalyst.Runtimes;
 using ObjCRuntime;
 
-namespace Maui.Toolkit.Platforms.MacCatalyst.Notifications;
+namespace Maui.Toolkitx.Platforms.MacCatalyst.Notifications;
 
 public static class NsApplication_Notifications
 {

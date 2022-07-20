@@ -6,7 +6,7 @@ using MapKit;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 
-namespace Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
+namespace Maui.Toolkitx.Platforms.MacCatalyst.Runtimes;
 
 public static partial class RuntimeInterop
 {

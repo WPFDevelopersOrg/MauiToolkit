@@ -1,6 +1,6 @@
 ﻿using ObjCRuntime;
 
-namespace Maui.Toolkit.Platforms.MacCatalyst.Runtimes.AppKit;
+namespace Maui.Toolkitx.Platforms.MacCatalyst.Runtimes.AppKit;
 
 [Native]
 public enum TitlebarTitleVisibility : long

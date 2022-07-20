@@ -1,10 +1,10 @@
 ﻿using CoreGraphics;
 using Foundation;
-using Maui.Toolkit.Platforms.MacCatalyst.Runtimes;
+using Maui.Toolkitx.Platforms.MacCatalyst.Runtimes;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 
-namespace Maui.Toolkit.Platforms.MacCatalyst.Helpers;
+namespace Maui.Toolkitx.Platforms.MacCatalyst.Helpers;
 
 public static class RuntimeHelper
 {

@@ -1,7 +1,10 @@
-﻿using Maui.Toolkitx.Config;
+﻿using AppKit;
+using Foundation;
+using Maui.Toolkitx.Config;
+using UIKit;
 
 namespace Maui.Toolkitx;
-internal partial class StatusBarService : IStatusBarService, IService
+internal partial class StatusBarService : IService
 {
 
     public StatusBarService(StatusBarConfigurations config)
@@ -11,6 +14,15 @@ internal partial class StatusBarService : IStatusBarService, IService
     }
 
     readonly StatusBarConfigurations _Config;
+
+    NSObject? _SystemStatusBar;
+    NSObject? _StatusBar;
+    NSObject? _StatusBarItem;
+    NSObject? _StatusBarButton;
+    NSImage? _NsImage;
+    UIApplication? _Application;
+
+    IDisposable? _Disposable;
 
     public bool RegisterApplicationEvent(ILifecycleBuilder lifecycleBuilder)
     {
@@ -36,6 +48,8 @@ internal partial class StatusBarService : IStatusBarService, IService
                 return true;
             }).FinishedLaunching((app, options) =>
             {
+                _Application = app;
+                ((IService)this).Run();
                 return true;
             }).OpenUrl((app, url, options) =>
             {
@@ -61,23 +75,20 @@ internal partial class StatusBarService : IStatusBarService, IService
         return true;
     }
 
+
     bool IService.Run()
     {
-        throw new NotImplementedException();
-    }
+        LoadStatusBar();
+        SetImage(_Config.Icon1);
+        return true;
+     }
 
     bool IService.Stop()
     {
-        throw new NotImplementedException();
+        SetImage(default);
+        UnloadStatusBar();
+        return true;
     }
 
-    IDisposable IStatusBarService.Blink(TimeSpan period, Func<bool, string>? action)
-    {
-        throw new NotImplementedException();
-    }
 
-    bool IStatusBarService.StopBlink()
-    {
-        throw new NotImplementedException();
-    }
 }

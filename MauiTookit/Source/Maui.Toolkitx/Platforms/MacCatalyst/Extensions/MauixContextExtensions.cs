@@ -1,6 +1,6 @@
 ﻿using UIKit;
 
-namespace Maui.Toolkit.Platforms.MacCatalyst.Extensions;
+namespace Maui.Toolkitx.Platforms.MacCatalyst.Extensions;
 
 public static partial class MauixContextExtensions
 {
