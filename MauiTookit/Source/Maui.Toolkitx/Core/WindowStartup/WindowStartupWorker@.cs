@@ -36,9 +36,15 @@ internal partial class WindowStartupWorker : IAttachedObject
         window.HandlerChanging += Window_HandlerChanging;
         window.HandlerChanged += Window_HandlerChanged;
         window.Created += Window_Created;
+        window.Deactivated += Window_Deactivated;
         window.Destroying += Window_Destroying;
         window.Stopped += Window_Stopped;
         _IsAttached = true;
+    }
+
+    private void Window_Deactivated(object? sender, EventArgs e)
+    {
+        
     }
 
     public void Detach()
@@ -46,19 +52,23 @@ internal partial class WindowStartupWorker : IAttachedObject
         if (!_IsAttached)
             return;
 
-        if (_AssociatedObject is not null)
-        {
-            _AssociatedObject.HandlerChanging -= Window_HandlerChanging;
-            _AssociatedObject.HandlerChanged -= Window_HandlerChanged;
-            _AssociatedObject.Created -= Window_Created;
-            _AssociatedObject.Destroying -= Window_Destroying;
-            _AssociatedObject.Stopped -= Window_Stopped;
-        }
+#if MACCATALYST
+            _Service?.Stop();
+#else
+            if (_AssociatedObject is not null)
+            {
+                _AssociatedObject.HandlerChanging -= Window_HandlerChanging;
+                _AssociatedObject.HandlerChanged -= Window_HandlerChanged;
+                _AssociatedObject.Created -= Window_Created;
+                _AssociatedObject.Destroying -= Window_Destroying;
+                _AssociatedObject.Stopped -= Window_Stopped;
+            }
 
-        _IsAttached = false;
-        _Service?.Stop();
-        _Service = default;
-        _AssociatedObject = default;
+            _IsAttached = false;
+            _Service?.Stop();
+            _Service = default;
+            _AssociatedObject = default;
+#endif
     }
 
     private void Window_Created(object? sender, EventArgs e)

@@ -17,7 +17,11 @@ public partial class App : Application
     {
         //var baseWindow = base.CreateWindow(activationState) 
         if (Windows is not null && Windows.Count > 0)
-            return Windows.First();
+        {
+            var mainWindow = Windows.First();
+            mainWindow.Page = MainPage;
+            return mainWindow;
+        }
 
         var window = new ClassicalWindow()
         {
@@ -25,7 +29,19 @@ public partial class App : Application
             Height = 600d,
             IsShowFllowMouse = true,
             Title = PlatformShared.GetApplicationName(),
+            WindowPresenterKind = Maui.Toolkitx.Options.WindowPresenterKind.Maximize,
+#if MACCATALYST
+            BackdropsKind = Maui.Toolkitx.Options.BackdropsKind.BlurEffect,
+            BackdropConfigurations = new Maui.Toolkitx.Config.BackdropConfigurations
+            {
+                IsHighContrast = false,
+                IsUseBaseKind = true,
+                LuminosityOpacity = 0.9f,
+                TintOpacity = 0.5f
+            },
+#elif WINDOWS
             BackdropsKind = Maui.Toolkitx.Options.BackdropsKind.Mica,
+#endif
             Page = MainPage,
         }.UseWindowChrome(options => 
         {
