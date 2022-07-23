@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:sys="clr-namespace:System;assembly=netstandard"
     xmlns:local="clr-namespace:MauiAppZx"
+    xmlns:views="using:MauiAppZx.Views"
     Shell.FlyoutBehavior="{OnIdiom Phone=Flyout, Default=Locked}" 
     BackgroundColor="Transparent"
     FlyoutBackgroundColor="Transparent"
@@ -27,9 +28,27 @@
     </Shell.FlyoutHeader>
 
     <ShellContent
-        Title="Home"
+        Title="Main"
+        Icon="im_home.png"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
+
+    <ShellContent
+        Title="Home"
+        Icon="im_home.png"
+        ContentTemplate="{DataTemplate views:Home}"
+        Route="HomeRouter" />
+    <ShellContent
+        Title="Sample"
+        Icon="im_apply.png"
+        ContentTemplate="{DataTemplate views:Sample}"
+        Route="ApplyRouter" />
+    <ShellContent
+        Title="Result"
+        Icon="im_result.png"
+        ContentTemplate="{DataTemplate views:Result}"
+        Route="ResultRouter" />
+     
 
     <Shell.FlyoutFooter>
         <Grid>
