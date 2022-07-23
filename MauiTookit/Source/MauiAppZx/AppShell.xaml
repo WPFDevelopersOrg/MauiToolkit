@@ -12,6 +12,8 @@
     FlyoutIsPresented="False"
     FlyoutWidth="180"
     FlyoutIcon="im_hospital.png"
+    Shell.NavBarHasShadow="True"
+    Shell.PresentationMode="Animated" 
     Shell.NavBarIsVisible="{OnIdiom Phone=True, Default=False}">
 
     <Shell.FlyoutHeader>
@@ -32,7 +34,6 @@
         Icon="im_home.png"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
-
     <ShellContent
         Title="Home"
         Icon="im_home.png"
@@ -49,7 +50,6 @@
         ContentTemplate="{DataTemplate views:Result}"
         Route="ResultRouter" />
      
-
     <Shell.FlyoutFooter>
         <Grid>
             <Grid.RowDefinitions>

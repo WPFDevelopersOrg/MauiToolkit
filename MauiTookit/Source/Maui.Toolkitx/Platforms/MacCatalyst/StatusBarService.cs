@@ -6,7 +6,6 @@ using UIKit;
 namespace Maui.Toolkitx;
 internal partial class StatusBarService : IService
 {
-
     public StatusBarService(StatusBarConfigurations config)
     {
         ArgumentNullException.ThrowIfNull(config);

@@ -43,7 +43,8 @@ public partial class App : Application
             BackdropsKind = Maui.Toolkitx.Options.BackdropsKind.Mica,
 #endif
             Page = MainPage,
-        }.UseWindowChrome(options => 
+        }
+        .UseWindowChrome(options =>
         {
 #if WINDOWS
 
@@ -64,7 +65,8 @@ public partial class App : Application
             options.CaptionActiveBackgroundColor = Colors.Transparent;
             options.WindowTitleBarKind = Maui.Toolkitx.Options.WindowTitleBarKind.Default;
             options.WindowButtonKind = Maui.Toolkitx.Options.WindowButtonKind.Show;
-        }).UseShellView(options => 
+        })
+        .UseShellView(options =>
         {
             options.IsSearchBarVisible = true;
             options.IsSettingVisible = true;
@@ -73,7 +75,7 @@ public partial class App : Application
             //options.Background = Colors.Red;
             //options.ContentBackground = Colors.Blue;
         });
-        
+
         return window;
     }
 }
