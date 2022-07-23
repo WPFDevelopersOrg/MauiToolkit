@@ -16,6 +16,10 @@ internal class ArcylicBrushService : IArcylicBrushService
 
     bool IService.Run()
     {
+        LoadEvent();
+
+        _VisualElement.HandlerChanged += VisualElement_HandlerChanged;
+        _AcrylicBrush.PropertyChanged += AcrylicBrush_PropertyChanged;
         return true;
     }
 
@@ -23,4 +27,39 @@ internal class ArcylicBrushService : IArcylicBrushService
     {
         return true;
     }
+
+    bool LoadEvent()
+    {
+        if (_VisualElement.Handler is null)
+            return false;
+
+        if (_VisualElement.Handler.PlatformView is null)
+            return false;
+
+        var platformView = _VisualElement.Handler.PlatformView;
+        
+        return true;
+    }
+
+    bool UnloadEvent()
+    {
+        if (_VisualElement.Handler is null)
+            return false;
+
+        if (_VisualElement.Handler.PlatformView is null)
+            return false;
+
+        var platformView = _VisualElement.Handler.PlatformView;
+      
+
+        return true;
+    }
+
+    private void AcrylicBrush_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        
+    }
+
+    private void VisualElement_HandlerChanged(object? sender, EventArgs e) => LoadEvent();
+
 }

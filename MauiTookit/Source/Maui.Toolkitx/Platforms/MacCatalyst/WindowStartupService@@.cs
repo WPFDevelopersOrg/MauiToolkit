@@ -49,7 +49,9 @@ internal partial class WindowStartupService : NSObject
                     visualEffectView.RightAnchor.ConstraintEqualTo(_PlatformWindow.RightAnchor);
                     visualEffectView.BottomAnchor.ConstraintEqualTo(_PlatformWindow.BottomAnchor);
                     _PlatformWindow.BackgroundColor = null;
-                    _PlatformWindow.InsertSubview(visualEffectView, 0); 
+                    _PlatformWindow.InsertSubview(visualEffectView, 0);
+                    
+                    
                 }
                 break;
             default:

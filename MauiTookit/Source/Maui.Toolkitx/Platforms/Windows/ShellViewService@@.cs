@@ -122,6 +122,8 @@ internal partial class ShellViewService
             return false;
 
         _RootNavigationView.IsPaneToggleButtonVisible = isVisible;
+        _RootNavigationView.RegisterPropertyChangedCallback(MicrosoftuixamlControls.NavigationView.IsPaneOpenProperty, OnIsPaneOpenPropertyCallBack);
+        _RootNavigationView.RegisterPropertyChangedCallback(MicrosoftuixamlControls.NavigationView.IsPaneToggleButtonVisibleProperty, OnIsPaneToggleButtonVisiblePropertyChangedCallBack);
         //_RootNavigationView.CompactPaneLength = 30d;
         //_RootNavigationView.IsPaneVisible = false;
         //_RootNavigationView.PaneDisplayMode = MicrosoftuiControls.NavigationViewPaneDisplayMode.Top;
@@ -137,5 +139,28 @@ internal partial class ShellViewService
     private void SearchBar_QuerySubmitted(MicrosoftuixamlControls.AutoSuggestBox sender, MicrosoftuixamlControls.AutoSuggestBoxQuerySubmittedEventArgs args)
     {
          
+    }
+
+    private void OnIsPaneOpenPropertyCallBack(MicrosoftuiXaml.DependencyObject sender, MicrosoftuiXaml.DependencyProperty dp)
+    {
+        if (!sender.Equals(_RootNavigationView))
+            return;
+
+        //if (!_RootNavigationView.IsPaneOpen)
+        //{
+        //    var content = _RootNavigationView.PaneCustomContent;
+        //}
+    }
+
+    private void OnIsPaneToggleButtonVisiblePropertyChangedCallBack(MicrosoftuiXaml.DependencyObject sender, MicrosoftuiXaml.DependencyProperty dp)
+    {
+        if (!sender.Equals(_RootNavigationView))
+            return;
+
+        if (_RootNavigationView.PaneDisplayMode != MicrosoftuixamlControls.NavigationViewPaneDisplayMode.Left)
+            return;
+
+        if (_RootNavigationView.IsPaneToggleButtonVisible != _ShellView.IsPaneToggleButtonVisible && _ShellView.IsPaneToggleButtonVisible)
+            _RootNavigationView.IsPaneToggleButtonVisible = _ShellView.IsPaneToggleButtonVisible;
     }
 }
