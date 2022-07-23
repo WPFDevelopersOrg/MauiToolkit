@@ -36,7 +36,7 @@ public partial class App : Application
             {
                 IsHighContrast = false,
                 IsUseBaseKind = true,
-                LuminosityOpacity = 0.9f,
+                LuminosityOpacity = 1f,
                 TintOpacity = 0.5f
             },
 #elif WINDOWS

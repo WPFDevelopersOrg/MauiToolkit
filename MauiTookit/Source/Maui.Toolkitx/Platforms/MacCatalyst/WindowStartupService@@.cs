@@ -33,7 +33,7 @@ internal partial class WindowStartupService : NSObject
         {
             case BackdropsKind.BlurEffect:
                 {
-                    //_NsWindow.SetValueForNsobject<NFloat>("setAlphaValue:", new NFloat(options.LuminosityOpacity));
+                    _NsWindow.SetValueForNsobject<NFloat>("setAlphaValue:", new NFloat(options.LuminosityOpacity));
                     _NsWindow.SetValueForNsobject<IntPtr>("setBackgroundColor:", IntPtr.Zero);
                     var contentView = _NsWindow.GetNsobjectFromNsobject("contentView");
                     //if (_PlatformWindow.RootViewController?.View?.BackgroundColor != null)
