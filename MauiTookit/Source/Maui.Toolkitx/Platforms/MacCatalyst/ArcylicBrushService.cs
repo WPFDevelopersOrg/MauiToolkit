@@ -1,4 +1,5 @@
 ﻿using Maui.Toolkitx.Compositions;
+using UIKit;
 
 namespace Maui.Toolkitx;
 
@@ -36,8 +37,22 @@ internal class ArcylicBrushService : IArcylicBrushService
         if (_VisualElement.Handler.PlatformView is null)
             return false;
 
-        var platformView = _VisualElement.Handler.PlatformView;
-        
+        var platformView = _VisualElement.Handler.PlatformView as UIView;
+        if (platformView is null)
+            return false;
+
+        var blurEffect = UIBlurEffect.FromStyle(UIBlurEffectStyle.Light);
+        var visualEffectView = new UIVisualEffectView(blurEffect)
+        {
+            TranslatesAutoresizingMaskIntoConstraints = false,
+        };
+        visualEffectView.TopAnchor.ConstraintEqualTo(platformView.TopAnchor);
+        visualEffectView.LeftAnchor.ConstraintEqualTo(platformView.LeftAnchor);
+        visualEffectView.RightAnchor.ConstraintEqualTo(platformView.RightAnchor);
+        visualEffectView.BottomAnchor.ConstraintEqualTo(platformView.BottomAnchor);
+        platformView.BackgroundColor = null;
+        platformView.InsertSubview(visualEffectView, 0);
+
         return true;
     }
 
