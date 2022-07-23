@@ -1,4 +1,5 @@
-﻿using Maui.Toolkitx.Compositions;
+﻿using CoreGraphics;
+using Maui.Toolkitx.Compositions;
 using UIKit;
 
 namespace Maui.Toolkitx;
@@ -15,47 +16,79 @@ internal class ArcylicBrushService : IArcylicBrushService
     readonly VisualElement _VisualElement;
     readonly MauiAcrylicBrush _AcrylicBrush;
 
+    UIVisualEffectView? _UIVisualEffectView;
+
     bool IService.Run()
     {
         LoadEvent();
+        SetBlurEffect(_VisualElement.Handler?.PlatformView as UIView);
 
-        _VisualElement.HandlerChanged += VisualElement_HandlerChanged;
-        _AcrylicBrush.PropertyChanged += AcrylicBrush_PropertyChanged;
+        UIWindow.Notifications.ObserveDidBecomeVisible((sender, arg) =>
+        {
+            SetBlurEffect(_VisualElement.Handler?.PlatformView as UIView);
+        });
+
+        UIWindow.Notifications.ObserveDidBecomeHidden((sender, arg) =>
+        {
+
+        });
+
+
         return true;
     }
 
+   
     bool IService.Stop()
     {
+        UnloadEvent();
         return true;
     }
 
     bool LoadEvent()
     {
-        if (_VisualElement.Handler is null)
+        _VisualElement.HandlerChanged += VisualElement_HandlerChanged;
+        _AcrylicBrush.PropertyChanged += AcrylicBrush_PropertyChanged;
+        return true;
+    }
+
+    bool SetBlurEffect(UIView? uiView)
+    {
+        if (uiView is null)
             return false;
 
-        if (_VisualElement.Handler.PlatformView is null)
+        if (_UIVisualEffectView is null)
+        {
+            var blurEffect = UIBlurEffect.FromStyle(UIBlurEffectStyle.Light);
+            var visualEffectView = new UIVisualEffectView(blurEffect)
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+            };
+            _UIVisualEffectView = visualEffectView;
+            if (_AcrylicBrush.TintLuminosityOpacity != null)
+                _UIVisualEffectView.Alpha = new NFloat(_AcrylicBrush.TintLuminosityOpacity.Value);
+
+            uiView.BackgroundColor = UIColor.Clear;
+            
+        }
+
+        if (_UIVisualEffectView is null)
             return false;
 
-        var platformView = _VisualElement.Handler.PlatformView as UIView;
-        if (platformView is null)
-            return false;
+        _UIVisualEffectView.Frame = uiView.Bounds;
+        foreach (var item in uiView.Subviews)
+        {
+            if (item.Equals(_UIVisualEffectView))
+                return true;
+        }
 
-        UIView.Notifications.ObserveAnnouncementDidFinish(OnAnnouncementDidFinished);
-
+        uiView.AddSubview(_UIVisualEffectView);
         return true;
     }
 
     bool UnloadEvent()
     {
-        if (_VisualElement.Handler is null)
-            return false;
-
-        if (_VisualElement.Handler.PlatformView is null)
-            return false;
-
-        var platformView = _VisualElement.Handler.PlatformView;
-      
+        _VisualElement.HandlerChanged -= VisualElement_HandlerChanged;
+        _AcrylicBrush.PropertyChanged -= AcrylicBrush_PropertyChanged;
 
         return true;
     }
@@ -65,24 +98,16 @@ internal class ArcylicBrushService : IArcylicBrushService
         
     }
 
-    private void VisualElement_HandlerChanged(object? sender, EventArgs e) => LoadEvent();
-
-    void OnAnnouncementDidFinished(object? sender, UIAccessibilityAnnouncementFinishedEventArgs arg)
+    private void VisualElement_HandlerChanged(object? sender, EventArgs e)
     {
-        if (sender is not UIView platformView)
+        var uiView = _VisualElement.Handler?.PlatformView as UIView;
+        if (uiView is null)
             return;
 
-        var blurEffect = UIBlurEffect.FromStyle(UIBlurEffectStyle.Light);
-        var visualEffectView = new UIVisualEffectView(blurEffect)
-        {
-            TranslatesAutoresizingMaskIntoConstraints = false,
-        };
-        visualEffectView.TopAnchor.ConstraintEqualTo(platformView.TopAnchor);
-        visualEffectView.LeftAnchor.ConstraintEqualTo(platformView.LeftAnchor);
-        visualEffectView.RightAnchor.ConstraintEqualTo(platformView.RightAnchor);
-        visualEffectView.BottomAnchor.ConstraintEqualTo(platformView.BottomAnchor);
-        platformView.BackgroundColor = null;
-        platformView.InsertSubview(visualEffectView, 0);
+        _UIVisualEffectView?.Dispose();
+        _UIVisualEffectView = default;
+
+        SetBlurEffect(uiView);
     }
 
 }

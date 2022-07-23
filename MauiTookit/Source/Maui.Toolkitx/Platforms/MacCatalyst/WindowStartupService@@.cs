@@ -44,14 +44,10 @@ internal partial class WindowStartupService : NSObject
                     {
                         TranslatesAutoresizingMaskIntoConstraints = false,
                     };
-                    visualEffectView.TopAnchor.ConstraintEqualTo(_PlatformWindow.TopAnchor);
-                    visualEffectView.LeftAnchor.ConstraintEqualTo(_PlatformWindow.LeftAnchor);
-                    visualEffectView.RightAnchor.ConstraintEqualTo(_PlatformWindow.RightAnchor);
-                    visualEffectView.BottomAnchor.ConstraintEqualTo(_PlatformWindow.BottomAnchor);
-                    _PlatformWindow.BackgroundColor = null;
+                    visualEffectView.Frame = _PlatformWindow.Bounds;
+                   
+                    _PlatformWindow.BackgroundColor = UIColor.Clear;
                     _PlatformWindow.InsertSubview(visualEffectView, 0);
-                    
-                    
                 }
                 break;
             default:
