@@ -56,7 +56,12 @@ internal partial class WindowStartupService : IService
 
     bool IService.Run()
     {
+        if (_NsWindow is null)
+            return true;
 
+        LoadBackgroundMaterial(_WindowStartup.BackdropsKind, _WindowStartup.BackdropConfigurations);
+        MoveWindow(_WindowStartup.WindowPresenterKind);
+        _IsLoaded = true;
         return true;
     }
 
