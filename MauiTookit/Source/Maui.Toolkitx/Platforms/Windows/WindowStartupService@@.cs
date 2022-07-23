@@ -58,6 +58,7 @@ internal partial class WindowStartupService
 
     bool ShowWindow(WindowPresenterKind kind, bool isFllowMouse , WindowAlignment alignment, Size size)
     {
+        MoveWindow(isFllowMouse, alignment, size);
         switch (kind)
         {
             case WindowPresenterKind.Maximize:
@@ -65,7 +66,6 @@ internal partial class WindowStartupService
                 ShowPresenter(kind);
                 break;
             default:
-                MoveWindow(isFllowMouse, alignment, size);
                 ShowPresenter(kind);
                 break;
         }
