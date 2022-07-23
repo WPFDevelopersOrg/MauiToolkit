@@ -41,17 +41,7 @@ internal class ArcylicBrushService : IArcylicBrushService
         if (platformView is null)
             return false;
 
-        var blurEffect = UIBlurEffect.FromStyle(UIBlurEffectStyle.Light);
-        var visualEffectView = new UIVisualEffectView(blurEffect)
-        {
-            TranslatesAutoresizingMaskIntoConstraints = false,
-        };
-        visualEffectView.TopAnchor.ConstraintEqualTo(platformView.TopAnchor);
-        visualEffectView.LeftAnchor.ConstraintEqualTo(platformView.LeftAnchor);
-        visualEffectView.RightAnchor.ConstraintEqualTo(platformView.RightAnchor);
-        visualEffectView.BottomAnchor.ConstraintEqualTo(platformView.BottomAnchor);
-        platformView.BackgroundColor = null;
-        platformView.InsertSubview(visualEffectView, 0);
+        UIView.Notifications.ObserveAnnouncementDidFinish(OnAnnouncementDidFinished);
 
         return true;
     }
@@ -76,5 +66,23 @@ internal class ArcylicBrushService : IArcylicBrushService
     }
 
     private void VisualElement_HandlerChanged(object? sender, EventArgs e) => LoadEvent();
+
+    void OnAnnouncementDidFinished(object? sender, UIAccessibilityAnnouncementFinishedEventArgs arg)
+    {
+        if (sender is not UIView platformView)
+            return;
+
+        var blurEffect = UIBlurEffect.FromStyle(UIBlurEffectStyle.Light);
+        var visualEffectView = new UIVisualEffectView(blurEffect)
+        {
+            TranslatesAutoresizingMaskIntoConstraints = false,
+        };
+        visualEffectView.TopAnchor.ConstraintEqualTo(platformView.TopAnchor);
+        visualEffectView.LeftAnchor.ConstraintEqualTo(platformView.LeftAnchor);
+        visualEffectView.RightAnchor.ConstraintEqualTo(platformView.RightAnchor);
+        visualEffectView.BottomAnchor.ConstraintEqualTo(platformView.BottomAnchor);
+        platformView.BackgroundColor = null;
+        platformView.InsertSubview(visualEffectView, 0);
+    }
 
 }
