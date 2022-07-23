@@ -377,6 +377,18 @@ public static partial class RuntimeInterop
     /// </summary>
     /// <param name="receiver"></param>
     /// <param name="selector"></param>
+    /// <param name="actionSelector"></param>
+    /// <param name="p1"></param>
+    /// <param name="p2"></param>
+    /// <returns></returns>
+    [DllImport(_ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
+    public extern static IntPtr IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr(IntPtr receiver, IntPtr selector, IntPtr actionSelector , IntPtr p1, IntPtr p2);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="receiver"></param>
+    /// <param name="selector"></param>
     /// <param name="a"></param>
     /// <param name="b"></param>
     /// <returns></returns>

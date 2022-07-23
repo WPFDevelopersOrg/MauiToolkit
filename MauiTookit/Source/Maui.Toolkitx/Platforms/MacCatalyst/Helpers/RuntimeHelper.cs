@@ -185,4 +185,21 @@ public static class RuntimeHelper
         RuntimeInterop.void_objc_msgSend(nsObject.Handle, propertySelector.Handle);
         return true;
     }
+
+    public static NSObject? SetTargetForAction(this NSObject nsObject, string name , string actionName, NSObject from, NSObject to)
+    {
+        if (nsObject is null)
+            return default;
+
+        if (from is null || to is null)
+            return default;
+
+        var propertySelector = new Selector(name);
+        if (!nsObject.RespondsToSelector(propertySelector))
+            return default;
+
+        var actionSelector = new Selector(actionName);
+        var intPtr = RuntimeInterop.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr(nsObject.Handle, propertySelector.Handle, actionSelector.Handle, from.Handle, to.Handle);
+        return Runtime.GetNSObject(intPtr);
+    }
 }

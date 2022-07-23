@@ -18,8 +18,10 @@ internal partial class WindowStartupService : NSObject
         if (_NsApplication is null)
             return false;
 
-        var delegateCallBack = _NsApplication.GetValueFromNsobject<IntPtr>("ApplicationShouldTerminateAfterLastWindowClosed");
+        //var delegateCallBack = _NsApplication.GetValueFromNsobject<IntPtr>("ApplicationShouldTerminateAfterLastWindowClosed");
+        //_NsApplication.SetValueForNsobject<IntPtr>("setApplicationShouldTerminateAfterLastWindowClosed:",  NsApplicationPredicateCallBack);
 
+        var nsObject = _NsApplication.SetTargetForAction("targetForAction:to:from:", "ApplicationShouldTerminateAfterLastWindowClosed:", _NsApplication, this);
         return true;
     }
 
@@ -183,6 +185,7 @@ internal partial class WindowStartupService : NSObject
         _IsLoaded = true;
     }
 
+    [Export("ApplicationShouldTerminateAfterLastWindowClosed:")]
     bool NsApplicationPredicateCallBack(NSObject sender)
     {
         return true;
