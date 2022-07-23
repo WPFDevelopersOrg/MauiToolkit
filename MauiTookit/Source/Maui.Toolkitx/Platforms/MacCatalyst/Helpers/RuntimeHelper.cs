@@ -123,6 +123,15 @@ public static class RuntimeHelper
         return default;
     }
 
+    public static NSObject? GetNsobjectFromNsobject(this NSObject nsObject, string name)
+    {
+        var value = GetValueFromNsobject<IntPtr>(nsObject, name);
+        if (value == IntPtr.Zero)
+            return default;
+
+        return Runtime.GetNSObject(value);
+    }
+
     public static bool SetValueForNsobject<T>(this NSObject nsObject, string name, T value)
     {
         if (nsObject is null)

@@ -3,6 +3,7 @@ using Foundation;
 using Maui.Toolkitx.Config;
 using Maui.Toolkitx.Platforms.MacCatalyst.Extensions;
 using Maui.Toolkitx.Platforms.MacCatalyst.Helpers;
+using Maui.Toolkitx.Platforms.MacCatalyst.Notifications;
 using Maui.Toolkitx.Platforms.MacCatalyst.Runtimes.AppKit;
 using Microsoft.Maui.Platform;
 using System.Diagnostics.CodeAnalysis;
@@ -18,10 +19,8 @@ internal partial class WindowStartupService : NSObject
         if (_NsApplication is null)
             return false;
 
-        //var delegateCallBack = _NsApplication.GetValueFromNsobject<IntPtr>("ApplicationShouldTerminateAfterLastWindowClosed");
-        //_NsApplication.SetValueForNsobject<IntPtr>("setApplicationShouldTerminateAfterLastWindowClosed:",  NsApplicationPredicateCallBack);
 
-        var nsObject = _NsApplication.SetTargetForAction("targetForAction:to:from:", "ApplicationShouldTerminateAfterLastWindowClosed:", _NsApplication, this);
+        NsApplication_Notifications.ObserveWillBecomeActive(ObserveWindowCreatedCallBack);
         return true;
     }
 
@@ -33,7 +32,25 @@ internal partial class WindowStartupService : NSObject
         switch (kind)
         {
             case BackdropsKind.BlurEffect:
-                _NsWindow.SetValueForNsobject<NFloat>("setAlphaValue:", new NFloat(options.LuminosityOpacity));
+                {
+                    //_NsWindow.SetValueForNsobject<NFloat>("setAlphaValue:", new NFloat(options.LuminosityOpacity));
+                    _NsWindow.SetValueForNsobject<IntPtr>("setBackgroundColor:", IntPtr.Zero);
+                    var contentView = _NsWindow.GetNsobjectFromNsobject("contentView");
+                    //if (_PlatformWindow.RootViewController?.View?.BackgroundColor != null)
+                        //s_PlatformWindow.RootViewController.View.BackgroundColor = null;
+
+                    var blurEffect = UIBlurEffect.FromStyle(UIBlurEffectStyle.Light);
+                    var visualEffectView = new UIVisualEffectView(blurEffect)
+                    {
+                        TranslatesAutoresizingMaskIntoConstraints = false,
+                    };
+                    visualEffectView.TopAnchor.ConstraintEqualTo(_PlatformWindow.TopAnchor);
+                    visualEffectView.LeftAnchor.ConstraintEqualTo(_PlatformWindow.LeftAnchor);
+                    visualEffectView.RightAnchor.ConstraintEqualTo(_PlatformWindow.RightAnchor);
+                    visualEffectView.BottomAnchor.ConstraintEqualTo(_PlatformWindow.BottomAnchor);
+                    _PlatformWindow.BackgroundColor = null;
+                    _PlatformWindow.InsertSubview(visualEffectView, 0); 
+                }
                 break;
             default:
                 break;
@@ -185,10 +202,8 @@ internal partial class WindowStartupService : NSObject
         _IsLoaded = true;
     }
 
-    [Export("ApplicationShouldTerminateAfterLastWindowClosed:")]
-    bool NsApplicationPredicateCallBack(NSObject sender)
+    void ObserveWindowCreatedCallBack(object? sender, NSNotificationEventArgs arg)
     {
-        return true;
-    }
 
+    }
 }
