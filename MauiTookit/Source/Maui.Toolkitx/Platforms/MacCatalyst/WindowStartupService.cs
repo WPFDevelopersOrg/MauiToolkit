@@ -56,6 +56,8 @@ internal partial class WindowStartupService : IService
 
     bool IService.Run()
     {
+        LoadApplicationEvent();
+
         if (_NsWindow is null)
             return true;
 

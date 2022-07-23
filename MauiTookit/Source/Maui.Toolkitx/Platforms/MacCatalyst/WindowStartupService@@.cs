@@ -13,6 +13,16 @@ namespace Maui.Toolkitx;
 // All the code in this file is only included on Windows.
 internal partial class WindowStartupService : NSObject
 {
+    bool LoadApplicationEvent()
+    {
+        if (_NsApplication is null)
+            return false;
+
+        var delegateCallBack = _NsApplication.GetValueFromNsobject<IntPtr>("ApplicationShouldTerminateAfterLastWindowClosed");
+
+        return true;
+    }
+
     bool LoadBackgroundMaterial(BackdropsKind kind, BackdropConfigurations options)
     {
         if (_NsWindow is null)
@@ -171,6 +181,11 @@ internal partial class WindowStartupService : NSObject
         MoveWindow(_WindowStartup.WindowPresenterKind);
 
         _IsLoaded = true;
+    }
+
+    bool NsApplicationPredicateCallBack(NSObject sender)
+    {
+        return true;
     }
 
 }
