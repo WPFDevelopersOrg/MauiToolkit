@@ -1,5 +1,7 @@
 ﻿using Maui.Toolkitx.Platforms.Windows.Runtimes;
 using Maui.Toolkitx.Platforms.Windows.Runtimes.Shell32;
+using Maui.Toolkitx.Platforms.Windows.Runtimes.User32;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using PInvoke;
 using static PInvoke.User32;
 
@@ -63,6 +65,23 @@ internal partial class StatusBarService
         return true;
     }
 
+    bool LoadPopupMenu()
+    {
+        m_hMenu = RuntimeInterop.CreatePopupMenu();
+        if (m_hMenu == IntPtr.Zero)
+            return false;
+         
+        AppendMenu(m_hMenu, MenuItemFlags.MF_STRING, new IntPtr(1), "123");
+        AppendMenu(m_hMenu, MenuItemFlags.MF_SEPARATOR, new IntPtr(0), null);
+        AppendMenu(m_hMenu, MenuItemFlags.MF_STRING, new IntPtr(2), "234");
+        AppendMenu(m_hMenu, MenuItemFlags.MF_SEPARATOR, new IntPtr(0), null);
+        AppendMenu(m_hMenu, MenuItemFlags.MF_STRING, new IntPtr(3), "345");
+        AppendMenu(m_hMenu, MenuItemFlags.MF_SEPARATOR, new IntPtr(0), null);
+        AppendMenu(m_hMenu, MenuItemFlags.MF_STRING, new IntPtr(4), "456");
+        
+        return true;
+    }
+
     bool Show()
     {
         lock (this)
@@ -93,21 +112,41 @@ internal partial class StatusBarService
         {
             //UpdateIcon(true);
         }
-        else
+        else if((int)msg == _WmStatusBarMouseMessage)
         {
-            IntPtr lparamPtr = (IntPtr)lparam;
-
-            switch ((WindowMessage)lparamPtr.ToInt64())
+            switch ((WindowMessage)((long)lparam))
             {
                 case WindowMessage.WM_LBUTTONDOWN:
                     break;
                 case WindowMessage.WM_LBUTTONDBLCLK:
                     break;
                 case WindowMessage.WM_RBUTTONDOWN:
+                    {
+                        if (m_hMenu == IntPtr.Zero)
+                            break;
+
+                        var vPoint = GetCursorPos();
+                        RuntimeInterop.TrackPopupMenuEx(m_hMenu, TackMenuFlag.TPM_RIGHTBUTTON, vPoint.x, vPoint.y, _StatusBarWindowHandle, IntPtr.Zero);
+                    }
                     break;
                 default:
                     break;
             }
+        }
+        else if (msg == WindowMessage.WM_COMMAND)
+        {
+            switch ((int)wparam)
+            {
+                case 1:
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        else
+        {
+          
         }
 
         return DefWindowProc(hWnd, msg, (IntPtr)wparam, (IntPtr)lparam);

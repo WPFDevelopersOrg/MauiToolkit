@@ -177,7 +177,6 @@ internal partial class WindowChromeService
 
         //resource["TitleBarHeight"] = 50;
 
-
         TriggertTitleBarRepaint();
 
         return true;
@@ -438,8 +437,6 @@ internal partial class WindowChromeService
         LoadTitleBarCorlor(_AppWindow?.TitleBar);
     }
 
-
-
     private void AppWindow_Changed(MicrosoftuiWindowing.AppWindow sender, MicrosoftuiWindowing.AppWindowChangedEventArgs args)
     {
         if (!args.DidPresenterChange)
@@ -452,7 +449,6 @@ internal partial class WindowChromeService
             _IsLastFullScreen = true;
         else
             _IsLastFullScreen = false;
-
     }
 
 

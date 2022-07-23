@@ -26,6 +26,8 @@ internal partial class StatusBarService : IService
     IntPtr _hICon;
     IDisposable? _Disposable;
 
+    IntPtr m_hMenu = IntPtr.Zero;
+
     public bool RegisterApplicationEvent(ILifecycleBuilder lifecycleBuilder)
     {
         ArgumentNullException.ThrowIfNull(lifecycleBuilder, nameof(lifecycleBuilder));
@@ -61,6 +63,7 @@ internal partial class StatusBarService : IService
         //启动托盘服务
         RegisterClass();
         LoadNotifyIconData(_Config.Icon1, _Config.Title);
+        LoadPopupMenu();
         Show();
 
         return true;
