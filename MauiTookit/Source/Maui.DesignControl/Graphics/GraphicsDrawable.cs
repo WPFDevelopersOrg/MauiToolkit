@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Maui.DesignControl.Graphics;
+﻿namespace Maui.DesignControl.Graphics;
 public class GraphicsDrawable : IDrawable
 {
     void IDrawable.Draw(ICanvas canvas, RectF dirtyRect)
