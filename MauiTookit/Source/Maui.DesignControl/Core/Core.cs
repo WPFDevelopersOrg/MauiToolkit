@@ -1,7 +1,4 @@
 ﻿namespace Maui.DesignControl.Core;
-
-public interface IDialogService
+internal class Core
 {
-
-
 }
