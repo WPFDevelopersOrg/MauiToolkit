@@ -1,6 +1,8 @@
 ﻿using Maui.Toolkitx.Config;
 using Maui.Toolkitx.Platforms.Windows.Controllers;
+using Maui.Toolkitx.Platforms.Windows.Runtimes.User32;
 using Microsoft.Maui.Platform;
+using PInvoke;
 using static PInvoke.User32;
 using MicrosoftuiWindowing = Microsoft.UI.Windowing;
 using WindowsGraphics = Windows.Graphics;
@@ -34,6 +36,8 @@ internal partial class WindowStartupService
                 break;
         }
         _BackdropService?.Run();
+
+        //TriggertTitleBarRepaint();
         return true;
     }
 
@@ -209,6 +213,27 @@ internal partial class WindowStartupService
                 var customOverlappedPresenter = MicrosoftuiWindowing.OverlappedPresenter.CreateForContextMenu();
                 _AppWindow.SetPresenter(customOverlappedPresenter);
             }
+        }
+
+        return true;
+    }
+
+    bool TriggertTitleBarRepaint()
+    {
+        if (_WinUIWindow is null)
+            return false;
+
+        var windowHanlde = _WinUIWindow.GetWindowHandle();
+        var activeWindow = User32.GetActiveWindow();
+        if (windowHanlde == activeWindow)
+        {
+            User32.PostMessage(windowHanlde, WindowMessage.WM_ACTIVATE, new IntPtr((int)User32Constants.WA_INACTIVE), IntPtr.Zero);
+            User32.PostMessage(windowHanlde, WindowMessage.WM_ACTIVATE, new IntPtr((int)User32Constants.WA_ACTIVE), IntPtr.Zero);
+        }
+        else
+        {
+            User32.PostMessage(windowHanlde, WindowMessage.WM_ACTIVATE, new IntPtr((int)User32Constants.WA_ACTIVE), IntPtr.Zero);
+            User32.PostMessage(windowHanlde, WindowMessage.WM_ACTIVATE, new IntPtr((int)User32Constants.WA_INACTIVE), IntPtr.Zero);
         }
 
         return true;

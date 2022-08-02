@@ -41,6 +41,16 @@ public partial class App : Application
             },
 #elif WINDOWS
             BackdropsKind = Maui.Toolkitx.Options.BackdropsKind.Mica,
+            BackdropConfigurations = new Maui.Toolkitx.Config.BackdropConfigurations
+            {
+                IsHighContrast = false,
+                IsUseBaseKind = true,
+                LuminosityOpacity = 0.95f,
+                TintOpacity = 0.8f,
+                //TintColor = Colors.Transparent,
+                
+                
+            },
 #endif
             Page = MainPage,
         }
@@ -63,6 +73,7 @@ public partial class App : Application
 #endif
             options.CaptionHeight = 40d;
             options.CaptionActiveBackgroundColor = Colors.Transparent;
+            options.CaptionInactiveBackgroundColor = Colors.Transparent;
             options.WindowTitleBarKind = Maui.Toolkitx.Options.WindowTitleBarKind.Default;
             options.WindowButtonKind = Maui.Toolkitx.Options.WindowButtonKind.Show;
         })
@@ -72,8 +83,8 @@ public partial class App : Application
             options.IsSettingVisible = true;
             options.IsPaneToggleButtonVisible = true;
             options.SettingConfigurations.Height = 35;
-            //options.Background = Colors.Red;
-            //options.ContentBackground = Colors.Blue;
+            options.Background = Colors.Transparent;
+            options.ContentBackground = Colors.Transparent;
         });
 
         return window;

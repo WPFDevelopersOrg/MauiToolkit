@@ -177,7 +177,7 @@ internal partial class WindowChromeService
 
         //resource["TitleBarHeight"] = 50;
 
-        TriggertTitleBarRepaint();
+        //TriggertTitleBarRepaint();
 
         return true;
     }
