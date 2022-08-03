@@ -57,16 +57,34 @@ internal partial class ShellViewService
         //    closeButton.Visibility = MicrosoftuiXaml.Visibility.Visible;
         //}
 
+        var topNavAreaProperty = typeof(MauiNavigationView).GetProperty("TopNavArea", BindingFlags.Instance | BindingFlags.NonPublic);
+        if (topNavAreaProperty?.GetValue(_RootNavigationView) is MicrosoftuixamlControls.StackPanel topNavArea)
+        {
+            //topNavArea.Background = Colors.Red.ToPlatform();
+        }
+
         var buttonHolderGridProperty = typeof(MauiNavigationView).GetProperty("ButtonHolderGrid", BindingFlags.Instance | BindingFlags.NonPublic);
         if (buttonHolderGridProperty?.GetValue(_RootNavigationView) is MicrosoftuixamlControls.Grid buttonHolderGrid)
         {
-            //buttonHolderGrid.Background = Colors.Red.ToPlatform();
+            buttonHolderGrid.Background = Colors.Transparent.ToPlatform();
         }
 
         var contentGridProperty = typeof(MauiNavigationView).GetProperty("ContentGrid", BindingFlags.Instance | BindingFlags.NonPublic);
         if (contentGridProperty?.GetValue(_RootNavigationView) is MicrosoftuixamlControls.Grid contentGrid)
         {
             contentGrid.Background = Colors.Transparent.ToPlatform();
+        }
+
+        var paneContentGridProperty = typeof(MauiNavigationView).GetProperty("PaneContentGrid", BindingFlags.Instance | BindingFlags.NonPublic);
+        if (paneContentGridProperty?.GetValue(_RootNavigationView) is MicrosoftuixamlControls.Grid paneContentGrid)
+        {
+            paneContentGrid.Background = Colors.Transparent.ToPlatform();
+        }
+
+        var paneCustomContentBorderProperty = typeof(MauiNavigationView).GetProperty("PaneCustomContentBorder", BindingFlags.Instance | BindingFlags.NonPublic);
+        if (paneCustomContentBorderProperty?.GetValue(_RootNavigationView) is MicrosoftuixamlControls.ContentControl paneCustomContentBorder)
+        {
+            //paneCustomContentBorder.Background = Colors.Red.ToPlatform();
         }
 
 
