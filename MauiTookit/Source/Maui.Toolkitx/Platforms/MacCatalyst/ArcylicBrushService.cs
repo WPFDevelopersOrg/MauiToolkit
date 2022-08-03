@@ -110,4 +110,29 @@ internal class ArcylicBrushService : IArcylicBrushService
         SetBlurEffect(uiView);
     }
 
+    private void VisualElement_SizeChanged(object? sender, EventArgs e)
+    {
+         
+    }
+
+    UIViewController? GetUIViewController(UIView? view)
+    {
+        if (view is default(UIView))
+            return default;
+
+        UIResponder uiResponder = view.NextResponder;
+        for (; ; )
+        {
+            if (uiResponder is null)
+                break;
+
+            if (uiResponder is UIViewController viewController)
+                return viewController;
+
+            uiResponder = uiResponder.NextResponder;
+        }
+
+        return default;
+    }
+
 }
