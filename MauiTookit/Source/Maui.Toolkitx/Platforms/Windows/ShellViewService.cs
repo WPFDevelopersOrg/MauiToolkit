@@ -67,6 +67,8 @@ internal partial class ShellViewService : IService
         LoadSearchBar(_ShellView.IsSearchBarVisible, _ShellView.SearchBarConfigurations);
         LoadToggleButton(_ShellView.IsPaneToggleButtonVisible);
 
+        //LoadInternalElemenet();
+
         return true;
     }
 

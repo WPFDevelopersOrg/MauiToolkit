@@ -11,6 +11,7 @@ internal partial class ShellViewService
     private void RootNavigationView_Loaded(object sender, MicrosoftuiXaml.RoutedEventArgs e)
     {
         LoadSettings(_ShellView.IsSettingVisible, _ShellView.SettingConfigurations);
+        LoadInternalElemenet();
     }
 
     private void RootNavigationView_SelectionChanged(MicrosoftuixamlControls.NavigationView sender, MicrosoftuixamlControls.NavigationViewSelectionChangedEventArgs args)
@@ -43,6 +44,31 @@ internal partial class ShellViewService
         var navigationViewContent = _RootNavigationView.Content;
         if (navigationViewContent is MauiNavigationView mauiNavigationView)
             mauiNavigationView.Background = color?.ToPlatform();
+
+        return true;
+    }
+
+    bool LoadInternalElemenet()
+    {
+
+        //var closeButtonPropety = typeof(MauiNavigationView).GetProperty("NavigationViewCloseButton", BindingFlags.Instance | BindingFlags.NonPublic);
+        //if (closeButtonPropety?.GetValue(_RootNavigationView) is MicrosoftuixamlControls.Button closeButton)
+        //{
+        //    closeButton.Visibility = MicrosoftuiXaml.Visibility.Visible;
+        //}
+
+        var buttonHolderGridProperty = typeof(MauiNavigationView).GetProperty("ButtonHolderGrid", BindingFlags.Instance | BindingFlags.NonPublic);
+        if (buttonHolderGridProperty?.GetValue(_RootNavigationView) is MicrosoftuixamlControls.Grid buttonHolderGrid)
+        {
+            //buttonHolderGrid.Background = Colors.Red.ToPlatform();
+        }
+
+        var contentGridProperty = typeof(MauiNavigationView).GetProperty("ContentGrid", BindingFlags.Instance | BindingFlags.NonPublic);
+        if (contentGridProperty?.GetValue(_RootNavigationView) is MicrosoftuixamlControls.Grid contentGrid)
+        {
+            contentGrid.Background = Colors.Transparent.ToPlatform();
+        }
+
 
         return true;
     }
