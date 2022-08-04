@@ -79,6 +79,11 @@ internal partial class ShellViewService
         if (paneContentGridProperty?.GetValue(_RootNavigationView) is MicrosoftuixamlControls.Grid paneContentGrid)
         {
             paneContentGrid.Background = Colors.Transparent.ToPlatform();
+
+            paneContentGrid.RegisterPropertyChangedCallback(MicrosoftuixamlControls.Grid.VisibilityProperty, (sender, dp) =>
+            {
+
+            });
         }
 
         var paneCustomContentBorderProperty = typeof(MauiNavigationView).GetProperty("PaneCustomContentBorder", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -166,6 +171,7 @@ internal partial class ShellViewService
             return false;
 
         _RootNavigationView.IsPaneToggleButtonVisible = isVisible;
+        _RootNavigationView.RegisterPropertyChangedCallback(MicrosoftuixamlControls.NavigationView.DisplayModeProperty, OnDisplayModePropertyCanllBack);
         _RootNavigationView.RegisterPropertyChangedCallback(MicrosoftuixamlControls.NavigationView.IsPaneOpenProperty, OnIsPaneOpenPropertyCallBack);
         _RootNavigationView.RegisterPropertyChangedCallback(MicrosoftuixamlControls.NavigationView.IsPaneToggleButtonVisibleProperty, OnIsPaneToggleButtonVisiblePropertyChangedCallBack);
         //_RootNavigationView.CompactPaneLength = 30d;
@@ -190,10 +196,30 @@ internal partial class ShellViewService
         if (!sender.Equals(_RootNavigationView))
             return;
 
-        //if (!_RootNavigationView.IsPaneOpen)
-        //{
-        //    var content = _RootNavigationView.PaneCustomContent;
-        //}
+        if (_RootNavigationView.PaneDisplayMode != MicrosoftuixamlControls.NavigationViewPaneDisplayMode.Left)
+            return;
+
+        if (!_RootNavigationView.IsPaneOpen)
+        {
+            var paneContentGridProperty = typeof(MauiNavigationView).GetProperty("PaneContentGrid", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (paneContentGridProperty?.GetValue(_RootNavigationView) is MicrosoftuixamlControls.Grid paneContentGrid)
+            {
+                //paneContentGrid.Visibility = MicrosoftuiXaml.Visibility.Visible;
+
+            }
+        }
+    }
+
+    private void OnDisplayModePropertyCanllBack(MicrosoftuiXaml.DependencyObject sender, MicrosoftuiXaml.DependencyProperty dp)
+    {
+        if (!sender.Equals(_RootNavigationView))
+            return;
+
+        if (_RootNavigationView.PaneDisplayMode != MicrosoftuixamlControls.NavigationViewPaneDisplayMode.Left)
+            return;
+
+        if (_RootNavigationView.IsPaneToggleButtonVisible != _ShellView.IsPaneToggleButtonVisible && _ShellView.IsPaneToggleButtonVisible)
+            _RootNavigationView.IsPaneToggleButtonVisible = _ShellView.IsPaneToggleButtonVisible;
     }
 
     private void OnIsPaneToggleButtonVisiblePropertyChangedCallBack(MicrosoftuiXaml.DependencyObject sender, MicrosoftuiXaml.DependencyProperty dp)

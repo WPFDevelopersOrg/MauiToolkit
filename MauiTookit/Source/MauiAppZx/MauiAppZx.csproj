@@ -102,4 +102,10 @@
 	  <ProjectReference Include="..\Maui.Toolkitx\Maui.Toolkitx.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <MauiXaml Update="Views\Login.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>
