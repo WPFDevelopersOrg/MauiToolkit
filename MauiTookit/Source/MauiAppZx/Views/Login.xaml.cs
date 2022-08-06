@@ -23,4 +23,9 @@ public partial class Login : ContentPage
     {
         base.OnNavigatingFrom(args);
     }
+
+    void Button_Clicked(System.Object sender, System.EventArgs e)
+    {
+        Shell.Current.GoToAsync("..");
+    }
 }
