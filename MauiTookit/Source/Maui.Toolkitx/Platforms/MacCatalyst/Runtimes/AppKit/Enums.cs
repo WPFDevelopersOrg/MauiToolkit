@@ -58,3 +58,12 @@ public enum NSApplicationPresentationOptions : ulong
     //[Mac(10, 11, 2)]
     DisableCursorLocationAssistance = (1 << 12),
 }
+
+[Flags]
+[Native]
+public enum NSBlacking
+{
+    NSBackingStoreRetained = 0, //compatible old 
+    NSBackingStoreNonretained = 1, //no cache
+    NSBackingStoreBuffered = 2  //draw cache
+}

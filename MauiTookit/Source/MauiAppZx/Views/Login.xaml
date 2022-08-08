@@ -11,7 +11,7 @@
 
         <VerticalStackLayout Grid.Column="1">
                <Entry Placeholder="用户名"/>
-               <Entry Placeholder="密码" IsPassword="True"/>
+               <Entry Placeholder="密码" IsPassword="True" BackgroundColor="Transparent"/>
                <Button Text="Login" Clicked="Button_Clicked"/>
         </VerticalStackLayout>
 

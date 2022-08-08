@@ -53,6 +53,9 @@ internal partial class WindowStartupService : NSObject
             default:
                 break;
         }
+        _NsWindow.SetValueForNsobject<long>("setBackingType:", (long)NSBlacking.NSBackingStoreBuffered);
+        
+
 
         return true;
     }
